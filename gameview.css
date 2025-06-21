@@ -1,0 +1,15 @@
+
+
+#canvasback {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#game {
+  background-color: black;
+}
+
+.texture {
+  display: none;
+}
