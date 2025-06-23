@@ -5,7 +5,7 @@ class Game {
     this.gameview = new GameView(this);
     this.gamecore.initMap(map);
     this.gameview.initResize();
-    this.gameview.initAnimate();
+    // this.gameview.initAnimate();
     this.gameview.initKeyboard();
     // this.gameview.initDrag();
 

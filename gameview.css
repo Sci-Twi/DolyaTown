@@ -6,8 +6,17 @@
   top: 0;
 }
 
-#game {
+#block {
+  position: absolute;
+  left: 0;
+  top: 0;
   background-color: black;
+}
+
+#npc {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .texture {

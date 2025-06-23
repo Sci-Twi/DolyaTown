@@ -17,8 +17,13 @@
   
   <div id="back">
     <div id="canvasback">
-      <canvas id="game"></canvas>
+      <canvas id="block"></canvas>
+      <canvas id="npc"></canvas>
       <canvas class="texture" id="temp"></canvas>
+      <canvas class="texture" id="blockCanvas1"></canvas>
+      <canvas class="texture" id="blockCanvas2"></canvas>
+      <!-- <canvas class="texture" id="blockCanvas4"></canvas>
+      <canvas class="texture" id="blockCanvas8"></canvas> -->
     </div>
     <img class="texture" id="ground0" src="images/ground0.png"/>
     <img class="texture" id="wall0" src="images/wall0.png"/>
@@ -30,9 +35,6 @@
   <script src="dolya.js"></script>
   <script>
     var game;
-    
-
-    
     window.addEventListener("load", () => {
       game = new Game(JSON.parse(map_dolya_block));
       // const test = document.querySelector("#test");

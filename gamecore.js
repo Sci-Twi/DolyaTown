@@ -65,7 +65,6 @@ class GameCore {
   // }
   
   initMap(map) {
-    
     this.game.gameview.initRenderData();
     // customize
 
@@ -95,6 +94,8 @@ class GameCore {
       const [x, y] = npcMap[npc].coor;
       this.#npcmap[y][x] = new NPC(npcMap[npc]);
     }
+
+    this.game.gameview.initMap();
 
 
   }
