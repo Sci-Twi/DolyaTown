@@ -1,29 +1,29 @@
 class GameView {
   game;
-  #pixelSize;
+  pixelSize;
   // #worldSize;
   // #player;
   #camera;
   #mapCanvas;
-  #mtx;
+  mtx;
 
   #npcCanvas;
-  #ntx;
+  ntx;
 
   #blockCanvas;
   #bctx;
 
 
-  #renderData;
+  renderData;
   #tempCanvas;
   #tempCtx;
   #dragging;
   #resizeData;
-  // #npcAnimation;
+  #NPCAnimation;
 
   constructor(game) {
     this.game = game;
-    this.#pixelSize = 4;
+    this.pixelSize = 4;
     // this.#worldSize = this.game.gamecore.worldSize;
     // this.#player = this.game.gamecore.player;
     const player = this.game.gamecore.player;
@@ -32,7 +32,9 @@ class GameView {
     this.#camera[1] = player[1];
 
     this.#resizeData = {};
-    // this.#npcAnimation = [[], []];
+    this.#NPCAnimation = new NPCAnimationController({
+      view: this,
+    });
 
     this.#blockCanvas = [];
     this.#bctx = [];
@@ -48,12 +50,12 @@ class GameView {
     this.#npcCanvas.width = this.#mapCanvas.width;
     this.#npcCanvas.height = this.#mapCanvas.height;
     
-    this.#mtx = this.#mapCanvas.getContext("2d");
-    this.#ntx = this.#npcCanvas.getContext("2d");
-    // this.#mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
+    this.mtx = this.#mapCanvas.getContext("2d");
+    this.ntx = this.#npcCanvas.getContext("2d");
+    // this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
     this.#tempCanvas = document.getElementById("temp");
     this.#tempCtx = this.#tempCanvas.getContext("2d");
-    this.#renderData = {};
+    this.renderData = {};
   }
 
   // screenToCoor(screen) {
@@ -99,7 +101,7 @@ class GameView {
 
 
 
-    // this.#mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
+    // this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
     // const coorStartX = this.#camera[0] - this.#resizeData.widthNumber;
     // const coorStartY = this.#camera[1] - this.#resizeData.heightNumber;
 
@@ -109,7 +111,7 @@ class GameView {
     //     if (!block) {
     //       continue;
     //     }
-    //     this.renderMapBlock(this.#renderData[block.name], (x - coorStartX) * 16 * this.#pixelSize + this.#resizeData.startX, (y - coorStartY) * 16 * this.#pixelSize + this.#resizeData.startY);
+    //     this.renderMapBlock(this.renderData[block.name], (x - coorStartX) * 16 * this.pixelSize + this.#resizeData.startX, (y - coorStartY) * 16 * this.pixelSize + this.#resizeData.startY);
     //   }
     // }
 
@@ -129,7 +131,7 @@ class GameView {
           }
           this.renderSingleBlockByS({
             ctx,
-            imgData: this.#renderData[block.name],
+            imgData: this.renderData[block.name],
             pixelSize,
             sx: x * 16 * pixelSize,
             sy: y * 16 * pixelSize,
@@ -148,20 +150,20 @@ class GameView {
   }
 
   renderMapByCut() {
-    const num = this.#pixelSize;
+    const num = this.pixelSize;
     const bctx = this.#bctx[num];
 
     const sx = this.#camera[0] * 16 * num + 16 / 2 * num - this.#mapCanvas.width / 2;
     const sy = this.#camera[1] * 16 * num + 16 / 2 * num - this.#mapCanvas.height / 2;
 
-    this.#mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
+    this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
     const mapData = bctx.getImageData(sx, sy, this.#mapCanvas.width, this.#mapCanvas.height);
-    this.#mtx.putImageData(mapData, 0, 0);
+    this.mtx.putImageData(mapData, 0, 0);
 
   }
 
   renderMapByWrite() {
-    const num = this.#pixelSize;
+    const num = this.pixelSize;
     const mapCanvas = this.#mapCanvas;
 
     let startX = ((mapCanvas.width - num * 16) / 2) % (num * 16);
@@ -173,7 +175,7 @@ class GameView {
     const widthNumber = Math.ceil(((mapCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((mapCanvas.height - num * 16) / 2) / (num * 16));
     
-    this.#mtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+    this.mtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
     const coorStartX = this.#camera[0] - widthNumber;
     const coorStartY = this.#camera[1] - heightNumber;
 
@@ -184,7 +186,7 @@ class GameView {
           continue;
         }
         this.renderMapBlock({
-          imgData: this.#renderData[block.name],
+          imgData: this.renderData[block.name],
           sx: (x - coorStartX) * 16 * num + startX,
           sy: (y - coorStartY) * 16 * num + startY,
         });
@@ -196,7 +198,7 @@ class GameView {
 
 
   renderNPC() {
-    const num = this.#pixelSize;
+    const num = this.pixelSize;
     const npcCanvas = this.#npcCanvas;
     let startX = ((npcCanvas.width - num * 16) / 2) % (num * 16);
     let startY = ((npcCanvas.height - num * 16) / 2) % (num * 16);
@@ -207,7 +209,12 @@ class GameView {
     const heightNumber = Math.ceil(((npcCanvas.height - num * 16) / 2) / (num * 16));
     const coorStartX = this.#camera[0] - widthNumber;
     const coorStartY = this.#camera[1] - heightNumber;
-    this.#ntx.clearRect(0, 0, this.#npcCanvas.width, this.#npcCanvas.height);
+    this.ntx.clearRect(0, 0, this.#npcCanvas.width, this.#npcCanvas.height);
+
+    // const newAnimation = new NPCAnimation({
+    //   view: this,
+    //   preAnimation: this.#NPCAnimation,
+    // });
 
     for (let y = coorStartY; y <= heightNumber + this.#camera[1]; y++) {
       for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
@@ -215,20 +222,35 @@ class GameView {
         if (!npc) {
           continue;
         }
-        // this.animateAddNPC(this.#renderData[npc.name][0], (x - coorStartX) * 16 * this.#pixelSize + this.#resizeData.startX, (y - coorStartY) * 16 * this.#pixelSize + this.#resizeData.startY);
-        this.renderNPCBlock({
-          imgData: this.#renderData[npc.name][0],
+
+        this.#NPCAnimation.add({
+          name: npc.name,
           sx: (x - coorStartX) * 16 * num + startX,
-          sy:(y - coorStartY) * 16 * num + startY,
+          sy: (y - coorStartY) * 16 * num + startY,
         });
+        // if (npc.name === "hmdzl001") {
+        //   // continue;
+        // }
+
+        // for now
+        
       }
     }
+    this.#NPCAnimation.stop();
+    this.#NPCAnimation.merge();
+
+    // in the future...
+    // this.ntx.clearRect(0, 0, this.#npcCanvas.width, );
+    this.#NPCAnimation.start();
+    // this.#NPCAnimation = newAnimation;
+    
+    // newAnimation.restart();
+
     // this.animateNPC();
   }
 
   renderGame() {
-    // console.log(this.#pixelSize)
-    if (this.#pixelSize <= 3) {
+    if (this.pixelSize <= 3) {
       this.renderMapByCut();
     } else {
       this.renderMapByWrite();
@@ -250,6 +272,13 @@ class GameView {
     
   // }
 
+  // animationListAdd({imgData, sx, sy}) {
+  //   this.#npcAnimationList.push({imgData, sx, sy});
+  // }
+  getNPCFrames(name) {
+    return this.renderData[name];
+  }
+
   // animateNPC() {
 
   // }
@@ -263,31 +292,31 @@ class GameView {
   // }
 
   renderNPCBlock({imgData, sx, sy}) {
-
+    this.ntx.clearRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
     for (let y = 0; y < 16; y++) {
       for (let x = 0; x < 16; x++) {
         const index = (y * 16 + x);
         if (imgData.data[index * 4 + 3] === 0) {
           continue;
         }
-        this.#ntx.fillStyle = `rgb(${imgData.data[index * 4]}, ${imgData.data[index * 4 + 1]}, ${imgData.data[index * 4 + 2]})`;
-        this.#ntx.fillRect(sx + x * this.#pixelSize, sy + y * this.#pixelSize, this.#pixelSize, this.#pixelSize);
+        this.ntx.fillStyle = `rgb(${imgData.data[index * 4]}, ${imgData.data[index * 4 + 1]}, ${imgData.data[index * 4 + 2]})`;
+        this.ntx.fillRect(sx + x * this.pixelSize, sy + y * this.pixelSize, this.pixelSize, this.pixelSize);
       }
     }
   }
 
 
   renderMapBlock({imgData, sx, sy}) {
-    if (this.#pixelSize === 1) {
-      this.#mtx.putImageData(imgData, sx, sy);
+    if (this.pixelSize === 1) {
+      this.mtx.putImageData(imgData, sx, sy);
       return;
     }
 
     for (let y = 0; y < 16; y++) {
       for (let x = 0; x < 16; x++) {
         const index = (y * 16 + x);
-        this.#mtx.fillStyle = `rgb(${imgData.data[index * 4]}, ${imgData.data[index * 4 + 1]}, ${imgData.data[index * 4 + 2]})`;
-        this.#mtx.fillRect(sx + x * this.#pixelSize, sy + y * this.#pixelSize, this.#pixelSize, this.#pixelSize);
+        this.mtx.fillStyle = `rgb(${imgData.data[index * 4]}, ${imgData.data[index * 4 + 1]}, ${imgData.data[index * 4 + 2]})`;
+        this.mtx.fillRect(sx + x * this.pixelSize, sy + y * this.pixelSize, this.pixelSize, this.pixelSize);
       }
     }
   }
@@ -309,7 +338,7 @@ class GameView {
   }
 
   // getBlockSize() {
-  //   return this.#pixelSize * 16;
+  //   return this.pixelSize * 16;
   // }
   // move(move) {
   //   if (move[0] !== 0) {
@@ -360,36 +389,35 @@ class GameView {
 
   resize(isBigger) {
 
-    // this.#mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
+    // this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
 
     if (isBigger) {
-      if (this.#pixelSize < 4) {
-        this.#pixelSize += 1;
-      } else if (this.#pixelSize < 8) {
-        this.#pixelSize += 2;
+      if (this.pixelSize < 4) {
+        this.pixelSize += 1;
+      } else if (this.pixelSize < 8) {
+        this.pixelSize += 2;
       } else {
         return;
       }
     } else {
-      if (this.#pixelSize > 4) {
-        this.#pixelSize -= 2;
-      } else if (this.#pixelSize > 1) {
-        this.#pixelSize -= 1;
+      if (this.pixelSize > 4) {
+        this.pixelSize -= 2;
+      } else if (this.pixelSize > 1) {
+        this.pixelSize -= 1;
       } else {
         return;
       }
 
     }
-    // this.updateResizeData();
     this.renderGame();
   }
   // updateResizeData() {
-  //   this.#resizeData.startX = ((this.#mapCanvas.width % (this.#pixelSize * 16)) - this.#pixelSize * 16) / 2;
-  //   this.#resizeData.startY = ((this.#mapCanvas.height % (this.#pixelSize * 16)) - this.#pixelSize * 16) / 2;
+  //   this.#resizeData.startX = ((this.#mapCanvas.width % (this.pixelSize * 16)) - this.pixelSize * 16) / 2;
+  //   this.#resizeData.startY = ((this.#mapCanvas.height % (this.pixelSize * 16)) - this.pixelSize * 16) / 2;
 
     
-  //   this.#resizeData.widthNumber = Math.ceil(((this.#mapCanvas.width - this.#pixelSize * 16) / 2) / (this.#pixelSize * 16));
-  //   this.#resizeData.heightNumber = Math.ceil(((this.#mapCanvas.height - this.#pixelSize * 16) / 2) / (this.#pixelSize * 16));
+  //   this.#resizeData.widthNumber = Math.ceil(((this.#mapCanvas.width - this.pixelSize * 16) / 2) / (this.pixelSize * 16));
+  //   this.#resizeData.heightNumber = Math.ceil(((this.#mapCanvas.height - this.pixelSize * 16) / 2) / (this.pixelSize * 16));
   // }
   // changeBlockSize() {
 
@@ -415,7 +443,7 @@ class GameView {
       this.#tempCtx.drawImage(document.getElementById("water0"), 0, 0);
       const image = document.getElementById(textureName);
       this.#tempCtx.drawImage(image, 0, 0);
-      this.#renderData[textureName] = this.#tempCtx.getImageData(0, 0, 16, 16);
+      this.renderData[textureName] = this.#tempCtx.getImageData(0, 0, 16, 16);
     }
 
     this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
@@ -425,14 +453,14 @@ class GameView {
       this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
       const image = document.getElementById(textureName);
       this.#tempCtx.drawImage(image, 0, 0);
-      // this.#renderData[textureName] = this.#tempCtx.getImageData(0, 0, image.width, image.height).data;
+      // this.renderData[textureName] = this.#tempCtx.getImageData(0, 0, image.width, image.height).data;
       // for (let i = 0; i < image.width  + image.height / 16)
       const xLength = image.width / 16;
       const yLength = image.height / 16;
-      this.#renderData[textureName] = [];
+      this.renderData[textureName] = [];
       for (let y = 0; y < yLength; y++) {
         for (let x = 0; x < xLength; x++) {
-          this.#renderData[textureName][yLength * y + x] = this.#tempCtx.getImageData(x * 16, y * 16, 16, 16);
+          this.renderData[textureName][yLength * y + x] = this.#tempCtx.getImageData(x * 16, y * 16, 16, 16);
         }
       }
     }
@@ -481,6 +509,11 @@ class GameView {
     });
   }
 
+  // to be deleted
+  tempStop() {
+    this.#NPCAnimation.stop();
+  }
+
   // sadly, no dragging for now
   initDrag() {
     // const body = document.querySelector("body");
@@ -511,4 +544,161 @@ class GameView {
     //   this.#mapCanvas.style.cursor = "auto";
     // });
   }
+}
+
+class NPCAnimationController {
+  // #animation;
+  // #newAnimationList;
+  // #stop;
+  // #stoped;
+  constructor({view}) {
+    this.animationList = {};
+    this.animation = new Animation(this);
+    
+    // this.#newAnimationList = [];
+    // this.#animation = null;
+    // this.#stop = true;
+    this.gameview = view;
+  }
+  startAnimate() {
+
+
+    
+  }
+  merge() {
+    for (const npc in this.animationList) {
+      const animate = this.animationList[npc];
+      if (!animate.dontdelete) {
+        delete this.animationList[npc];
+      }
+    }
+  }
+  stop() {
+    this.animation.stop();
+    this.animation = new Animation(this);
+    // this.#stop = true;
+    // const size = this.gameview.pixelSize * 16;
+    // for (const npc of this.animationList) {
+    //   this.gameview.ntx.clearRect(npc.sx, npc.sy, size, size);
+    // }
+    // this.gameview.ntx.clearRect()
+  }
+  start() {
+    this.animation.start();
+    for (const npc in this.animationList) {
+      this.animationList[npc].dontdelete = false;
+    }
+  }
+
+  // merge({preAnimation}) {
+  //   // const preSet = new Set(preAnimation.keys());
+  //   // const nowSet = new Set(this.animationList.keys());
+  // }
+  add({name, sx, sy}) {
+    let animate = this.animationList[name];
+    if (!animate) {
+      this.animationList[name] = {sx, sy, index: 0, hz: 0, dontdelete: true};
+
+    } else {
+      if (animationDone.includes(name)) {
+        
+        animate.sx = sx;
+        animate.sy = sy;
+        animate.dontdelete = true;
+      } else {
+        this.animationList[name] = {sx, sy, index: 0, hz: 0, dontdelete: true};
+      }
+    }
+
+    animate = this.animationList[name];
+    let frameIndex = 0;
+    // let imgData;
+    // console.log(name, animate.index)
+    if (animationDone.includes(name)) {
+      // not good
+      const frames = npcMap[name].animation.idle.frames;
+
+      // imgData = this.gameview.renderData[name][frames[animate.index]];
+      if (frames.length > animate.index) {
+        frameIndex = frames[animate.index];
+      }
+
+    }
+    this.gameview.renderNPCBlock({
+      imgData: this.gameview.renderData[name][frameIndex],
+      sx,
+      sy,
+    });
+    
+    
+    // this.animationList.push({name, sx, sy, index: 0, hz: 0});
+
+  }
+  // clear() {
+  //   // this.animationList = null;
+  //   // this.animationList = this.#newAnimationList;
+  //   // this.#newAnimationList = [];
+  // }
+  // restart() {
+  //   this.stop();
+  //   this.clear();
+  //   this.start();
+  // }
+}
+
+
+class Animation {
+  constructor(npcAnimationController) {
+    this.controller = npcAnimationController;
+    this.stoped = false;
+  }
+
+  stop() {
+    this.stoped = true;
+  }
+
+  start() {
+    requestAnimationFrame(() => {
+      this.animate();
+    });
+  }
+
+  animate() {
+    for (const npc in this.controller.animationList) {
+      if (!animationDone.includes(npc)) {
+        continue;
+      }
+      // const npc = this.animationList[animate];
+      const animate = this.controller.animationList[npc];
+      const hz = npcMap[npc].animation.idle.hz;
+      if (animate.hz < hz) {
+        animate.hz += 1;
+        continue;
+      }
+      animate.hz = 0;
+      const frames = npcMap[npc].animation.idle.frames;
+      
+      if (frames.length <= animate.index) {
+        animate.index = 0;
+      }
+      
+      // const num = this.controller.gameview.pixelSize;
+      // this.controller.gameview.ntx.clearRect(animate.sx, animate.sy, num * 16, num * 16);
+      // this.gameview.ntx.clearRect(sx, sy, 1)
+      this.controller.gameview.renderNPCBlock({
+        imgData: this.controller.gameview.getNPCFrames(npc)[frames[animate.index]],
+        sx: animate.sx,
+        sy: animate.sy,
+      });
+      animate.index += 1;
+    }
+    
+    if (!this.stoped) {
+      requestAnimationFrame(() => {
+        this.animate();
+      });
+    }
+  }
+
+  
 }
