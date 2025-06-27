@@ -20,8 +20,8 @@
       <canvas id="block"></canvas>
       <canvas id="npc"></canvas>
       <canvas class="texture" id="temp"></canvas>
-      <canvas class="texture" id="blockCanvas1"></canvas>
-      <canvas class="texture" id="blockCanvas2"></canvas>
+      <!-- <canvas class="texture" id="blockCanvas1"></canvas>
+      <canvas class="texture" id="blockCanvas2"></canvas> -->
       <!-- <canvas class="texture" id="blockCanvas4"></canvas>
       <canvas class="texture" id="blockCanvas8"></canvas> -->
     </div>
@@ -37,19 +37,6 @@
     var game;
     window.addEventListener("load", () => {
       game = new Game(JSON.parse(map_dolya_block));
-      // const test = document.querySelector("#test");
-      
-      // test.width = 16;
-      // test.height = 16;
-      // const ttx = test.getContext("2d");
-      // ttx.drawImage(document.querySelector("#ground0"), 0, 0, 16, 16);
-      // const oldData = ttx.getImageData(0, 0, 16, 16).data;
-      // const newData = game.gameview.resizeImage(oldData);
-      // test.width = 128;
-      // test.height = 128;
-      // ttx.putImageData(newData, 0, 0);
-      // game.gameview.resizeImage(oldData, 0, 0);
-      // console.log(ttx.getImageData(0, 0, 16, 16));
     });
 
   </script>

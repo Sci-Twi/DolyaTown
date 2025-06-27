@@ -8,14 +8,143 @@ class GameCore {
   constructor(game) {
     this.game = game;
     this.worldSize = [48, 48];
-    this.player = [24, 24];
-
+    this.player = [4, 2];
   }
 
   getMap() {
     return this.#blockmap;
   }
 
+
+  pathFinder({from, to}) {
+    // is this fast?
+    const pathMap = [];
+    // pathMap.length = 49;
+    // pathMap.fill([], 1);
+    for (let i = 1; i <= 48; i++) {
+      pathMap[i] = [];
+    }
+    // [x, y]
+    // bruh
+    pathMap[from[1]][from[0]] = "start";
+    
+    // console.log(pathMap.join("|"))
+
+    let toBeFind = [from];
+
+    
+
+    let found = false;
+
+    // ...dont wanna talk about it
+    let maxTimes = 1;
+    while (!found && maxTimes < 50) {
+      maxTimes += 1;
+      let newFind = [];
+      for (const coor of toBeFind) {
+        const [x, y] = coor;
+        const toFind = [[x + 1, y - 1], [x + 1, y], [x + 1, y + 1], [x, y - 1], [x, y + 1], [x - 1, y - 1], [x - 1, y], [x - 1, y + 1]].filter((c) => {
+          return this.getBlock(c)?.type === Block.FLOOR && !this.getNPC(c) && !pathMap[c[1]][c[0]];
+        });
+
+        for (const c of toFind) {
+          newFind.push(c);
+          pathMap[c[1]][c[0]] = coor;
+          if (c[0] === to[0] && c[1] === to[1]) {
+            found = c;
+            break;
+          }
+        }
+        
+        // pathMap[c[1]][c[0]] = coor;
+        // if (this.getBlock(coor)?.type !== Block.FLOOR || !this.getNPC(coor)) {
+        //   continue;
+        // }
+
+        // if (x === to[0] && y === to[1]) {
+        //   found = coor;
+        //   break;
+        // }
+
+        // newFind
+        // pathMap[y][x] = coor;
+        
+        // if (pathMap[y][x]) {
+        //   continue;
+        // }
+        // newFind.push([x + 1, y - 1], [x + 1, y], [x + 1, y + 1], [x, y - 1], [x, y + 1], [x - 1, y - 1], [x - 1, y], [x - 1, y + 1]);
+        
+
+
+
+      }
+      toBeFind = newFind;
+      // console.log(newFind.join(","))
+    }
+
+    if (!found) {
+      return [];
+    }
+
+    // found
+    let reverse = to;
+    const result = [];
+    while (true) {
+      const next = pathMap[reverse[1]][reverse[0]];
+      if (next !== "start") {
+        result.push([reverse[0] - next[0], reverse[1] - next[1]]);
+        
+        reverse = next;
+      } else {
+        break;
+      }
+    }
+    return result.reverse();
+  }
+
+  async multiMove(move) {
+    let stop = false;
+    const stopCallback = (event) => {
+      stop = true;
+      document.getElementById("npc").removeEventListener("click", stopCallback);
+      document.getElementById("npc").addEventListener("click", this.game.gameview.mapClickHandler);
+    };
+    document.getElementById("npc").addEventListener("click", stopCallback);
+    document.getElementById("npc").removeEventListener("click", this.game.gameview.mapClickHandler);
+    const next = (m) => {
+      return new Promise((resolve, reject) => {
+        // let hz = 0;
+        // requestAnimationFrame(() => {
+          
+        // });
+        // while (hz < 10) {
+
+        // }
+
+
+        // wtf
+        setTimeout(() => {
+          this.game.gameview.move(m);
+          resolve();
+        }, 100);
+      });
+    }
+    for (const m of move) {
+      if (stop) {
+        break;
+      }
+      await next(m);
+      // if (!stop) {
+      // requestAnimationFrame(() => {
+      //   // this.game.gameview.move(m);
+      // });
+      // }
+    }
+    // requestAnimationFrame(() => {});
+    
+      document.getElementById("npc").removeEventListener("click", stopCallback);
+      document.getElementById("npc").addEventListener("click", this.game.gameview.mapClickHandler);
+  }
   // changePlayerCoor(coor) {
   //   const [x, y] = this.player;
   //   let t = this.#npcmap[y][x];
@@ -24,7 +153,6 @@ class GameCore {
 
   move(move) {
     const [originX, originY] = this.player;
-    // let moved = false;
 
     const toX = move[0] + originX;
     const toY = move[1] + originY;
@@ -59,7 +187,6 @@ class GameCore {
       return null;
     }
     return this.#npcmap[y][x];
-
   }
   // serMap(map) {
   // }
@@ -67,16 +194,6 @@ class GameCore {
   initMap(map) {
     this.game.gameview.initRenderData();
     // customize
-
-    // for (let y = 0; y < 32; y++) {
-    //   this.#blockmap[y] = [];
-    //   for (let x = 0; x < 32; x++) {
-    //     this.#blockmap[y][x] = new Block(Block.FLOOR, "ground0");
-    //     if (y === 14 && x < 14) {
-    //       this.#blockmap[y][x] = new Block(Block.FLOOR, "wall0");
-    //     }
-    //   }
-    // }
 
     this.#blockmap = [];
     for (let y = 0; y < this.worldSize[1]; y++) {
@@ -94,9 +211,7 @@ class GameCore {
       const [x, y] = npcMap[npc].coor;
       this.#npcmap[y][x] = new NPC(npcMap[npc]);
     }
-
     this.game.gameview.initMap();
-
 
   }
 }
@@ -113,7 +228,6 @@ class Block {
   // static BUILDING = 2;
 
   constructor({type, name}) {
-    // ...Object.create()
     this.type = type;
     this.name = name;
   }
@@ -133,3 +247,10 @@ class NPC {
 // const textureMap = new Map();
 // textureMap.set("ground0");
 
+// class PathFinder {
+//   constructor() {
+//     this.pathMap = new Array(48);
+//     this.pathMap.fill([]);
+
+//   }
+// }

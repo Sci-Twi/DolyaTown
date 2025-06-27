@@ -69,7 +69,7 @@ class GameView {
   initMap() {
     [1, 2, 3].map((num) => {
 
-      
+
       
       const blockCanvas = document.createElement("canvas");
       document.getElementById("canvasback").append(blockCanvas);
@@ -90,31 +90,6 @@ class GameView {
       
 
     });
-    // this.#bctx = this.#blockCanvas.map((can) => {
-    //   return can.getContext("2d");
-    // });
-
-    // this.#bctx.forEach((ctx) => {
-    //   // ctx.clearRect(0, 0, );
-      
-    // });
-
-
-
-    // this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
-    // const coorStartX = this.#camera[0] - this.#resizeData.widthNumber;
-    // const coorStartY = this.#camera[1] - this.#resizeData.heightNumber;
-
-    // for (let y = coorStartY; y <= this.#resizeData.heightNumber + this.#camera[1]; y++) {
-    //   for (let x = coorStartX; x <= this.#resizeData.widthNumber + this.#camera[0]; x++) {
-    //     const block = this.game.gamecore.getBlock([x, y]);
-    //     if (!block) {
-    //       continue;
-    //     }
-    //     this.renderMapBlock(this.renderData[block.name], (x - coorStartX) * 16 * this.pixelSize + this.#resizeData.startX, (y - coorStartY) * 16 * this.pixelSize + this.#resizeData.startY);
-    //   }
-    // }
-
   }
 
   preRenderMap({blockCanvas, ctx, pixelSize}) {
@@ -369,7 +344,7 @@ class GameView {
     this.renderGame();
   }
 
-  moveView(move) { //[x, y]
+  moveView(move) { // [x, y]
 
     const [originX, originY] = this.#camera;
     const toX = move[0] + originX;
@@ -509,10 +484,45 @@ class GameView {
     });
   }
 
-  // to be deleted
-  tempStop() {
-    this.#NPCAnimation.stop();
+  initClick() {
+    document.getElementById("npc").addEventListener("click", this.mapClickHandler);
+
   }
+
+  mapClickHandler = (event) => {
+    const gamecore = this.game.gamecore;
+    const midX = this.#mapCanvas.width / 2;
+    const midY = this.#mapCanvas.height / 2;
+    const num = this.pixelSize * 16;
+
+    // bro...
+    const biasX = Math.floor((event.clientX - midX - num / 2) / num) + 1;
+    const biasY = Math.floor((event.clientY - midY - num / 2) / num) + 1;
+
+    const [cx, cy] = this.#camera;
+    // console.log(event)
+    // console.log(midX, midY)
+    // console.log(biasX, biasY)
+    // console.log()
+    const tobe = [cx + biasX, cy + biasY];
+    if (gamecore.getBlock(tobe)?.type !== Block.FLOOR || gamecore.getNPC(tobe)) {
+      return;
+    }
+
+    // const [px, py] = this..player;
+    // not good
+    gamecore.multiMove(gamecore.pathFinder({
+      // from: [px, py],
+      from: gamecore.player,
+      to: [cx + biasX, cy + biasY],
+    }));
+  }
+
+
+  // to be deleted
+  // tempStop() {
+  //   this.#NPCAnimation.stop();
+  // }
 
   // sadly, no dragging for now
   initDrag() {
@@ -560,11 +570,11 @@ class NPCAnimationController {
     // this.#stop = true;
     this.gameview = view;
   }
-  startAnimate() {
+  // startAnimate() {
 
 
     
-  }
+  // }
   merge() {
     for (const npc in this.animationList) {
       const animate = this.animationList[npc];
