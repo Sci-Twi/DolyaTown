@@ -2,9 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
 
-  <title>SFRPD</title>
+  <title>Dolya Town</title>
   <link rel="stylesheet" href="gameview.css"></link>
   <style>
     body {
@@ -19,14 +18,19 @@
     <div id="canvasback">
       <canvas id="block"></canvas>
       <canvas id="npc"></canvas>
+      <canvas id="shadow"></canvas>
       <canvas class="texture" id="temp"></canvas>
-      <!-- <canvas class="texture" id="blockCanvas1"></canvas>
-      <canvas class="texture" id="blockCanvas2"></canvas> -->
-      <!-- <canvas class="texture" id="blockCanvas4"></canvas>
-      <canvas class="texture" id="blockCanvas8"></canvas> -->
+      <div id="npcwindow">
+        <canvas id="windowcanvas"></canvas>
+        <div id="windowcontent">
+          <canvas id="windowanimation"></canvas>
+          <div id="windowname"></div>
+          <div id="windowdescription"></div>
+        </div>
+      </div>
     </div>
-    <img class="texture" id="ground0" src="images/ground0.png"/>
-    <img class="texture" id="wall0" src="images/wall0.png"/>
+    <!-- <img class="texture" id="ground0" src="images/ground0.png"/>
+    <img class="texture" id="wall0" src="images/wall0.png"/> -->
   </div>
   
   <script src="gamecore.js"></script>

@@ -1,6 +1,238 @@
-<img class="wall0" src="wall0.png"/>
-<style>
-  .wall0 {
-    scale: 8;
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>像素风格 Div</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        
+        .pixel-art {
+            /* 基础像素风格设置 */
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            
+            /* div 样式 */
+            width: 200px;
+            height: 200px;
+            background-color: #ff5252;
+            border: 4px solid #333;
+            position: relative;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+            
+            /* 添加像素化细节 */
+            box-shadow: 
+                0 0 0 4px #333,
+                8px 8px 0 #333,
+                8px 8px 0 4px #333;
+        }
+        
+        /* 添加像素化装饰元素 */
+        .pixel-art::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border: 4px solid #333;
+            /* box-shadow: 
+                60px 0 0 #fff,
+                60px 0 0 4px #333,
+                0 60px 0 #fff,
+                0 60px 0 4px #333,
+                60px 60px 0 #fff,
+                60px 60px 0 4px #333; */
+        }
+        
+        .pixel-art::after {
+            content: "";
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: #333;
+            box-shadow: 
+                -30px 0 0 #333,
+                -60px 0 0 #333,
+                0 -30px 0 #333,
+                -30px -30px 0 #333,
+                -60px -30px 0 #333;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        class ShadowCasting {
+        /**
+         * 计算从(x,y)位置出发的视野范围
+         * @param {number} x - 起点x坐标
+         * @param {number} y - 起点y坐标
+         * @param {number} radius - 视野半径
+         * @param {function} isOpaque - 判断某位置是否不透明的回调函数
+         * @returns {Array} - 返回一个二维数组，表示哪些格子可见
+         */
+        static computeFOV(x, y, radius, isOpaque, width, height) {
+    // 初始化结果数组
+    const visible = Array(height).fill().map(() => Array(width).fill(false));
+    
+    // 中心点总是可见
+    visible[y][x] = true;
+    
+    // 处理8个八分圆
+    for (let octant = 0; octant < 8; octant++) {
+      this._castLight(
+        x, y, octant, radius, 
+        (x, y) => {
+          if (x >= 0 && x < width && y >= 0 && y < height) {
+            visible[y][x] = true;
+          }
+        },
+        isOpaque
+      );
+    }
+    
+    return visible;
   }
-</style>
+
+        /**
+         * 处理单个八分圆的阴影投射
+         * @param {number} startX - 起点x坐标
+         * @param {number} startY - 起点y坐标
+         * @param {number} octant - 当前处理的八分圆(0-7)
+         * @param {number} radius - 最大视野半径
+         * @param {function} markVisible - 标记格子可见的回调
+         * @param {function} isOpaque - 判断格子是否不透明
+         */
+        static _castLight(startX, startY, octant, radius, markVisible, isOpaque) {
+            // 八分圆变换表
+            const octantTransform = [
+            [1, 0, 0, 1],   // 0 E-NE
+            [0, 1, 1, 0],    // 1 NE-N
+            [0, 1, -1, 0],   // 2 N-NW
+            [-1, 0, 0, 1],   // 3 NW-W
+            [-1, 0, 0, -1],  // 4 W-SW
+            [0, -1, -1, 0],  // 5 SW-S
+            [0, -1, 1, 0],   // 6 S-SE
+            [1, 0, 0, -1]    // 7 SE-E
+            ];
+            
+            const [xx, xy, yx, yy] = octantTransform[octant];
+            
+            // 阴影线队列
+            let shadows = [];
+            
+            // 从近到远扫描每行
+            for (let row = 1; row <= radius; row++) {
+            // 当前行的起点和终点角度
+            let startAngle = 0;
+            let endAngle = 1;
+            
+            // 当前行的起点和终点坐标
+            const dx = -row - 1;
+            const dy = -row - 1;
+            
+            let blocked = false;
+            
+            // 扫描当前行的每个格子
+            for (let col = 0; col <= row; col++) {
+                // 计算实际地图坐标
+                const mapX = startX + col * xx + row * yx;
+                const mapY = startY + col * xy + row * yy;
+                
+                // 计算当前格子的角度范围
+                const leftSlope = (col - 0.5) / (row + 0.5);
+                const rightSlope = (col + 0.5) / (row - 0.5);
+                
+                // 如果当前格子不在阴影范围内，跳过
+                if (!(startAngle < rightSlope && endAngle > leftSlope)) {
+                continue;
+                }
+                
+                // 检查是否在视野半径内
+                if (this._getDistance(col, row) <= radius) {
+                markVisible(mapX, mapY);
+                }
+                
+                // 如果当前格子阻挡视线
+                if (blocked) {
+                if (isOpaque(mapX, mapY)) {
+                    startAngle = rightSlope;
+                    continue;
+                } else {
+                    blocked = false;
+                    startAngle = leftSlope;
+                }
+                } else {
+                if (isOpaque(mapX, mapY) && col < row) {
+                    blocked = true;
+                    shadows.push([leftSlope, rightSlope]);
+                }
+                }
+            }
+            
+            // 检查阴影队列，更新可见角度
+            for (let i = 0; i < shadows.length; ) {
+                const [shadowLeft, shadowRight] = shadows[i];
+                if (shadowRight <= startAngle) {
+                shadows.splice(i, 1);
+                } else {
+                if (shadowLeft < endAngle) {
+                    endAngle = shadowLeft;
+                }
+                i++;
+                }
+            }
+            
+            if (shadows.length === 0 && blocked) {
+                break;
+            }
+            }
+        }
+
+        /**
+         * 计算圆形视野的距离
+         */
+        static _getDistance(dx, dy) {
+            return Math.sqrt(dx*dx + dy*dy);
+        }
+        }
+
+const map = [
+  [1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 1],
+  [1, 0, 1, 0, 1],
+  [1, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1]
+];
+
+// 判断某位置是否阻挡视线
+function isOpaque(x, y) {
+  return map[y][x] === 1;
+}
+
+// 计算从(2,2)位置出发，半径3的视野
+const visible = ShadowCasting.computeFOV(2, 2, 3, isOpaque, 5, 5);
+
+// 打印结果
+for (let y = 0; y < 5; y++) {
+  let line = '';
+  for (let x = 0; x < 5; x++) {
+    line += visible[y][x] ? (map[y][x] ? '#' : '.') : ' ';
+  }
+  console.log(line);
+}
+    </script>
+    <div class="pixel-art"></div>
+</body>
+</html>

@@ -5,45 +5,53 @@ class GameCore {
   worldSize;
   #blockmap;
   #npcmap;
+  player;
+  sight;
   constructor(game) {
     this.game = game;
     this.worldSize = [48, 48];
-    this.player = [4, 2];
+    this.player = [25, 21];
+    this.sight = 7;
   }
 
-  getMap() {
-    return this.#blockmap;
+  // getMap() {
+  //   return this.#blockmap;
+  // }
+
+  npcClickHandler({to}) {
+    const player = this.player;
+    
+
   }
 
+  blockClickHandler({to}) {
+    this.multiMove(this.pathFinder({
+      from: this.player,
+      to,
+    }));
+  }
 
   pathFinder({from, to}) {
     // is this fast?
     const pathMap = [];
-    // pathMap.length = 49;
-    // pathMap.fill([], 1);
     for (let i = 1; i <= 48; i++) {
       pathMap[i] = [];
     }
     // [x, y]
     // bruh
     pathMap[from[1]][from[0]] = "start";
-    
-    // console.log(pathMap.join("|"))
 
     let toBeFind = [from];
-
-    
-
     let found = false;
 
     // ...dont wanna talk about it
     let maxTimes = 1;
-    while (!found && maxTimes < 50) {
+    while (!found && maxTimes < 100) {
       maxTimes += 1;
       let newFind = [];
       for (const coor of toBeFind) {
         const [x, y] = coor;
-        const toFind = [[x + 1, y - 1], [x + 1, y], [x + 1, y + 1], [x, y - 1], [x, y + 1], [x - 1, y - 1], [x - 1, y], [x - 1, y + 1]].filter((c) => {
+        const toFind = [[x + 1, y], [x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 1], [x - 1, y + 1]].filter((c) => {
           return this.getBlock(c)?.type === Block.FLOOR && !this.getNPC(c) && !pathMap[c[1]][c[0]];
         });
 
@@ -55,31 +63,8 @@ class GameCore {
             break;
           }
         }
-        
-        // pathMap[c[1]][c[0]] = coor;
-        // if (this.getBlock(coor)?.type !== Block.FLOOR || !this.getNPC(coor)) {
-        //   continue;
-        // }
-
-        // if (x === to[0] && y === to[1]) {
-        //   found = coor;
-        //   break;
-        // }
-
-        // newFind
-        // pathMap[y][x] = coor;
-        
-        // if (pathMap[y][x]) {
-        //   continue;
-        // }
-        // newFind.push([x + 1, y - 1], [x + 1, y], [x + 1, y + 1], [x, y - 1], [x, y + 1], [x - 1, y - 1], [x - 1, y], [x - 1, y + 1]);
-        
-
-
-
       }
       toBeFind = newFind;
-      // console.log(newFind.join(","))
     }
 
     if (!found) {
@@ -93,7 +78,6 @@ class GameCore {
       const next = pathMap[reverse[1]][reverse[0]];
       if (next !== "start") {
         result.push([reverse[0] - next[0], reverse[1] - next[1]]);
-        
         reverse = next;
       } else {
         break;
@@ -103,6 +87,12 @@ class GameCore {
   }
 
   async multiMove(move) {
+
+    if (move.length === 1) {
+      this.game.gameview.move(move[0]);
+      return;
+    }
+
     let stop = false;
     const stopCallback = (event) => {
       stop = true;
@@ -129,7 +119,25 @@ class GameCore {
         }, 100);
       });
     }
+
+    // if (move.length === 1) {
+      
+    // } else {
+
+    // }
+
+    let firstTime = true;
+
     for (const m of move) {
+      // ugly
+      if (firstTime) {
+        this.game.gameview.move(m);
+        firstTime = false;
+        continue;
+      }
+
+
+
       if (stop) {
         break;
       }
@@ -142,14 +150,9 @@ class GameCore {
     }
     // requestAnimationFrame(() => {});
     
-      document.getElementById("npc").removeEventListener("click", stopCallback);
-      document.getElementById("npc").addEventListener("click", this.game.gameview.mapClickHandler);
+    document.getElementById("npc").removeEventListener("click", stopCallback);
+    document.getElementById("npc").addEventListener("click", this.game.gameview.mapClickHandler);
   }
-  // changePlayerCoor(coor) {
-  //   const [x, y] = this.player;
-  //   let t = this.#npcmap[y][x];
-    
-  // }
 
   move(move) {
     const [originX, originY] = this.player;
