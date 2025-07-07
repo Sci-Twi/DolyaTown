@@ -16,7 +16,7 @@ class GameView {
   #blockCanvas;
   #bctx;
 
-
+  currentShadow;
   mapRenderData;
   npcRenderData;
   #tempCanvas;
@@ -29,7 +29,7 @@ class GameView {
   constructor(game) {
     this.game = game;
     this.pixelSize = 8;
-    this.sight = 6;
+    this.sight = 5;
     // this.#worldSize = this.game.gamecore.worldSize;
     // this.#player = this.game.gamecore.player;
     const player = this.game.gamecore.player;
@@ -44,6 +44,8 @@ class GameView {
 
     this.#blockCanvas = [];
     this.#bctx = [];
+    // tmep!
+    this.oldPlayer = [];
 
     
 
@@ -60,12 +62,14 @@ class GameView {
     this.shadowCanvas = document.getElementById("shadow");
     this.shadowCanvas.width = this.#mapCanvas.width;
     this.shadowCanvas.height = this.#mapCanvas.height;
+    
 
     // this.windowCanvas = document.getElementById("window");
 
     this.mtx = this.#mapCanvas.getContext("2d");
     this.ntx = this.#npcCanvas.getContext("2d");
     this.stx = this.shadowCanvas.getContext("2d");
+    // this.stx.globalCompositeOperation = "source-over";
     // this.wtx = this.windowCanvas.getContext("2d");
     // this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
     this.#tempCanvas = document.getElementById("temp");
@@ -208,6 +212,7 @@ class GameView {
     [1, 2, 3].map((num) => {
 
       const blockCanvas = document.createElement("canvas");
+      blockCanvas.style.display = "none";
       document.getElementById("canvasback").append(blockCanvas);
       const bctx = blockCanvas.getContext("2d", {"willReadFrequently": true});
 
@@ -321,11 +326,11 @@ class GameView {
         //   this.stx.fillRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
         // }
         // if (y <= 13) {
-        //   // const gradient = this.stx.createLinearGradient(sx, sy, sx, sy + this.pixelSize * 16);
-        //   // gradient.addColorStop(0, "black");
-        //   // gradient.addColorStop(1, "#111111cc");
-        //   // this.stx.fillStyle = gradient;
-        //   this.stx.fillStyle = "black";
+        //   const gradient = this.stx.createLinearGradient(sx, sy, sx, sy + this.pixelSize * 16);
+        //   gradient.addColorStop(0, "black");
+        //   gradient.addColorStop(1, "#111111cc");
+        //   this.stx.fillStyle = gradient;
+        //   // this.stx.fillStyle = "black";
         //   // this.stx.fillStyle = "#111111cc";
         //   this.stx.fillRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
         // }
@@ -336,6 +341,223 @@ class GameView {
   }
 
 
+  // to be removed to shadow class?
+  renderShadow() {
+    if (this.game.lightMode) {
+      return;
+    }
+    
+
+    const num = this.pixelSize;
+    const shadowCanvas = this.shadowCanvas;
+    const gamecore = this.game.gamecore;
+    let startX = ((shadowCanvas.width - num * 16) / 2) % (num * 16);
+    let startY = ((shadowCanvas.height - num * 16) / 2) % (num * 16);
+    startX = startX === 0 ? startX : startX  - num * 16;
+    startY = startY === 0 ? startY : startY  - num * 16;
+
+    const widthNumber = Math.ceil(((shadowCanvas.width - num * 16) / 2) / (num * 16));
+    const heightNumber = Math.ceil(((shadowCanvas.height - num * 16) / 2) / (num * 16));
+    const coorStartX = this.#camera[0] - widthNumber;
+    const coorStartY = this.#camera[1] - heightNumber;
+
+    // this.stx.fillStyle = "#111111cc";
+    // this.stx.fillStyle = "#112244cc";
+    this.stx.clearRect(0, 0, shadowCanvas.width, shadowCanvas.height);
+    // this.stx.fillStyle = "rgba(17, 17, 17, 0.8)";
+    // this.stx.fillRect(0, 0, shadowCanvas.width, shadowCanvas.height);
+
+
+    // temp...bruh
+    if (this.oldPlayer[0] !== gamecore.player[0] || this.oldPlayer[1] !== gamecore.player[1]) {
+      this.oldPlayer[0] = gamecore.player[0];
+      this.oldPlayer[1] = gamecore.player[1];
+
+      this.currentShadow = new Shadow({
+        map: gamecore.blockmap,
+        view: this,
+        width: gamecore.worldSize[0],
+        height: gamecore.worldSize[1],
+      });
+      this.currentShadow.scanAllSector(gamecore.player[0], gamecore.player[1], this.sight);
+    }
+
+    
+    // holy i swear i will redo this later
+    // ok i give up
+
+    // const shadowGradientRender = [[], [], []];
+    // shadowGradientRender[2][1] = (sx, sy) => {
+    //   // const gradient = this.stx.createLinearGradient(sx + 8 * num, sy + 8 * num, sx + 8 * num, sy + 16 * num);
+    //   // gradient.addColorStop(0, "#00000000");
+    //   // gradient.addColorStop(1, "#111111cc");
+    //   // this.stx.fillStyle = gradient;
+    //   // // this.stx.clearRect(sx, sy + num * 8, num * 16, num * 8);
+    //   // this.stx.fillRect(sx, sy + num * 8, num * 16, num * 8);
+    //   // for (let y = 0; y < 8; y++) {
+    //   //   for (let x = 0; x < 16; x++) {
+    //   //     this.stx.fillStyle = `rgba(17, 17, 17, ${0.8 * ((y) / 8)})`;
+    //   //     this.stx.fillRect(sx + x * num, sy + (y + 8) * num, num, num);
+    //   //   }
+    //   // }
+    // };
+
+
+    // shadowGradientRender[1][2] = (sx, sy) => {
+    //   // const gradient = this.stx.createLinearGradient(sx + 8 * num, sy + 8 * num, sx + 16 * num, sy + 8 * num);
+    //   // gradient.addColorStop(0, "#00000000");
+    //   // gradient.addColorStop(1, "#111111cc");
+    //   // this.stx.fillStyle = gradient;
+      
+    //   // // this.stx.clearRect(sx + num * 8, sy, num * 8, num * 16);
+    //   // this.stx.fillRect(sx + num * 8, sy, num * 8, num * 16);
+    //   // const gradient = this.stx.createLinearGradient();
+    //   // for (let y = 0; y < 16; y++) {
+    //   //   for (let x = 0; x < 8; x++) {
+    //   //   }
+    //   // }
+    // };
+
+    // shadowGradientRender[2][2] = (sx, sy) => {
+    //   // const gradient = this.stx.createRadialGradient(sx + 8 * num, sy + 8 * num, num * 4, sx + 8 * num, sy + 8 * num, num * 8);
+    //   // const gradient = this.stx.createLinearGradient(sx + 8 * num, sy + 8 * num, sx + 16 * num, sy + 16 * num);
+    //   // gradient.addColorStop(0, "#00000000");
+    //   // gradient.addColorStop(1, "#111111cc");
+    //   // this.stx.fillStyle = gradient;
+    //   // this.stx.fillStyle = "red"
+      
+    //   // this.stx.clearRect(sx + num * 8, sy + num * 8, num * 8, num * 8);
+    //   // this.stx.fillRect(sx + num * 8, sy + num * 8, num * 8, num * 8);
+    //   // const gradient = this.stx.createLinearGradient();
+    //   // for (let y = 0; y < 16; y++) {
+    //   //   for (let x = 0; x < 8; x++) {
+    //   //   }
+    //   // }
+    // };
+    // console.log(coorStartX, coorStartY)
+    console.log(widthNumber + this.#camera[0] + 2 - coorStartX, heightNumber + this.#camera[1] + 2 - coorStartY)
+    
+    const invisible = [0, 0, 0, 255];
+    const visited = [17, 17, 17, 204];
+    const visible = [0, 0, 0, 0];
+
+    const width1 = widthNumber + this.#camera[0] + 2 - coorStartX;
+    const height1 = heightNumber + this.#camera[1] + 2 - coorStartY;
+
+    const shadowArray = new ImageData(widthNumber + this.#camera[0] + 2 - coorStartX, heightNumber + this.#camera[1] + 2 - coorStartY);
+    // console.log(shadowArray)
+
+    for (let y = coorStartY; y <= heightNumber + this.#camera[1] + 1; y++) {
+      for (let x = coorStartX; x <= widthNumber + this.#camera[0] + 1; x++) {
+        const b1 = gamecore.getBlock([x, y]);
+        const b2 = gamecore.getBlock([x, y - 1]);
+        const b3 = gamecore.getBlock([x - 1, y]);
+        const b4 = gamecore.getBlock([x - 1, y - 1]);
+        // if (!(b1 && b2 && b3 && b4)) {
+        //   continue;
+        // }
+        // const sx = (x - coorStartX) * 16 * num + startX - num * 8;
+        // const sy = (y - coorStartY) * 16 * num + startY - num * 8;
+        const index = (y - coorStartY) * (widthNumber + this.#camera[0] + 2 - coorStartX) + (x - coorStartX);
+        let c = invisible;
+        
+        let isLit = this.currentShadow.isLit(x, y) && this.currentShadow.isLit(x, y - 1) && this.currentShadow.isLit(x - 1, y) && this.currentShadow.isLit(x - 1, y - 1);
+        if (isLit) {
+          b1.isVisited = true;
+          b2.isVisited = true;
+          b3.isVisited = true;
+          b4.isVisited = true;
+          c = visible;
+
+          // this.renderShadowBlock({
+          //   sx,
+          //   sy,
+          // });
+        } else {
+          if ((b1 && b2 && b3 && b4)) {
+            if (!b1.isVisited || !b2.isVisited || !b3.isVisited || !b4.isVisited) {
+              c = invisible;
+            } else {
+              
+              c = visited;
+            }
+          }
+        }
+        // const index = (y - (coorStartY - 1)) * (widthNumber + this.#camera[0] + 2 - (coorStartY - 1)) + (x - (coorStartX - 1));
+        // console.log((y - coorStartY) * (widthNumber + this.#camera[0] + 1 - coorStartX), (x - coorStartX))
+        // console.log(index)
+        shadowArray.data[index * 4] = c[0];
+        shadowArray.data[index * 4 + 1] = c[1];
+        shadowArray.data[index * 4 + 2] = c[2];
+        shadowArray.data[index * 4 + 3] = c[3];
+        
+
+        // console.log(x, y)
+      }
+    }
+    // this.stx.drawImage(shadowArray, startX, startY);
+    this.#tempCtx.putImageData(shadowArray, 0, 0);
+    // console.log(this.#tempCanvas.getImageData())
+    this.stx.drawImage(this.#tempCanvas, 0, 0, width1, height1, startX - num * 8, startY - num * 8, width1 * this.pixelSize * 16, height1 * this.pixelSize * 16);
+    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#tempCanvas.height);
+    // for (let y = coorStartY; y <= heightNumber + this.#camera[1]; y++) {
+    //   for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
+    //     const block = gamecore.getBlock([x, y]);
+    //     if (!block) {
+    //       continue;
+    //     }
+    //     const isLit = this.currentShadow.isLit(x, y);
+    //     const sx = (x - coorStartX) * 16 * num + startX;
+    //     const sy = (y - coorStartY) * 16 * num + startY;
+
+        
+    //     if (isLit) {
+    //       if (!block.isVisited) {
+    //         block.isVisited = true;
+    //       }
+
+    //       this.renderShadowBlock({
+    //         sx,
+    //         sy,
+    //       });
+
+    //     } else {
+    //       if (!block.isVisited) {
+    //         this.renderBlackBlock({sx, sy});
+    //       }
+    //     }
+    //   }
+    // }
+
+  }
+
+  renderShadowBlock({sx, sy}) {
+    this.stx.clearRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
+  }
+
+  renderBlackBlock({sx, sy}) {
+    this.stx.fillStyle = "black";
+    this.stx.fillRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
+  }
+
+
+  // renderGradientShadow({sx, sy, sw, sh, isSide}) {
+  //   const num = this.pixelSize;
+
+  //   for (let y = 0; y < sh; y++) {
+  //     for (let x = 0; x < sw; x++) {
+  //       if (isSide) {
+  //         this.stx.fillStyle = `rgba(17, 17, 17, ${0.8 * ((y + 1) / sh)})`;
+  //         this.stx.fillRect(sx + x * num, sy + y * num, num, num);
+  //       }
+        
+  //     }
+  //   }
+
+  //   // this.stx.
+  // }
+
+  
 
 
   renderNPC() {
@@ -350,7 +572,7 @@ class GameView {
     const heightNumber = Math.ceil(((npcCanvas.height - num * 16) / 2) / (num * 16));
     const coorStartX = this.#camera[0] - widthNumber;
     const coorStartY = this.#camera[1] - heightNumber;
-    this.ntx.clearRect(0, 0, this.#npcCanvas.width, this.#npcCanvas.height);
+    this.ntx.clearRect(0, 0, npcCanvas.width, npcCanvas.height);
 
     // const newAnimation = new NPCAnimation({
     //   view: this,
@@ -361,6 +583,10 @@ class GameView {
       for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
         const npc = this.game.gamecore.getNPC([x, y]);
         if (!npc) {
+          continue;
+        }
+        
+        if (!this.game.lightMode && !this.currentShadow.isLit(x, y)) {
           continue;
         }
 
@@ -396,10 +622,10 @@ class GameView {
     } else {
       this.renderMapByWrite();
     }
+    this.renderShadow();
     this.renderNPC();
 
 
-    // this.renderShadow();
     // this.animatePlayer();
   }
 
@@ -624,6 +850,8 @@ class GameView {
         }
       }
     }
+    
+    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
   }
 
 
@@ -687,7 +915,9 @@ class GameView {
     const [cx, cy] = this.#camera;
     const tobe = [cx + biasX, cy + biasY];
 
-    const isBlockEmpty = gamecore.getBlock(tobe)?.type === Block.FLOOR;
+    const block = gamecore.getBlock(tobe);
+
+    const isBlockEmpty = block?.type === Block.FLOOR;
     const isNPCEmpty = !gamecore.getNPC(tobe);
   
     if (!isNPCEmpty) {
@@ -696,6 +926,9 @@ class GameView {
     }
 
     if (isBlockEmpty) {
+      if (!block.isVisited && !this.game.lightMode) {
+        return;
+      }
       gamecore.blockClickHandler({to: [cx + biasX, cy + biasY]});
       return;
     }
@@ -896,4 +1129,148 @@ class Animation {
   }
 
   
+}
+
+
+// wanna rewrite to mine
+
+class Shadow {
+  static mult = [
+    [1,  0,  0, -1, -1,  0,  0,  1],
+    [0,  1, -1,  0,  0, -1,  1,  0],
+    [0,  1,  1,  0,  0, -1, -1,  0],
+    [1,  0,  0,  1, -1,  0,  0, -1]
+  ]
+
+  constructor({map, view, width, height}) {
+    this.map = map;
+    this.gameview = view;
+    this.width = width;
+    this.height = height;
+    this.light = [];
+    for (let i = 0; i < height; i++) {
+      this.light[i] = new Array(width).fill(false);
+    }
+    this.flag = false;
+  }
+
+  blocked(x, y) {
+    // here
+    return x < 0 || y < 0 || x >= this.width || y >= this.height || (this.map[y][x].type !== Block.FLOOR && !this.map[y][x].lightPass);
+  }
+
+  
+  isLit(x, y) {
+    if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+      return false;
+    }
+    return this.light[y][x] === this.flag;
+  }
+  setLit(x, y) {
+    if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
+      this.light[y][x] = this.flag;
+    }
+  }
+
+  castLight(cx, cy, row, start, end, radius, xx, xy, yx, yy, id) {
+    if (start < end) {
+      return;
+    }
+    const area = radius * radius;
+    let startCopy = start;
+    let newStart;
+    let blocked = false;
+    for (let j = row; j < radius + 1; j++) {
+      let dx = -j - 1;
+      const dy = -j;
+
+      
+      
+
+      while(dx <= 0) {
+        dx += 1;
+        const x = cx + dx * xx + dy * xy;
+        const y = cy + dx * yx + dy * yy;
+        // b r o
+        // const block = this.gameview.game.gamecore.getBlock(x, y);
+        // if (!block) {continue};
+
+        
+        const leftSlope = (dx - 0.5) / (dy + 0.5);
+        const rightSlope = (dx + 0.5) / (dy - 0.5);
+
+        if (startCopy < rightSlope) {
+          continue;
+        } else if (end > leftSlope) {
+          break;
+        } else {
+          if (dx * dx + dy * dy < area) {
+            this.setLit(x, y);
+          }
+          if (blocked) {
+            if (this.blocked(x, y)) {
+              newStart = rightSlope;
+              continue;
+            } else {
+              blocked = false;
+              startCopy = newStart;
+            }
+          } else {
+            if (this.blocked(x, y) && j < radius) {
+              blocked = true;
+              this.castLight(cx, cy, j + 1, startCopy, leftSlope, radius, xx, xy, yx, yy, id + 1);
+              newStart = rightSlope;
+            }
+          }
+        }
+      }
+      if (blocked) {
+        break;
+      }
+    }
+  }
+
+  scanAllSector(x, y, radius) {
+    
+    this.flag = true;
+    for (let oct = 0; oct < 8; oct++) {
+      this.castLight(x, y, 1, 1, 0, radius, Shadow.mult[0][oct], Shadow.mult[1][oct], Shadow.mult[2][oct], Shadow.mult[3][oct], 0);
+    }
+    this.light[y][x] = true;
+  }
+
+  // static calcSectorShadow({blockMap, sx, sy, radius}) {
+
+  //   // ok i gave up
+  //   // maybe someday i will rewrite it to mine shadowcaster
+
+
+  //   // temp
+  //   // Shadow.calcSectorShadow({sx: 0, sy: 0, radius: 6})
+  //   // const map = [];
+  //   // for (let i = 0; i < 6; i++) {
+  //   //   map[i] = [{type: 0}, {type: 0}, {type: 0}, {type: 0}, {type: 0}, {type: 0}];
+  //   // }
+  //   // map[3][3].type = 1;
+  //   // map[4][0].type = 1;
+  //   // map[5][2].type = 1;
+
+  //   // console.log(map)
+
+
+
+
+  //   // const slopeArray = [[1, 0]];
+    
+  //   // for (let row = 1; row < radius; row++) {
+  //   //   for (let col = row - 1; col >= 0; col--) {
+  //   //     console.log(map[row][col])
+
+  //   //   }
+  //   // }
+  // }
+
+  // static isBlocked(block) {
+  //   return block.type !== Block.floor;
+  // }
 }

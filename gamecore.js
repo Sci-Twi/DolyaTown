@@ -3,7 +3,7 @@
 class GameCore {
   game;
   worldSize;
-  #blockmap;
+  blockmap;
   #npcmap;
   player;
   sight;
@@ -15,7 +15,7 @@ class GameCore {
   }
 
   // getMap() {
-  //   return this.#blockmap;
+  //   return this.blockmap;
   // }
 
   npcClickHandler({to}) {
@@ -96,11 +96,11 @@ class GameCore {
     let stop = false;
     const stopCallback = (event) => {
       stop = true;
-      document.getElementById("npc").removeEventListener("click", stopCallback);
-      document.getElementById("npc").addEventListener("click", this.game.gameview.mapClickHandler);
+      document.getElementById("canvasback").removeEventListener("click", stopCallback);
+      document.getElementById("canvasback").addEventListener("click", this.game.gameview.mapClickHandler);
     };
-    document.getElementById("npc").addEventListener("click", stopCallback);
-    document.getElementById("npc").removeEventListener("click", this.game.gameview.mapClickHandler);
+    document.getElementById("canvasback").addEventListener("click", stopCallback);
+    document.getElementById("canvasback").removeEventListener("click", this.game.gameview.mapClickHandler);
     const next = (m) => {
       return new Promise((resolve, reject) => {
         // let hz = 0;
@@ -150,8 +150,8 @@ class GameCore {
     }
     // requestAnimationFrame(() => {});
     
-    document.getElementById("npc").removeEventListener("click", stopCallback);
-    document.getElementById("npc").addEventListener("click", this.game.gameview.mapClickHandler);
+    document.getElementById("canvasback").removeEventListener("click", stopCallback);
+    document.getElementById("canvasback").addEventListener("click", this.game.gameview.mapClickHandler);
   }
 
   move(move) {
@@ -183,7 +183,7 @@ class GameCore {
     if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {
       return null;
     }
-    return this.#blockmap[y][x];
+    return this.blockmap[y][x];
   }
   getNPC([x, y]) {
     if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {
@@ -198,11 +198,11 @@ class GameCore {
     this.game.gameview.initRenderData();
     // customize
 
-    this.#blockmap = [];
+    this.blockmap = [];
     for (let y = 0; y < this.worldSize[1]; y++) {
-      this.#blockmap[y] = [];
+      this.blockmap[y] = [];
       for (let x = 0; x < this.worldSize[0]; x++) {
-        this.#blockmap[y][x] = new Block(blockMap[map[y][x]]);
+        this.blockmap[y][x] = new Block(blockMap[map[y][x]]);
       }
     }
 
@@ -224,6 +224,7 @@ class Block {
   type;
   name;
   coor;
+  isVisited;
 
   // static NULL = -1;
   static FLOOR = 0;
@@ -233,6 +234,7 @@ class Block {
   constructor({type, name}) {
     this.type = type;
     this.name = name;
+    this.isVisited = false;
   }
 }
 
