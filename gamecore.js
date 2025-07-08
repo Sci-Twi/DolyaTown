@@ -19,7 +19,16 @@ class GameCore {
   // }
 
   npcClickHandler({to}) {
-    const player = this.player;
+    // const player = this.player;
+    const name = this.getNPC(to).name;
+    // console.log(name)
+    if (!tempTextDone.includes(name)) {
+      return;
+    }
+    const text = npcMap[name].text;
+    this.game.gameview.currentAnimation = name;
+    this.game.gameview.renderWindow(text);
+
     
 
   }
@@ -212,7 +221,7 @@ class GameCore {
     }
     for (const npc in npcMap) {
       const [x, y] = npcMap[npc].coor;
-      this.#npcmap[y][x] = new NPC(npcMap[npc]);
+      this.#npcmap[y][x] = new NPC(npc, npcMap[npc]);
     }
     this.game.gameview.initMap();
 
@@ -231,20 +240,24 @@ class Block {
   static WALL = 1;
   // static BUILDING = 2;
 
-  constructor({type, name}) {
+  constructor({type, name, lightPass}) {
     this.type = type;
     this.name = name;
     this.isVisited = false;
+    this.lightPass = !!lightPass;
   }
 }
 
 class NPC {
   name;
-  frames;
+  texture;
+  // frames;
 
-  constructor({name, frames}) {
-    this.name = name;
-    this.frames = frames;
+  // dont code like that
+  constructor(realName, {name}) {
+    this.name = realName;
+    this.texture = name;
+    // this.frames = frames;
   }
 }
 

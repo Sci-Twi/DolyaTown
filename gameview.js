@@ -22,14 +22,15 @@ class GameView {
   #tempCanvas;
   #tempCtx;
   #dragging;
-  #resizeData;
+  // #resizeData;
   sight;
   #NPCAnimation;
+  currentAnimation;
 
   constructor(game) {
     this.game = game;
     this.pixelSize = 8;
-    this.sight = 5;
+    this.sight = 6;
     // this.#worldSize = this.game.gamecore.worldSize;
     // this.#player = this.game.gamecore.player;
     const player = this.game.gamecore.player;
@@ -37,7 +38,7 @@ class GameView {
     this.#camera[0] = player[0];
     this.#camera[1] = player[1];
 
-    this.#resizeData = {};
+    // this.#resizeData = {};
     this.#NPCAnimation = new NPCAnimationController({
       view: this,
     });
@@ -46,6 +47,7 @@ class GameView {
     this.#bctx = [];
     // tmep!
     this.oldPlayer = [];
+    this.currentAnimation = null;
 
     
 
@@ -62,7 +64,10 @@ class GameView {
     this.shadowCanvas = document.getElementById("shadow");
     this.shadowCanvas.width = this.#mapCanvas.width;
     this.shadowCanvas.height = this.#mapCanvas.height;
-    
+  
+    // const npcWindow = document.getElementById("npcwindow");
+    // npcWindow.style.width = this.#mapCanvas.width;
+    // npcWindow.style.height = this.#mapCanvas.height;
 
     // this.windowCanvas = document.getElementById("window");
 
@@ -104,7 +109,7 @@ class GameView {
   }
 
 
-  renderWindow({name, text}) {
+  renderWindow({name, description}) {
 
     // shit codes here
     const windowCanvas = document.getElementById("windowcanvas");
@@ -116,6 +121,10 @@ class GameView {
     // wtx.fillRect(0, 0, windowCanvas.width, windowCanvas.height);
   
     const num = 6;
+    // const num = this.pixelSize;
+
+
+
     // const nameSize = num * 8 * 0.8;
     // const textSize = num * 8 / 2;
     // const shortSide = windowCanvas.height - num * 5 * 2;
@@ -123,7 +132,7 @@ class GameView {
 
 
 
-    document.getElementById("windowdescription").innerText = text;
+    document.getElementById("windowdescription").innerText = description;
     document.getElementById("windowname").innerText = name;
 
 
@@ -196,6 +205,30 @@ class GameView {
     renderLongSide(5 * num, 5 * num + shortSide);
     renderShortSide(0, 5 * num);
     renderShortSide(5 * num + longSide, 5 * num);
+
+
+
+
+    // document.getElementById("npcwindow").style.display = "block";
+    document.getElementById("canvasback").removeEventListener("click", this.mapClickHandler);
+    document.getElementById("canvasback").addEventListener("click", this.removeWindowHandler);
+  }
+
+  removeWindowHandler = () => {
+    const windowCanvas = document.getElementById("windowcanvas");
+    windowCanvas.getContext("2d").clearRect(0, 0, windowCanvas.width, windowCanvas.height);
+    
+    document.getElementById("windowdescription").innerText = "";
+    document.getElementById("windowname").innerText = "";
+    // console.log(1)
+    // document.getElementById("npcwindow").style.display = "none";
+    // document.getElementById("canvasback").addEventListener("click", this.mapClickHandler);
+    document.getElementById("windowanimation").getContext("2d").clearRect(0, 0, 96, 96);
+    this.currentAnimation = null;
+    console.log(this)
+    this.initClick();
+    document.getElementById("canvasback").removeEventListener("click", this.removeWindowHandler);
+
   }
 
   // renderWindowText({name, text}) {
@@ -435,7 +468,7 @@ class GameView {
     //   // }
     // };
     // console.log(coorStartX, coorStartY)
-    console.log(widthNumber + this.#camera[0] + 2 - coorStartX, heightNumber + this.#camera[1] + 2 - coorStartY)
+    // console.log(widthNumber + this.#camera[0] + 2 - coorStartX, heightNumber + this.#camera[1] + 2 - coorStartY)
     
     const invisible = [0, 0, 0, 255];
     const visited = [17, 17, 17, 204];
@@ -591,7 +624,7 @@ class GameView {
         }
 
         this.#NPCAnimation.add({
-          name: npc.name,
+          name: npc.texture,
           sx: (x - coorStartX) * 16 * num + startX,
           sy: (y - coorStartY) * 16 * num + startY,
         });
@@ -902,6 +935,11 @@ class GameView {
 
   }
 
+  // npcClickHandler({coor}) {
+  //   const gamecore = this.game.gamecore;
+    
+  // }
+
   mapClickHandler = (event) => {
     const gamecore = this.game.gamecore;
     const midX = this.#mapCanvas.width / 2;
@@ -1056,6 +1094,10 @@ class NPCAnimationController {
       }
 
     }
+
+    // if (this.gameview.currentAnimation) {
+    //   console.log(1)
+    // }
     this.gameview.renderNPCBlock({
       writer: this.gameview.ntx,
       imgData: this.gameview.npcRenderData[name].data[frameIndex],
@@ -1089,6 +1131,7 @@ class Animation {
   }
 
   animate() {
+    const gameview = this.controller.gameview;
     for (const npc in this.controller.animationList) {
       if (!tempAnimationDone.includes(npc)) {
         continue;
@@ -1106,7 +1149,20 @@ class Animation {
       if (frames.length <= animate.index) {
         animate.index = 0;
       }
-      
+
+
+      // not good
+      if (gameview.currentAnimation === npc) {
+
+        gameview.renderNPCBlock({
+          writer: document.getElementById("windowanimation").getContext("2d"),
+          imgData: gameview.npcRenderData[npc].data[frames[animate.index]],
+          sx: 0,
+          sy: 0,
+          reverseTexture: gameview.npcRenderData[npc].reverseTexture,
+          num: 6,
+        });
+      }
       // const num = this.controller.gameview.pixelSize;
       // this.controller.gameview.ntx.clearRect(animate.sx, animate.sy, num * 16, num * 16);
       // this.gameview.ntx.clearRect(sx, sy, 1)
@@ -1156,7 +1212,32 @@ class Shadow {
 
   blocked(x, y) {
     // here
-    return x < 0 || y < 0 || x >= this.width || y >= this.height || (this.map[y][x].type !== Block.FLOOR && !this.map[y][x].lightPass);
+    const blocked = x < 0 || y < 0 || x >= this.width || y >= this.height;
+    if (blocked) {
+      return true;
+    }
+
+    // ...bro
+    const lightPass = this.map[y][x].lightPass;
+    return !lightPass;
+    // const isFloor = this.map[y][x].type === Block.FLOOR;
+    // if (!lightPass && isFloor) {
+    //   return true;
+    // }
+    // if (lightPass && !isFloor) {
+    //   return false;
+    // }
+    // if (!lightPass && !isFloor) {
+    //   return true;
+    // }
+    // if (!lightPass && isFloor) {
+    //   return true;
+    // }
+    
+    
+
+    // return !lightPass;
+    // return this.map[y][x].lightPass;
   }
 
   
