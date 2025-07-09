@@ -21,19 +21,19 @@ class GameCore {
   npcClickHandler({to}) {
     // const player = this.player;
     const name = this.getNPC(to).name;
-    // console.log(name)
-    if (!tempTextDone.includes(name)) {
-      return;
-    }
     const text = npcMap[name].text;
     this.game.gameview.currentAnimation = name;
     this.game.gameview.renderWindow(text);
+    this.game.gameview.yell(text);
+    
+
 
     
 
   }
 
   blockClickHandler({to}) {
+    // console.log(1)
     this.multiMove(this.pathFinder({
       from: this.player,
       to,
@@ -61,7 +61,7 @@ class GameCore {
       for (const coor of toBeFind) {
         const [x, y] = coor;
         const toFind = [[x + 1, y], [x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 1], [x - 1, y + 1]].filter((c) => {
-          return this.getBlock(c)?.type === Block.FLOOR && !this.getNPC(c) && !pathMap[c[1]][c[0]];
+          return this.getBlock(c)?.type === Block.FLOOR && ((to[0] === c[0] && to[1] === c[1]) ? true : !this.getNPC(c)) && !pathMap[c[1]][c[0]];
         });
 
         for (const c of toFind) {
@@ -96,6 +96,7 @@ class GameCore {
   }
 
   async multiMove(move) {
+    const click = this.game.phone.click;
 
     if (move.length === 1) {
       this.game.gameview.move(move[0]);
@@ -105,11 +106,11 @@ class GameCore {
     let stop = false;
     const stopCallback = (event) => {
       stop = true;
-      document.getElementById("canvasback").removeEventListener("click", stopCallback);
-      document.getElementById("canvasback").addEventListener("click", this.game.gameview.mapClickHandler);
+      document.getElementById("canvasback").removeEventListener(click, stopCallback);
+      document.getElementById("canvasback").addEventListener(click, this.game.gameview.mapClickHandler);
     };
-    document.getElementById("canvasback").addEventListener("click", stopCallback);
-    document.getElementById("canvasback").removeEventListener("click", this.game.gameview.mapClickHandler);
+    document.getElementById("canvasback").addEventListener(click, stopCallback);
+    document.getElementById("canvasback").removeEventListener(click, this.game.gameview.mapClickHandler);
     const next = (m) => {
       return new Promise((resolve, reject) => {
         // let hz = 0;
@@ -159,8 +160,8 @@ class GameCore {
     }
     // requestAnimationFrame(() => {});
     
-    document.getElementById("canvasback").removeEventListener("click", stopCallback);
-    document.getElementById("canvasback").addEventListener("click", this.game.gameview.mapClickHandler);
+    document.getElementById("canvasback").removeEventListener(click, stopCallback);
+    document.getElementById("canvasback").addEventListener(click, this.game.gameview.mapClickHandler);
   }
 
   move(move) {

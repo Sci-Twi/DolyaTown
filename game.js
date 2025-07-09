@@ -2,12 +2,37 @@ class Game {
   gameview;
   gamecore;
   lightMode;
+  phone;
   constructor(map) {
+    
     this.gamecore = new GameCore(this);
     this.gameview = new GameView(this);
     this.lightMode = false;
+    this.phone = {
+      isPhone: false,
+      click: "click",
+    }
+    
+    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      this.phone.isPhone = true;
+      this.phone.click = "touchstart";
+      // this.gameview.initTouch();
+      this.gameview.initResizeButton();
+      
+      // this.gameview.initResize();
+
+    } else {
+      this.gameview.initResize();
+
+      // this.gameview.initResizeButton();
+    }
+
+    
+    // this.gameview.initResize();
+
+
+    // this.gameview.initPhone();
     this.gamecore.initMap(map);
-    this.gameview.initResize();
     this.gameview.initKeyboard();
     this.gameview.initClick();
     this.gameview.initWindow();
@@ -15,6 +40,11 @@ class Game {
     // this.gameview.initDrag();
 
     this.gameview.renderGame();
+    this.gameview.initHz();
+
     // this.gameview.animatePlayer();
   }
+
+  // initPhone() {
+  // }
 }

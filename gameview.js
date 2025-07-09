@@ -21,7 +21,9 @@ class GameView {
   npcRenderData;
   #tempCanvas;
   #tempCtx;
-  #dragging;
+
+  hzTimes;
+  // #dragging;
   // #resizeData;
   sight;
   #NPCAnimation;
@@ -37,6 +39,8 @@ class GameView {
     this.#camera = [];
     this.#camera[0] = player[0];
     this.#camera[1] = player[1];
+    // hz / 60
+    this.hzTimes = 1;
 
     // this.#resizeData = {};
     this.#NPCAnimation = new NPCAnimationController({
@@ -107,15 +111,20 @@ class GameView {
     // windowCanvas.height = shortSide - num * 2 + "px";
 
   }
+  
 
+  yell({name, yells}) {
+    // if (!tempTextDone.includes(name)) {
+    //   return;
+    // }
+    // const yells = text.yells;
+    document.getElementById("yell").innerText = `${name}： ${yells[Math.floor(Math.random() * yells.length)]}`;  
+  }
 
   renderWindow({name, description}) {
 
     // shit codes here
     const windowCanvas = document.getElementById("windowcanvas");
-    // windowCanvas.width = Math.floor(this.#mapCanvas.width * 0.8);
-    // windowCanvas.height = Math.floor(this.#mapCanvas.height * 0.6);
-    
     const wtx = windowCanvas.getContext("2d");
     // wtx.fillStyle = "white";
     // wtx.fillRect(0, 0, windowCanvas.width, windowCanvas.height);
@@ -134,6 +143,15 @@ class GameView {
 
     document.getElementById("windowdescription").innerText = description;
     document.getElementById("windowname").innerText = name;
+
+    // silly b, so many hardcoded shit
+    if (name === "hmdzl001") {
+      if (this.game.phone.isPhone) {
+        document.getElementById("windowdescription").innerText += "\n\n点击交互 右上角缩放";
+      } else {
+        document.getElementById("windowdescription").innerText += "\n\nwsad移动视角 点击交互 ↑↓←→行走 鼠标滚轮缩放";
+      }
+    }
 
 
     const longSide = windowCanvas.width - num * 5 * 2;
@@ -206,12 +224,11 @@ class GameView {
     renderShortSide(0, 5 * num);
     renderShortSide(5 * num + longSide, 5 * num);
 
-
-
+    const click = this.game.phone.click;
 
     // document.getElementById("npcwindow").style.display = "block";
-    document.getElementById("canvasback").removeEventListener("click", this.mapClickHandler);
-    document.getElementById("canvasback").addEventListener("click", this.removeWindowHandler);
+    document.getElementById("canvasback").removeEventListener(click, this.mapClickHandler);
+    document.getElementById("canvasback").addEventListener(click, this.removeWindowHandler);
   }
 
   removeWindowHandler = () => {
@@ -225,9 +242,9 @@ class GameView {
     // document.getElementById("canvasback").addEventListener("click", this.mapClickHandler);
     document.getElementById("windowanimation").getContext("2d").clearRect(0, 0, 96, 96);
     this.currentAnimation = null;
-    console.log(this)
+    // console.log(this)
     this.initClick();
-    document.getElementById("canvasback").removeEventListener("click", this.removeWindowHandler);
+    document.getElementById("canvasback").removeEventListener(this.game.phone.click, this.removeWindowHandler);
 
   }
 
@@ -242,7 +259,7 @@ class GameView {
 
 
   initMap() {
-    [1, 2, 3].map((num) => {
+    [1, 2, 3, 4, 8].map((num) => {
 
       const blockCanvas = document.createElement("canvas");
       blockCanvas.style.display = "none";
@@ -496,10 +513,11 @@ class GameView {
         
         let isLit = this.currentShadow.isLit(x, y) && this.currentShadow.isLit(x, y - 1) && this.currentShadow.isLit(x - 1, y) && this.currentShadow.isLit(x - 1, y - 1);
         if (isLit) {
-          b1.isVisited = true;
-          b2.isVisited = true;
-          b3.isVisited = true;
-          b4.isVisited = true;
+          // ugly
+          if (b1) b1.isVisited = true;
+          if (b2) b2.isVisited = true;
+          if (b3) b3.isVisited = true;
+          if (b4) b4.isVisited = true;
           c = visible;
 
           // this.renderShadowBlock({
@@ -516,16 +534,12 @@ class GameView {
             }
           }
         }
-        // const index = (y - (coorStartY - 1)) * (widthNumber + this.#camera[0] + 2 - (coorStartY - 1)) + (x - (coorStartX - 1));
-        // console.log((y - coorStartY) * (widthNumber + this.#camera[0] + 1 - coorStartX), (x - coorStartX))
-        // console.log(index)
+        
         shadowArray.data[index * 4] = c[0];
         shadowArray.data[index * 4 + 1] = c[1];
         shadowArray.data[index * 4 + 2] = c[2];
         shadowArray.data[index * 4 + 3] = c[3];
-        
-
-        // console.log(x, y)
+      
       }
     }
     // this.stx.drawImage(shadowArray, startX, startY);
@@ -624,10 +638,15 @@ class GameView {
         }
 
         this.#NPCAnimation.add({
-          name: npc.texture,
+          name: npc.name,
+          texture: npc.texture,
           sx: (x - coorStartX) * 16 * num + startX,
           sy: (y - coorStartY) * 16 * num + startY,
         });
+
+
+        // if ()
+
         // if (npc.name === "hmdzl001") {
         //   // continue;
         // }
@@ -650,7 +669,7 @@ class GameView {
   }
 
   renderGame() {
-    if (this.pixelSize <= 3) {
+    if (this.pixelSize <= 8) {
       this.renderMapByCut();
     } else {
       this.renderMapByWrite();
@@ -804,21 +823,25 @@ class GameView {
 
 
   resize(isBigger) {
-
+    const num = this.pixelSize;
     // this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
 
     if (isBigger) {
-      if (this.pixelSize < 4) {
+      if (num < 4) {
         this.pixelSize += 1;
-      } else if (this.pixelSize < 8) {
-        this.pixelSize += 2;
+      } else if (num < 8) {
+        this.pixelSize += 4;
+      } else if (num < 16){
+        this.pixelSize += 4;
       } else {
         return;
       }
     } else {
-      if (this.pixelSize > 4) {
-        this.pixelSize -= 2;
-      } else if (this.pixelSize > 1) {
+      if (num > 8) {
+        this.pixelSize -= 4;
+      } else if (num > 4) {
+        this.pixelSize -= 4;
+      } else if (num > 1) {
         this.pixelSize -= 1;
       } else {
         return;
@@ -887,6 +910,20 @@ class GameView {
     this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
   }
 
+  initResizeButton() {
+    const button = document.getElementById("resizeButton");
+    button.style.display = "block";
+    const pixleTypes = [1, 2, 3, 4, 8, 12, 28];
+    button.addEventListener("input", () => {
+      this.pixelSize = pixleTypes[button.value];
+      this.renderGame();
+    });
+
+    // button.style.display = "block";
+    // button.setAttribute("type", "range");
+    
+  }
+
 
   initResize() {
     document.getElementById("canvasback").addEventListener("wheel", (event) => {
@@ -931,7 +968,7 @@ class GameView {
   }
 
   initClick() {
-    document.getElementById("canvasback").addEventListener("click", this.mapClickHandler);
+    document.getElementById("canvasback").addEventListener(this.game.phone.click, this.mapClickHandler);
 
   }
 
@@ -947,8 +984,16 @@ class GameView {
     const num = this.pixelSize * 16;
 
     // bro...
-    const biasX = Math.floor((event.clientX - midX - num / 2) / num) + 1;
-    const biasY = Math.floor((event.clientY - midY - num / 2) / num) + 1;
+    // console.log(event)
+    let clientX = event.clientX;
+    let clientY = event.clientY;
+    if (this.game.phone.isPhone) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    }
+    
+    const biasX = Math.floor((clientX - midX - num / 2) / num) + 1;
+    const biasY = Math.floor((clientY - midY - num / 2) / num) + 1;
 
     const [cx, cy] = this.#camera;
     const tobe = [cx + biasX, cy + biasY];
@@ -956,14 +1001,18 @@ class GameView {
     const block = gamecore.getBlock(tobe);
 
     const isBlockEmpty = block?.type === Block.FLOOR;
-    const isNPCEmpty = !gamecore.getNPC(tobe);
-  
-    if (!isNPCEmpty) {
-      gamecore.npcClickHandler({to: [cx + biasX, cy + biasY]});
-      return;
+    if (this.currentShadow.isLit(cx + biasX, cy + biasY)) {
+      const isNPCEmpty = !gamecore.getNPC(tobe);
+      if (!isNPCEmpty) {
+        gamecore.npcClickHandler({to: [cx + biasX, cy + biasY]});
+        return;
+      }
     }
 
+    
+
     if (isBlockEmpty) {
+      // console.log(block)
       if (!block.isVisited && !this.game.lightMode) {
         return;
       }
@@ -982,9 +1031,34 @@ class GameView {
   }
 
 
+  initHz() {
+    // let stop = false;
+    // let hz = 0;
+
+    let now;
+    const past = performance.now();
+    requestAnimationFrame(() => {
+      now = performance.now();
+      // considering about performance...maybe round
+      let onehz = (1000 / (now - past) / 60);
+      // if (onehz === 0) {
+        // onehz = 1;
+      // }
+      // if (onehz > 4) {
+      //   onehz = 4;
+      // }
+      this.hzTimes = onehz;
+    });
+
+  }
+
   // to be deleted
   // tempStop() {
   //   this.#NPCAnimation.stop();
+  // }
+
+  // initPhone() {
+  //   // alert(navigator.userAgent)
   // }
 
   // sadly, no dragging for now
@@ -1067,45 +1141,57 @@ class NPCAnimationController {
   //   // const preSet = new Set(preAnimation.keys());
   //   // const nowSet = new Set(this.animationList.keys());
   // }
-  add({name, sx, sy}) {
+  add({name, texture, sx, sy}) {
     let animate = this.animationList[name];
+    // console.log()
     if (!animate) {
-      this.animationList[name] = {sx, sy, index: 0, hz: 0, dontdelete: true};
+      this.animationList[name] = {texture, sx, sy, index: 0, hz: 0, dontdelete: true};
     } else {
-      if (tempAnimationDone.includes(name)) {
-        animate.sx = sx;
-        animate.sy = sy;
-        animate.dontdelete = true;
-      } else {
-        this.animationList[name] = {sx, sy, index: 0, hz: 0, dontdelete: true};
-      }
+      // if (tempAnimationDone.includes(name)) {
+      animate.sx = sx;
+      animate.sy = sy;
+      animate.dontdelete = true;
+      // } else {
+      //   this.animationList[name] = {texture, sx, sy, index: 0, hz: 0, dontdelete: true};
+      // }
     }
 
     animate = this.animationList[name];
     let frameIndex = 0;
     
-    if (tempAnimationDone.includes(name)) {
+    // if (tempAnimationDone.includes(name)) {
       // not good
-      const frames = npcMap[name].animation.idle.frames;
+    const frames = npcMap[texture].animation.idle.frames;
 
-      // imgData = this.gameview.renderData[name][frames[animate.index]];
-      if (frames.length > animate.index) {
-        frameIndex = frames[animate.index];
-      }
-
+    // imgData = this.gameview.renderData[name][frames[animate.index]];
+    if (frames.length > animate.index) {
+      frameIndex = frames[animate.index];
     }
+
+    // }
 
     // if (this.gameview.currentAnimation) {
     //   console.log(1)
     // }
-    this.gameview.renderNPCBlock({
-      writer: this.gameview.ntx,
-      imgData: this.gameview.npcRenderData[name].data[frameIndex],
+    const gameview = this.gameview;
+    gameview.renderNPCBlock({
+      writer: gameview.ntx,
+      imgData: gameview.npcRenderData[texture].data[frameIndex],
       sx,
       sy,
-      reverseTexture: this.gameview.npcRenderData[name].reverseTexture,
-      num: this.gameview.pixelSize,
+      reverseTexture: gameview.npcRenderData[texture].reverseTexture,
+      num: gameview.pixelSize,
     });
+
+    
+    // this.gameview.renderNPCBlock({
+    //   writer: this.gameview.ntx,
+    //   imgData: this.gameview.npcRenderData[texture].data[frameIndex],
+    //   sx,
+    //   sy,
+    //   reverseTexture: this.gameview.npcRenderData[texture].reverseTexture,
+    //   num: this.gameview.pixelSize,
+    // });
     
     
     // this.animationList.push({name, sx, sy, index: 0, hz: 0});
@@ -1132,46 +1218,53 @@ class Animation {
 
   animate() {
     const gameview = this.controller.gameview;
+
     for (const npc in this.controller.animationList) {
-      if (!tempAnimationDone.includes(npc)) {
-        continue;
-      }
+      
+      
+      // if (!tempAnimationDone.includes(npc)) {
+      //   continue;
+      // }
       // const npc = this.animationList[animate];
       const animate = this.controller.animationList[npc];
-      const hz = npcMap[npc].animation.idle.hz;
-      if (animate.hz < hz) {
+      const texture = animate.texture;
+      const hz = 60 / npcMap[texture].animation.idle.hz;
+      const frames = npcMap[texture].animation.idle.frames;
+
+
+
+      if (animate.hz < hz * gameview.hzTimes) {
         animate.hz += 1;
         continue;
       }
       animate.hz = 0;
-      const frames = npcMap[npc].animation.idle.frames;
       
       if (frames.length <= animate.index) {
         animate.index = 0;
       }
 
-
       // not good
-      if (gameview.currentAnimation === npc) {
-
+      if (gameview.currentAnimation === texture) {
         gameview.renderNPCBlock({
           writer: document.getElementById("windowanimation").getContext("2d"),
-          imgData: gameview.npcRenderData[npc].data[frames[animate.index]],
+          imgData: gameview.npcRenderData[texture].data[frames[animate.index]],
           sx: 0,
           sy: 0,
-          reverseTexture: gameview.npcRenderData[npc].reverseTexture,
+          reverseTexture: gameview.npcRenderData[texture].reverseTexture,
           num: 6,
         });
       }
+
+      
       // const num = this.controller.gameview.pixelSize;
       // this.controller.gameview.ntx.clearRect(animate.sx, animate.sy, num * 16, num * 16);
       // this.gameview.ntx.clearRect(sx, sy, 1)
       this.controller.gameview.renderNPCBlock({
         writer: this.controller.gameview.ntx,
-        imgData: this.controller.gameview.npcRenderData[npc].data[frames[animate.index]],
+        imgData: this.controller.gameview.npcRenderData[texture].data[frames[animate.index]],
         sx: animate.sx,
         sy: animate.sy,
-        reverseTexture: this.controller.gameview.npcRenderData[npc].reverseTexture,
+        reverseTexture: this.controller.gameview.npcRenderData[texture].reverseTexture,
         num: this.controller.gameview.pixelSize,
       });
       animate.index += 1;
