@@ -316,7 +316,7 @@ const npcMap = {
     name: "flyling",
     animation: {
       idle: {
-        frames: [0, 11, 11, 12, 12, 12, 13, 13, 13],
+        frames: [0, 1, 1, 2, 2, 2, 3, 3, 3],
         hz: 3
       }
     },

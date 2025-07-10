@@ -151,6 +151,7 @@ class GameView {
       } else {
         document.getElementById("windowdescription").innerText += "\n\nwsad移动视角 点击交互 ↑↓←→行走 鼠标滚轮缩放";
       }
+      document.getElementById("windowdescription").innerText += "\n项目地址：https://github.com/Sci-Twi/DolyaTown";
     }
 
 
