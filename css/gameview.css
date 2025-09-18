@@ -27,10 +27,7 @@
 
 
 #npcwindow {
-  /* display: none; */
   position: absolute;
-  /* left: 0;
-  top: 0; */
 }
 
 #windowcanvas {

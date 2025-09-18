@@ -1,6 +1,6 @@
+import {Block, blockMap, npcMap} from "/js/temp/dolya.js";
 
-
-class GameCore {
+export default class GameCore {
   game;
   worldSize;
   blockmap;
@@ -14,26 +14,15 @@ class GameCore {
     this.sight = 7;
   }
 
-  // getMap() {
-  //   return this.blockmap;
-  // }
-
   npcClickHandler({to}) {
-    // const player = this.player;
     const name = this.getNPC(to).name;
     const text = npcMap[name].text;
     this.game.gameview.currentAnimation = name;
     this.game.gameview.renderWindow(text);
     this.game.gameview.yell(text);
-    
-
-
-    
-
   }
 
   blockClickHandler({to}) {
-    // console.log(1)
     this.multiMove(this.pathFinder({
       from: this.player,
       to,
@@ -113,14 +102,6 @@ class GameCore {
     document.getElementById("canvasback").removeEventListener(click, this.game.gameview.mapClickHandler);
     const next = (m) => {
       return new Promise((resolve, reject) => {
-        // let hz = 0;
-        // requestAnimationFrame(() => {
-          
-        // });
-        // while (hz < 10) {
-
-        // }
-
 
         // wtf
         setTimeout(() => {
@@ -130,11 +111,6 @@ class GameCore {
       });
     }
 
-    // if (move.length === 1) {
-      
-    // } else {
-
-    // }
 
     let firstTime = true;
 
@@ -152,13 +128,7 @@ class GameCore {
         break;
       }
       await next(m);
-      // if (!stop) {
-      // requestAnimationFrame(() => {
-      //   // this.game.gameview.move(m);
-      // });
-      // }
     }
-    // requestAnimationFrame(() => {});
     
     document.getElementById("canvasback").removeEventListener(click, stopCallback);
     document.getElementById("canvasback").addEventListener(click, this.game.gameview.mapClickHandler);
@@ -201,8 +171,6 @@ class GameCore {
     }
     return this.#npcmap[y][x];
   }
-  // serMap(map) {
-  // }
   
   initMap(map) {
     this.game.gameview.initRenderData();
@@ -230,46 +198,14 @@ class GameCore {
 }
 
 
-class Block {
-  type;
-  name;
-  coor;
-  isVisited;
-
-  // static NULL = -1;
-  static FLOOR = 0;
-  static WALL = 1;
-  // static BUILDING = 2;
-
-  constructor({type, name, lightPass}) {
-    this.type = type;
-    this.name = name;
-    this.isVisited = false;
-    this.lightPass = !!lightPass;
-  }
-}
 
 class NPC {
   name;
   texture;
-  // frames;
 
   // dont code like that
   constructor(realName, {name}) {
     this.name = realName;
     this.texture = name;
-    // this.frames = frames;
   }
 }
-
-
-// const textureMap = new Map();
-// textureMap.set("ground0");
-
-// class PathFinder {
-//   constructor() {
-//     this.pathMap = new Array(48);
-//     this.pathMap.fill([]);
-
-//   }
-// }

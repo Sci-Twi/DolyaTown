@@ -1,3 +1,23 @@
+export {blockMap, npcMap, map_dolya_block, Block};
+
+class Block {
+  type;
+  name;
+  coor;
+  isVisited;
+
+  static FLOOR = 0;
+  static WALL = 1;
+
+  constructor({type, name, lightPass}) {
+    this.type = type;
+    this.name = name;
+    this.isVisited = false;
+    this.lightPass = !!lightPass;
+  }
+}
+
+
 const blockMap = {
   "W": {name:"wall_ground", type: Block.WALL},
   "T": {name:"shrub", type: Block.FLOOR},
@@ -1215,10 +1235,6 @@ const npcMap = {
     }
   },
 };
-// const textMap = {
-//   // hmdzl001: ["", ""],
-// };
-
 // load texture
 for (const block in blockMap) {
   const textureName = blockMap[block].name;
