@@ -1,4 +1,4 @@
-import {Block, blockMap, npcMap} from "/js/temp/dolya.js";
+import {Block, blockMap, npcMap} from "./dolya.js";
 
 export default class GameCore {
   game;

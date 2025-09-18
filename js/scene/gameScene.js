@@ -1,5 +1,5 @@
-import GameCore from "/js/temp/gamecore.js";
-import GameView from "/js/temp/gameview.js";
+import GameCore from "../temp/gamecore.js";
+import GameView from "../temp/gameview.js";
 
 export default class Game {
   gameview;

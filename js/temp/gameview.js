@@ -1,5 +1,6 @@
 // export {GameView};
-import {blockMap, npcMap, Block} from "/js/temp/dolya.js";
+import {blockMap, npcMap, Block} from "./dolya.js";
+import {screen} from "../service/screen.js";
 
 export default class GameView {
   game;
@@ -50,9 +51,10 @@ export default class GameView {
     
 
     
-    this.#mapCanvas = document.getElementById("block");
-    this.#mapCanvas.width = window.innerWidth % 2 === 0 ? window.innerWidth : window.innerWidth + 1;
-    this.#mapCanvas.height = window.innerHeight % 2 === 0 ? window.innerHeight : window.innerHeight + 1;
+    // this.#mapCanvas = document.getElementById("block");
+    this.#mapCanvas = screen.getScreen();
+    // this.#mapCanvas.width = window.innerWidth % 2 === 0 ? window.innerWidth : window.innerWidth + 1;
+    // this.#mapCanvas.height = window.innerHeight % 2 === 0 ? window.innerHeight : window.innerHeight + 1;
     
     this.#npcCanvas = document.getElementById("npc");
     this.#npcCanvas.width = this.#mapCanvas.width;
