@@ -1,6 +1,8 @@
 // export {GameView};
 import {blockMap, npcMap, Block} from "./dolya.js";
-import {screen} from "../service/screen.js";
+import {screen} from "../tools/screen.js";
+import { textureCache } from "../tools/textureCache.js";
+import { assets } from "../assets.js";
 
 export default class GameView {
   game;
@@ -244,7 +246,8 @@ export default class GameView {
         }
         this.renderSingleBlockByS({
           ctx,
-          imgData: this.mapRenderData[block.name],
+          imgData: textureCache.getTexture(block.name),
+          // imgData: this.mapRenderData[block.name],
           pixelSize,
           sx: x * 16 * pixelSize,
           sy: y * 16 * pixelSize,
@@ -298,14 +301,11 @@ export default class GameView {
         const sx = (x - coorStartX) * 16 * num + startX;
         const sy = (y - coorStartY) * 16 * num + startY;
         this.renderMapBlock({
-          imgData: this.mapRenderData[block.name],
+          // imgData: this.mapRenderData[block.name],
+          imgData: textureCache.getTexture(block.name),
           sx,
           sy,
         });
-
-
-
-
       }
     }
   }
@@ -384,7 +384,6 @@ export default class GameView {
             if (!b1.isVisited || !b2.isVisited || !b3.isVisited || !b4.isVisited) {
               c = invisible;
             } else {
-              
               c = visited;
             }
           }
@@ -539,22 +538,23 @@ export default class GameView {
     this.renderGame();
   }
 
-  moveView(move) { // [x, y]
+  // moveView(move) {
+  //   // [x, y]
 
-    const [originX, originY] = this.#camera;
-    const toX = move[0] + originX;
-    const toY = move[1] + originY;
+  //   const [originX, originY] = this.#camera;
+  //   const toX = move[0] + originX;
+  //   const toY = move[1] + originY;
 
-    if (toX <= 0 || toX > 48 || toY <= 0 || toY > 48) {
-      return;
-    }
+  //   if (toX <= 0 || toX > 48 || toY <= 0 || toY > 48) {
+  //     return;
+  //   }
 
-    this.#camera[0] = toX;
-    this.#camera[1] = toY;
+  //   this.#camera[0] = toX;
+  //   this.#camera[1] = toY;
 
-    this.renderGame();
+  //   this.renderGame();
 
-  }
+  // }
 
 
   resize(isBigger) {
@@ -587,15 +587,21 @@ export default class GameView {
 
 
   initRenderData() {
-    for (const block in blockMap) {
-      const textureName = blockMap[block].name;
-      this.#tempCtx.drawImage(document.getElementById("water0"), 0, 0);
-      const image = document.getElementById(textureName);
-      this.#tempCtx.drawImage(image, 0, 0);
-      this.mapRenderData[textureName] = this.#tempCtx.getImageData(0, 0, 16, 16);
-    }
+    
+    
+    // blockMap.keys()
+    // for (const block in blockMap) {
+      // textureCache.loadTextures(["wall_ground", "shrub"]);
+      // const textureName = blockMap[block].name;
+      // this.#tempCtx.drawImage(document.getElementById("water0"), 0, 0);
+      // const image = document.getElementById(textureName);
+      // this.#tempCtx.drawImage(image, 0, 0);
+      // this.mapRenderData[textureName] = this.#tempCtx.getImageData(0, 0, 16, 16);
+    // }
+    // console.log(this)
 
-    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
+
+    // this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
 
     for (const npc in npcMap) {
       const textureName = npcMap[npc].name;
@@ -636,41 +642,9 @@ export default class GameView {
     });
   }
 
-  initKeyboard() {
-    document.addEventListener("keydown", (event) => {
-      if (event.repeat) {
-        return;
-      }
-      switch (event.key.toLowerCase()) {
-        case "w":
-          this.moveView([0, -1]);
-          break;
-        case "s":
-          this.moveView([0, 1]);
-          break;
-        case "a":
-          this.moveView([-1, 0]);
-          break;
-        case "d":
-          this.moveView([1, 0]);
-          break;
-        case "arrowup":
-          this.move([0, -1]);
-          break;
-        case "arrowdown":
-          this.move([0, 1]);
-          break;
-        case "arrowleft":
-          this.move([-1, 0]);
-          break;
-        case "arrowright":
-          this.move([1, 0]);
-          break;
-        default:
-          return;
-      }
-    });
-  }
+  // initKeyboard() {
+  //   // document.addEventListener("keydown", );
+  // }
 
   initClick() {
     document.getElementById("canvasback").addEventListener(this.game.phone.click, this.mapClickHandler);
@@ -717,7 +691,6 @@ export default class GameView {
       gamecore.blockClickHandler({to: [cx + biasX, cy + biasY]});
       return;
     }
-
   }
 
 

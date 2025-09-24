@@ -1,8 +1,19 @@
 import GameCore from "../temp/gamecore.js";
 import GameView from "../temp/gameview.js";
+import {screen} from "../tools/screen.js";
+import keyboard from "../keyboard.js";
+import { map_dolya_block } from "../temp/dolya.js";
 
-export default class Game {
+export const gameScene = {
+  tiles: null,
+
+  create,
+
+};
+
+class GameScene {
   gameview;
+  // dungeon.java
   gamecore;
   lightMode;
   phone;
@@ -15,7 +26,7 @@ export default class Game {
       click: "click",
     }
     
-    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    if (screen.isPhone) {
       this.phone.isPhone = true;
       this.phone.click = "touchstart";
       this.gameview.initResizeButton();
@@ -23,11 +34,19 @@ export default class Game {
       this.gameview.initResize();
     }
     this.gamecore.initMap(map);
-    this.gameview.initKeyboard();
+    keyboard.addListener("gameScene");
     this.gameview.initClick();
     this.gameview.initWindow();
     this.gameview.renderGame();
     this.gameview.initHz();
   }
+}
+
+function create() {
+
+  new GameScene(map_dolya_block);
+  // console.log(1)
+  // this
+  // this.tiles = new TilesMap();
 }
 

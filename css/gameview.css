@@ -61,7 +61,7 @@
 
 
 .texture {
-  display: none;
+  /* display: none; */
 }
 
 #resizeButton {
