@@ -1,14 +1,16 @@
 // export {GameView};
-import {blockMap, npcMap, Block} from "./dolya.js";
-import {screen} from "../tools/screen.js";
+import { npcMap, Block } from "./dolya.js";
+import { screen } from "../tools/screen.js";
 import { textureCache } from "../tools/textureCache.js";
-import { assets } from "../assets.js";
+// import { assets } from "../assets.js";
+import { debug } from "../tools/debug.js";
+import { Shadow } from "../mechanics/shadow.js";
 
 export default class GameView {
   game;
   pixelSize;
   #camera;
-  #mapCanvas;
+  mapCanvas;
   mtx;
 
   #npcCanvas;
@@ -19,7 +21,7 @@ export default class GameView {
   #bctx;
 
   currentShadow;
-  mapRenderData;
+  // mapRenderData;
   npcRenderData;
   #tempCanvas;
   #tempCtx;
@@ -53,151 +55,35 @@ export default class GameView {
     
 
     
-    // this.#mapCanvas = document.getElementById("block");
-    this.#mapCanvas = screen.getScreen();
-    // this.#mapCanvas.width = window.innerWidth % 2 === 0 ? window.innerWidth : window.innerWidth + 1;
-    // this.#mapCanvas.height = window.innerHeight % 2 === 0 ? window.innerHeight : window.innerHeight + 1;
+    this.mapCanvas = screen.getScreen();
+
     
     this.#npcCanvas = document.getElementById("npc");
-    this.#npcCanvas.width = this.#mapCanvas.width;
-    this.#npcCanvas.height = this.#mapCanvas.height;
+    this.#npcCanvas.width = this.mapCanvas.width;
+    this.#npcCanvas.height = this.mapCanvas.height;
 
     
     this.shadowCanvas = document.getElementById("shadow");
-    this.shadowCanvas.width = this.#mapCanvas.width;
-    this.shadowCanvas.height = this.#mapCanvas.height;
+    this.shadowCanvas.width = this.mapCanvas.width;
+    this.shadowCanvas.height = this.mapCanvas.height;
 
-    this.mtx = this.#mapCanvas.getContext("2d");
+    this.mtx = this.mapCanvas.getContext("2d");
     this.ntx = this.#npcCanvas.getContext("2d");
     this.stx = this.shadowCanvas.getContext("2d");
     this.#tempCanvas = document.getElementById("temp");
     this.#tempCtx = this.#tempCanvas.getContext("2d");
-    this.mapRenderData = {};
+    // this.mapRenderData = {};
     this.npcRenderData = {};
   }
 
-  initWindow() {
-    const windowCanvas = document.getElementById("windowcanvas");
-    windowCanvas.width = Math.floor(this.#mapCanvas.width * 0.8);
-    windowCanvas.style.left = Math.floor(this.#mapCanvas.width * 0.1) + "px";
-
-    const num = 6;
-    const longSide = windowCanvas.width - num * 5 * 2;
-
-    const windowName = document.getElementById("windowname");
-    windowName.style.left = num * 18 + "px";
-    windowName.style.fontSize = num * 9 + "px";
-    
-    const windowContent = document.getElementById("windowcontent");
-    windowContent.style.width = longSide - num * 2 + "px";
-    windowContent.style.left = Math.floor(this.#mapCanvas.width * 0.1) + num * 6 + "px";
-
-    
-    const windowAnimation = document.getElementById("windowanimation");
-    windowAnimation.width = num * 16;
-    windowAnimation.height = num * 16;
-
-  }
+  
   
 
   yell({name, yells}) {
     document.getElementById("yell").innerText = `${name}： ${yells[Math.floor(Math.random() * yells.length)]}`;  
   }
 
-  renderWindow({name, description}) {
-
-    // shit codes here
-    const windowCanvas = document.getElementById("windowcanvas");
-    const wtx = windowCanvas.getContext("2d");
   
-    const num = 6;
-
-
-
-    document.getElementById("windowdescription").innerText = description;
-    document.getElementById("windowname").innerText = name;
-
-    // silly b, so many hardcoded shit
-    if (name === "hmdzl001") {
-      if (this.game.phone.isPhone) {
-        document.getElementById("windowdescription").innerText += "\n\n点击交互 右上角缩放";
-      } else {
-        document.getElementById("windowdescription").innerText += "\n\nwsad移动视角 点击交互 ↑↓←→行走 鼠标滚轮缩放";
-      }
-      document.getElementById("windowdescription").innerText += "\n项目地址：https://github.com/Sci-Twi/DolyaTown";
-    }
-
-
-    const longSide = windowCanvas.width - num * 5 * 2;
-    const shortSide = Math.ceil(document.getElementById("windowdescription").offsetHeight) + num * 18;
-    windowCanvas.height = shortSide + num * 5 * 2;
-    
-
-    windowCanvas.style.top = Math.floor((this.#mapCanvas.height - (shortSide + num * 5 * 2)) / 2) + "px";
-
-
-    const windowContent = document.getElementById("windowcontent");
-    windowContent.style.height = shortSide - num * 2 + "px";
-    windowContent.style.top = windowCanvas.offsetTop + num * 6 + "px";
-    
-    // do we really need this?
-
-    const renderMid = (sx, sy) => {
-      wtx.fillStyle = "#393B35";
-      wtx.fillRect(sx, sy, longSide + num * 2, shortSide + num * 2);
-      wtx.fillStyle = "#3B3D37";
-      wtx.fillRect(sx + num, sy + num, longSide, shortSide);
-      wtx.fillStyle = "#3E4039";
-      wtx.fillRect(sx + num * 2, sy + num * 2, longSide - num * 2, shortSide - num * 2);
-    };
-
-    const renderAngle = (sx, sy) => {
-      wtx.fillStyle = "#63665C";
-      wtx.fillRect(sx, sy, 5 * num, 5 * num);
-      wtx.fillStyle = "#A0A695";
-      wtx.fillRect(sx, sy, 4 * num, 4 * num);
-      wtx.fillStyle = "#63665C";
-      wtx.fillRect(sx + num, sy + num, 2 * num, 2 * num);
-      wtx.fillStyle = "#7B8073";
-      wtx.fillRect(sx, sy + 4 * num, num, num);
-      wtx.fillRect(sx + num, sy + 3 * num, num, num);
-      wtx.fillRect(sx + 2 * num, sy + 2 * num, num, num);
-      wtx.fillRect(sx + 3 * num, sy + num, num, num);
-      wtx.fillRect(sx + 4 * num, sy, num, num);
-    };
-
-    const renderLongSide = (sx, sy) => {
-      wtx.fillStyle = "#A0A695";
-      wtx.fillRect(sx, sy + num, longSide, num);
-      wtx.fillStyle = "#7B8073";
-      wtx.fillRect(sx, sy + 2 * num, longSide, num);
-      wtx.fillStyle = "#63665C";
-      wtx.fillRect(sx, sy + 3 * num, longSide, num);
-    };
-
-    const renderShortSide = (sx, sy) => {
-      wtx.fillStyle = "#A0A695";
-      wtx.fillRect(sx + num, sy, num, shortSide);
-      wtx.fillStyle = "#7B8073";
-      wtx.fillRect(sx + 2 * num, sy, num, shortSide);
-      wtx.fillStyle = "#63665C";
-      wtx.fillRect(sx + 3 * num, sy, num, shortSide);
-    };
-
-    renderMid(num * 4, num * 4);
-    renderAngle(0, 0);
-    renderAngle(num * 5 + longSide, 0);
-    renderAngle(0, num * 5 + shortSide);
-    renderAngle(num * 5 + longSide, num * 5 + shortSide);
-    renderLongSide(5 * num, 0);
-    renderLongSide(5 * num, 5 * num + shortSide);
-    renderShortSide(0, 5 * num);
-    renderShortSide(5 * num + longSide, 5 * num);
-
-    const click = this.game.phone.click;
-    document.getElementById("canvasback").removeEventListener(click, this.mapClickHandler);
-    document.getElementById("canvasback").addEventListener(click, this.removeWindowHandler);
-  }
 
   removeWindowHandler = () => {
     const windowCanvas = document.getElementById("windowcanvas");
@@ -208,7 +94,7 @@ export default class GameView {
     document.getElementById("windowanimation").getContext("2d").clearRect(0, 0, 96, 96);
     this.currentAnimation = null;
     this.initClick();
-    document.getElementById("canvasback").removeEventListener(this.game.phone.click, this.removeWindowHandler);
+    document.getElementById("canvasback").removeEventListener(screen.clickName, this.removeWindowHandler);
 
   }
 
@@ -262,18 +148,18 @@ export default class GameView {
     const num = this.pixelSize;
     const bctx = this.#bctx[num];
 
-    const sx = this.#camera[0] * 16 * num + 16 / 2 * num - this.#mapCanvas.width / 2;
-    const sy = this.#camera[1] * 16 * num + 16 / 2 * num - this.#mapCanvas.height / 2;
+    const sx = this.#camera[0] * 16 * num + 16 / 2 * num - this.mapCanvas.width / 2;
+    const sy = this.#camera[1] * 16 * num + 16 / 2 * num - this.mapCanvas.height / 2;
 
-    this.mtx.clearRect(0, 0, this.#mapCanvas.width, this.#mapCanvas.height);
-    const mapData = bctx.getImageData(sx, sy, this.#mapCanvas.width, this.#mapCanvas.height);
+    this.mtx.clearRect(0, 0, this.mapCanvas.width, this.mapCanvas.height);
+    const mapData = bctx.getImageData(sx, sy, this.mapCanvas.width, this.mapCanvas.height);
     this.mtx.putImageData(mapData, 0, 0);
 
   }
 
   renderMapByWrite() {
     const num = this.pixelSize;
-    const mapCanvas = this.#mapCanvas;
+    const mapCanvas = this.mapCanvas;
 
     let startX = ((mapCanvas.width - num * 16) / 2) % (num * 16);
     let startY = ((mapCanvas.height - num * 16) / 2) % (num * 16);
@@ -313,7 +199,7 @@ export default class GameView {
 
   // to be removed to shadow class?
   renderShadow() {
-    if (this.game.lightMode) {
+    if (debug.lightMode) {
       return;
     }
     
@@ -349,7 +235,6 @@ export default class GameView {
     }
     
     // holy i swear i will redo this later
-    // ok i give up
 
     const invisible = [0, 0, 0, 255];
     const visited = [17, 17, 17, 204];
@@ -402,18 +287,6 @@ export default class GameView {
 
   }
 
-  renderShadowBlock({sx, sy}) {
-    this.stx.clearRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
-  }
-
-  renderBlackBlock({sx, sy}) {
-    this.stx.fillStyle = "black";
-    this.stx.fillRect(sx, sy, this.pixelSize * 16, this.pixelSize * 16);
-  }
-
-
-  
-
 
   renderNPC() {
     const num = this.pixelSize;
@@ -437,7 +310,7 @@ export default class GameView {
           continue;
         }
         
-        if (!this.game.lightMode && !this.currentShadow.isLit(x, y)) {
+        if (!debug.lightMode && !this.currentShadow.isLit(x, y)) {
           continue;
         }
 
@@ -538,24 +411,6 @@ export default class GameView {
     this.renderGame();
   }
 
-  // moveView(move) {
-  //   // [x, y]
-
-  //   const [originX, originY] = this.#camera;
-  //   const toX = move[0] + originX;
-  //   const toY = move[1] + originY;
-
-  //   if (toX <= 0 || toX > 48 || toY <= 0 || toY > 48) {
-  //     return;
-  //   }
-
-  //   this.#camera[0] = toX;
-  //   this.#camera[1] = toY;
-
-  //   this.renderGame();
-
-  // }
-
 
   resize(isBigger) {
     const num = this.pixelSize;
@@ -587,25 +442,10 @@ export default class GameView {
 
 
   initRenderData() {
-    
-    
-    // blockMap.keys()
-    // for (const block in blockMap) {
-      // textureCache.loadTextures(["wall_ground", "shrub"]);
-      // const textureName = blockMap[block].name;
-      // this.#tempCtx.drawImage(document.getElementById("water0"), 0, 0);
-      // const image = document.getElementById(textureName);
-      // this.#tempCtx.drawImage(image, 0, 0);
-      // this.mapRenderData[textureName] = this.#tempCtx.getImageData(0, 0, 16, 16);
-    // }
-    // console.log(this)
-
-
-    // this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
 
     for (const npc in npcMap) {
       const textureName = npcMap[npc].name;
-      this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
+      this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.mapCanvas.height);
       const image = document.getElementById(textureName);
       this.#tempCtx.drawImage(image, 0, 0);
       const xLength = image.width / 16;
@@ -621,7 +461,7 @@ export default class GameView {
       }
     }
     
-    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#mapCanvas.height);
+    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.mapCanvas.height);
   }
 
   initResizeButton() {
@@ -647,20 +487,20 @@ export default class GameView {
   // }
 
   initClick() {
-    document.getElementById("canvasback").addEventListener(this.game.phone.click, this.mapClickHandler);
+    document.getElementById("canvasback").addEventListener(screen.clickName, this.mapClickHandler);
 
   }
 
   mapClickHandler = (event) => {
     const gamecore = this.game.gamecore;
-    const midX = this.#mapCanvas.width / 2;
-    const midY = this.#mapCanvas.height / 2;
+    const midX = this.mapCanvas.width / 2;
+    const midY = this.mapCanvas.height / 2;
     const num = this.pixelSize * 16;
 
     // bro...
     let clientX = event.clientX;
     let clientY = event.clientY;
-    if (this.game.phone.isPhone) {
+    if (screen.isPhone) {
       clientX = event.touches[0].clientX;
       clientY = event.touches[0].clientY;
     }
@@ -682,10 +522,8 @@ export default class GameView {
       }
     }
 
-    
-
     if (isBlockEmpty) {
-      if (!block.isVisited && !this.game.lightMode) {
+      if (!block.isVisited && !debug.lightMode) {
         return;
       }
       gamecore.blockClickHandler({to: [cx + biasX, cy + biasY]});
@@ -708,8 +546,8 @@ export default class GameView {
 
 
   // sadly, no dragging for now
-  initDrag() {
-  }
+  // initDrag() {
+  // }
 }
 
 class NPCAnimationController {
@@ -844,126 +682,4 @@ class Animation {
   }
 
   
-}
-
-
-// wanna rewrite to mine
-
-class Shadow {
-  static mult = [
-    [1,  0,  0, -1, -1,  0,  0,  1],
-    [0,  1, -1,  0,  0, -1,  1,  0],
-    [0,  1,  1,  0,  0, -1, -1,  0],
-    [1,  0,  0,  1, -1,  0,  0, -1]
-  ]
-
-  constructor({map, view, width, height}) {
-    this.map = map;
-    this.gameview = view;
-    this.width = width;
-    this.height = height;
-    this.light = [];
-    for (let i = 0; i < height; i++) {
-      this.light[i] = new Array(width).fill(false);
-    }
-    this.flag = false;
-  }
-
-  blocked(x, y) {
-    // here
-    const blocked = x < 0 || y < 0 || x >= this.width || y >= this.height;
-    if (blocked) {
-      return true;
-    }
-
-    // ...bro
-    const lightPass = this.map[y][x].lightPass;
-    return !lightPass;
-  }
-
-  
-  isLit(x, y) {
-    if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
-      return false;
-    }
-    return this.light[y][x] === this.flag;
-  }
-  setLit(x, y) {
-    if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
-      this.light[y][x] = this.flag;
-    }
-  }
-
-  castLight(cx, cy, row, start, end, radius, xx, xy, yx, yy, id) {
-    if (start < end) {
-      return;
-    }
-    const area = radius * radius;
-    let startCopy = start;
-    let newStart;
-    let blocked = false;
-    for (let j = row; j < radius + 1; j++) {
-      let dx = -j - 1;
-      const dy = -j;
-
-      
-      
-
-      while(dx <= 0) {
-        dx += 1;
-        const x = cx + dx * xx + dy * xy;
-        const y = cy + dx * yx + dy * yy;
-        // b r o
-        
-        const leftSlope = (dx - 0.5) / (dy + 0.5);
-        const rightSlope = (dx + 0.5) / (dy - 0.5);
-
-        if (startCopy < rightSlope) {
-          continue;
-        } else if (end > leftSlope) {
-          break;
-        } else {
-          if (dx * dx + dy * dy < area) {
-            this.setLit(x, y);
-          }
-          if (blocked) {
-            if (this.blocked(x, y)) {
-              newStart = rightSlope;
-              continue;
-            } else {
-              blocked = false;
-              startCopy = newStart;
-            }
-          } else {
-            if (this.blocked(x, y) && j < radius) {
-              blocked = true;
-              this.castLight(cx, cy, j + 1, startCopy, leftSlope, radius, xx, xy, yx, yy, id + 1);
-              newStart = rightSlope;
-            }
-          }
-        }
-      }
-      if (blocked) {
-        break;
-      }
-    }
-  }
-
-  scanAllSector(x, y, radius) {
-    
-    this.flag = true;
-    for (let oct = 0; oct < 8; oct++) {
-      this.castLight(x, y, 1, 1, 0, radius, Shadow.mult[0][oct], Shadow.mult[1][oct], Shadow.mult[2][oct], Shadow.mult[3][oct], 0);
-    }
-    this.light[y][x] = true;
-  }
-
-  // static calcSectorShadow({blockMap, sx, sy, radius}) {
-
-  //   // ok i gave up
-  //   // maybe someday i will rewrite it to mine shadowcaster
-
-
-  //   // temp
-
 }

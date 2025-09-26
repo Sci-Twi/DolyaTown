@@ -11,5 +11,5 @@ export const screen = {
 
 screen.getScreen().width = screen.width;
 screen.getScreen().height = screen.height;
-// screen.clickName = screen.phoneClick ? "ontouchstart" : "onclick";
+screen.clickName = screen.isPhone ? "touchstart" : "click";
 // export default screen;

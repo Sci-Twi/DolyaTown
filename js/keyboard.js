@@ -1,5 +1,5 @@
 
-const keyboard = {
+export const keyboard = {
   addListener(listener) {
     document.addEventListener("keydown", listeners[listener]);
   },
@@ -34,5 +34,3 @@ const listeners = {
     }
   },
 };
-
-export default keyboard;

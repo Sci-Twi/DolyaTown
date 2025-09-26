@@ -1,10 +1,13 @@
+import { pathFinder } from "../tools/pathFinder.js";
 import {Block, blockMap, npcMap} from "./dolya.js";
+import { win } from "../ui/window.js";
+import { screen } from "../tools/screen.js";
 
 export default class GameCore {
   game;
   worldSize;
   blockmap;
-  #npcmap;
+  npcmap;
   player;
   sight;
   constructor(game) {
@@ -18,74 +21,19 @@ export default class GameCore {
     const name = this.getNPC(to).name;
     const text = npcMap[name].text;
     this.game.gameview.currentAnimation = name;
-    this.game.gameview.renderWindow(text);
+    win.renderWindow(text, this.game.gameview);
+    // this.game.gameview.renderWindow(text, this.game.gameview);
     this.game.gameview.yell(text);
   }
 
   blockClickHandler({to}) {
-    this.multiMove(this.pathFinder({
-      from: this.player,
-      to,
-    }));
+    this.multiMove(pathFinder.findPath(this.player, to, this));
   }
 
-  pathFinder({from, to}) {
-    // is this fast?
-    const pathMap = [];
-    for (let i = 1; i <= 48; i++) {
-      pathMap[i] = [];
-    }
-    // [x, y]
-    // bruh
-    pathMap[from[1]][from[0]] = "start";
-
-    let toBeFind = [from];
-    let found = false;
-
-    // ...dont wanna talk about it
-    let maxTimes = 1;
-    while (!found && maxTimes < 100) {
-      maxTimes += 1;
-      let newFind = [];
-      for (const coor of toBeFind) {
-        const [x, y] = coor;
-        const toFind = [[x + 1, y], [x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 1], [x - 1, y + 1]].filter((c) => {
-          return this.getBlock(c)?.type === Block.FLOOR && ((to[0] === c[0] && to[1] === c[1]) ? true : !this.getNPC(c)) && !pathMap[c[1]][c[0]];
-        });
-
-        for (const c of toFind) {
-          newFind.push(c);
-          pathMap[c[1]][c[0]] = coor;
-          if (c[0] === to[0] && c[1] === to[1]) {
-            found = c;
-            break;
-          }
-        }
-      }
-      toBeFind = newFind;
-    }
-
-    if (!found) {
-      return [];
-    }
-
-    // found
-    let reverse = to;
-    const result = [];
-    while (true) {
-      const next = pathMap[reverse[1]][reverse[0]];
-      if (next !== "start") {
-        result.push([reverse[0] - next[0], reverse[1] - next[1]]);
-        reverse = next;
-      } else {
-        break;
-      }
-    }
-    return result.reverse();
-  }
+  
 
   async multiMove(move) {
-    const click = this.game.phone.click;
+    const click = screen.clickName;
 
     if (move.length === 1) {
       this.game.gameview.move(move[0]);
@@ -152,8 +100,8 @@ export default class GameCore {
 
 
     const t = this.getNPC(this.player);
-    this.#npcmap[toY][toX] = t;
-    this.#npcmap[originY][originX] = null;
+    this.npcmap[toY][toX] = t;
+    this.npcmap[originY][originX] = null;
     this.player[0] = toX;
     this.player[1] = toY;
     
@@ -169,7 +117,7 @@ export default class GameCore {
     if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {
       return null;
     }
-    return this.#npcmap[y][x];
+    return this.npcmap[y][x];
   }
   
   initMap(map) {
@@ -184,13 +132,13 @@ export default class GameCore {
       }
     }
 
-    this.#npcmap = [];
+    this.npcmap = [];
     for (let y = 0; y < this.worldSize[1]; y++) {
-      this.#npcmap[y] = [];
+      this.npcmap[y] = [];
     }
     for (const npc in npcMap) {
       const [x, y] = npcMap[npc].coor;
-      this.#npcmap[y][x] = new NPC(npc, npcMap[npc]);
+      this.npcmap[y][x] = new NPC(npc, npcMap[npc]);
     }
     this.game.gameview.initMap();
 

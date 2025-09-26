@@ -1,6 +1,25 @@
-// dungeon.java
-const dungeon = {
-  
+import { TownLevel } from "./level/levels/townLevel.js";
+
+export const dungeon = {
+  depth: 0,
+  level: null,
+  hero: null,
+  newLevel() {
+    this.level = null;
+    // actor.clear();
+    this.depth++;
+
+    switch (this.depth) {
+      case 1:
+        this.level = new TownLevel();
+        break;
+      default:
+    }
+    return this.level;
+  },
+
+  init() {
+    // this.hero = new Hero();
+  }
 };
 
-export default dungeon;

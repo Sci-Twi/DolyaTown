@@ -21,5 +21,7 @@ export const assets = {
   bed: "block/bed.png",
   embers: "block/embers.png",
   glass_wall: "block/glass_wall.png",
+
+  tiles_town: "tiles/tiles_town.png",
   // water0: "block/water0.png",
 };
