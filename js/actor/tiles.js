@@ -1,8 +1,11 @@
 // import { assets } from "../assets.js";
 import { dungeon } from "../dungeon.js";
+import { gameScene } from "../scene/gameScene.js";
 // import { terrain } from "../terrain.js";
 import { Texture } from "../tools/texture.js";
 import { textureCache } from "../tools/textureCache.js";
+import { canvas } from "../tools/canvas.js";
+// import { screen } from "../tools/screen.js";
 
 export const tiles = {
   create,
@@ -13,24 +16,65 @@ class TilesMap {
   texture;
 
   constructor() {
-    this.texture = new Texture(textureCache.getTexture(dungeon.level.tilesTextureName()), 256, 64);
+    this.texture = new Texture(256, 64, 16);
   }
-  // mapWidth;
-  // mapHeight;
-  // constructor() {
-  //   // this.tilesArray = [];
-  // }
-
-  // constructor() {
-    
-  // }
 
   getTiles() {
     return this.tilesArray;
   }
-  update() {
+  updateTiles() {
     this.tilesArray = [...dungeon.level.levelAttr.map];
   }
+
+  render() {
+    // const width = dungeon.level.levelAttr.mapWidth;
+    const ps = gameScene.pixelSize;
+    const camera = gameScene.camera;
+
+
+    let startX = ((screen.width - ps * 16) / 2) % (ps * 16);
+    let startY = ((screen.height - ps * 16) / 2) % (ps * 16);
+    startX = startX === 0 ? startX : startX  - ps * 16;
+    startY = startY === 0 ? startY : startY  - ps * 16;
+
+    
+    const widthNumber = Math.ceil(((screen.width - ps * 16) / 2) / (ps * 16));
+    const heightNumber = Math.ceil(((screen.height - ps * 16) / 2) / (ps * 16));
+    
+    // this.mtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+    const coorStartX = camera[0] - widthNumber;
+    const coorStartY = camera[1] - heightNumber;
+    // canvas.clear();
+    // canvas.scale(ps, ps);
+
+    for (let y = coorStartY; y <= heightNumber + camera[1]; y++) {
+      for (let x = coorStartX; x <= widthNumber + camera[0]; x++) {
+        // const block = this.game.gamecore.getBlock([x, y]);
+        // if (!block) {
+        //   continue;
+        // }
+
+        // console.log(x, y)
+        const sx = (x - coorStartX) * 16 * ps + startX;
+        const sy = (y - coorStartY) * 16 * ps + startY;
+        // canvas.draw(textureCache.getTexture("tiles_town")[dungeon.level.levelAttr.getTile(x, y)], sx, sy, ps);
+
+        // this.renderMapBlock({
+        //   // imgData: this.mapRenderData[block.name],
+        //   // imgData: textureCache.getTexture("tiles_town")[terrain[block.name]],
+        //   imgData: textureCache.getTexture("tiles_town")[dungeon.level.levelAttr.getTile(x, y)],
+        //   sx,
+        //   sy,
+        // });
+      }
+    }
+
+    // canvas.scale(1 / ps,  1 /ps);
+
+
+
+  }
+
   // clone(tilesMap) {
   //   return new TilesMap([...tilesMap.getTiles()]);
   // }
@@ -38,8 +82,8 @@ class TilesMap {
 
 function create() {
   const t = new TilesMap();
-  t.update();
-  console.log(t)
+  t.updateTiles();
+  // console.log(t)
   return t;
   // if (args.length === 1) {
   //   // direct

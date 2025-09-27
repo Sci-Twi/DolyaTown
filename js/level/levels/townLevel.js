@@ -1,7 +1,7 @@
 import { Level } from "../level.js";
 // import { tiles } from "../../actor/tiles.js";
 import { townLayouts } from "../layouts/townLayouts.js";
-import { assets } from "../../assets.js";
+// import { assets } from "../../assets.js";
 
 export class TownLevel {
   levelAttr;

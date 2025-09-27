@@ -1,8 +1,8 @@
 import { terrain } from "../../terrain.js";
 // const M = terrain.;
 const W = terrain.wall_ground;
-const T = terrain.shrub;
-const Z = terrain.highgrass;
+const T = terrain.wall_deco;
+const Z = terrain.high_grass;
 const D = terrain.door;
 const L = terrain.locked_door;
 
@@ -17,7 +17,7 @@ const A = terrain.well;
 const B = terrain.bookshelf;
 
 const U = terrain.statue;
-const S = terrain.secretdoor;
+const S = terrain.secret_door;
 const R = terrain.water;
 const Y = terrain.alchemy;
 const G = terrain.statue_sp;

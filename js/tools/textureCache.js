@@ -17,6 +17,7 @@ const image = new Image();
 function getTexture(name) {
   // console.log(name, textures[name])
   return textures[name];
+
 }
 
 async function loadTexture(name) {
@@ -24,10 +25,21 @@ async function loadTexture(name) {
     return await new Promise((resolve, reject) => {
       image.src = "/images/" + assets[name];
       image.onload = function () {
-        const width = this.naturalWidth;
-        const height = this.naturalHeight;
+        // const width = ;
+        // const height = ;
         ctx.drawImage(image, 0, 0);
-        textures[name] = ctx.getImageData(0, 0, width, height);
+
+        textures[name] = [];
+
+        for (let y = 0; y < this.naturalHeight; y += 16) {
+          for (let x = 0; x < this.naturalWidth; x += 16) {
+            textures[name].push(ctx.getImageData(x, y, 16, 16));
+          }
+        }
+        
+        // textures[name] = ctx.getImageData(0, 0, width, height);
+        
+        // console.log(textures)
         image.src = "";
         ctx.clearRect(0, 0, 500, 500);
         resolve();

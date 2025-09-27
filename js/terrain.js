@@ -10,9 +10,29 @@ export const terrain = {
   exit: 8,
   embers: 9,
   locked_door: 10,
+  pedestal: 11,
   wall_deco: 12,
   barricade: 13,
   empty_sp: 14,
   high_grass: 15,
+
+  secret_door: 16,
+  wall_ground: 22,
+
+  empty_deco: 25,
   
+  glass_wall: 31,
+
+  iron_maker: 33,
+  well: 34,
+  statue: 35,
+  statue_sp: 36,
+
+  tent: 38,
+
+  bed: 40,
+  bookshelf: 41,
+  alchemy: 42,
+  
+  water: 63,
 };

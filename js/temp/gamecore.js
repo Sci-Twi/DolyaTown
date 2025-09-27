@@ -1,4 +1,4 @@
-import { pathFinder } from "../tools/pathFinder.js";
+import { pathFinder } from "../mechanics/pathFinder.js";
 import {Block, blockMap, npcMap} from "./dolya.js";
 import { win } from "../ui/window.js";
 import { screen } from "../tools/screen.js";
@@ -22,7 +22,6 @@ export default class GameCore {
     const text = npcMap[name].text;
     this.game.gameview.currentAnimation = name;
     win.renderWindow(text, this.game.gameview);
-    // this.game.gameview.renderWindow(text, this.game.gameview);
     this.game.gameview.yell(text);
   }
 

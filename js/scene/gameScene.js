@@ -9,6 +9,10 @@ import { assets } from "../assets.js";
 import { win } from "../ui/window.js";
 
 export const gameScene = {
+  // pixel size
+  pixelSize: 8,
+  camera: [24, 24],
+
   tiles: null,
 
   async create() {
@@ -18,9 +22,10 @@ export const gameScene = {
     keyboard.addListener("gameScene");
     // this.tiles = tiles.create(48, 48);
     this.tilesMap = tiles.create();
+    
 
   },
-  
+
 };
 
 class GameScene {

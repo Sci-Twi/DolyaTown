@@ -1,10 +1,15 @@
-// export {GameView};
+import { dungeon } from "../dungeon.js";
 import { npcMap, Block } from "./dolya.js";
 import { screen } from "../tools/screen.js";
 import { textureCache } from "../tools/textureCache.js";
 // import { assets } from "../assets.js";
 import { debug } from "../tools/debug.js";
 import { Shadow } from "../mechanics/shadow.js";
+import { gameScene } from "../scene/gameScene.js";
+// import { terrain } from "../terrain.js";
+// import { canvas } from "../tools/canvas.js";
+
+
 
 export default class GameView {
   game;
@@ -68,6 +73,7 @@ export default class GameView {
     this.shadowCanvas.height = this.mapCanvas.height;
 
     this.mtx = this.mapCanvas.getContext("2d");
+    this.mtx.imageSmoothingEnabled = false;
     this.ntx = this.#npcCanvas.getContext("2d");
     this.stx = this.shadowCanvas.getContext("2d");
     this.#tempCanvas = document.getElementById("temp");
@@ -123,25 +129,24 @@ export default class GameView {
   }
 
   preRenderMap({ctx, pixelSize}) {
-
     for (let y = 0; y < 48; y++) {
       for (let x = 0; x < 48; x++) {
-        const block = this.game.gamecore.getBlock([x, y]);
-        if (!block) {
-          continue;
-        }
+        // const block = this.game.gamecore.getBlock([x, y]);
+        // if (!block) {
+        //   continue;
+        // }
+        // console.log(terrain[block.name], block.name)
         this.renderSingleBlockByS({
           ctx,
-          imgData: textureCache.getTexture(block.name),
-          // imgData: this.mapRenderData[block.name],
+          // imgData: textureCache.getTexture(block.name),
+          // imgData: textureCache.getTexture("tiles_town")[terrain[block.name]],
+          imgData: textureCache.getTexture(dungeon.level.tilesTextureName())[dungeon.level.levelAttr.getTile(x, y)],
           pixelSize,
           sx: x * 16 * pixelSize,
           sy: y * 16 * pixelSize,
         });
       }
     }
-
-
   }
 
   renderMapByCut() {
@@ -175,27 +180,27 @@ export default class GameView {
     const coorStartY = this.#camera[1] - heightNumber;
 
 
-    
-
+    // gameScene.tilesMap.render();
     for (let y = coorStartY; y <= heightNumber + this.#camera[1]; y++) {
       for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
-        const block = this.game.gamecore.getBlock([x, y]);
-        if (!block) {
-          continue;
-        }
+        // const block = this.game.gamecore.getBlock([x, y]);
+        // if (!block) {
+        //   continue;
+        // }
+        // console.log(x, y)
 
         const sx = (x - coorStartX) * 16 * num + startX;
         const sy = (y - coorStartY) * 16 * num + startY;
         this.renderMapBlock({
           // imgData: this.mapRenderData[block.name],
-          imgData: textureCache.getTexture(block.name),
+          // imgData: textureCache.getTexture("tiles_town")[terrain[block.name]],
+          imgData: textureCache.getTexture(dungeon.level.tilesTextureName())[dungeon.level.levelAttr.getTile(x, y)],
           sx,
           sy,
         });
       }
     }
   }
-
 
   // to be removed to shadow class?
   renderShadow() {
@@ -378,6 +383,16 @@ export default class GameView {
     }
   }
   
+  // renderPamBlock({imgData, sx, sy}) {
+  //   if (this.pixelSize === 1) {
+  //     this.mtx.putImageData(imgData, sx, sy);
+  //     return;
+  //   }
+
+  //   // this.mtx.putImageData(imgData, );
+    
+
+  // }
 
   renderSingleBlockByS({ctx, imgData, sx, sy, pixelSize}) {
     if (pixelSize === 1) {
@@ -437,6 +452,7 @@ export default class GameView {
       }
 
     }
+    gameScene.pixelSize = this.pixelSize;
     this.renderGame();
   }
 

@@ -20,7 +20,7 @@ class Block {
 
 const blockMap = {
   "W": {name:"wall_ground", type: Block.WALL},
-  "T": {name:"shrub", type: Block.FLOOR},
+  "T": {name:"wall_deco", type: Block.FLOOR},
   "Z": {name:"high_grass", type: Block.FLOOR},
   "D": {name:"door", type: Block.FLOOR},
   "L": {name:"locked_door", type: Block.WALL},
@@ -41,7 +41,7 @@ const blockMap = {
   "H": {name:"bed", type: Block.FLOOR, lightPass: true},
   "I": {name:"embers", type: Block.FLOOR, lightPass: true},
   "J": {name:"glass_wall", type: Block.WALL, lightPass: true},
-  "water0": {name:"water0", type: Block.FLOOR, lightPass: true},
+  // "water0": {name:"water0", type: Block.FLOOR, lightPass: true},
 };
 const npcMap = {
   hmdzl001: {

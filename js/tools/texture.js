@@ -4,22 +4,22 @@ export const texture = {
 };
 
 export class Texture {
-  cache;
+  // cache;
   width;
   height;
   stepWidth;
-  constructor(cache, width, height, stepWidth) {
-    this.cache = cache;
+  constructor(width, height, stepWidth) {
+    // this.cache = cache;
     this.width = width;
     this.height = height;
     this.stepWidth = stepWidth;
   }
-  setCache(cache) {
-    this.cache = cache;
-  }
-  getCache() {
-    return this.cache;
-  }
+  // setCache(cache) {
+  //   this.cache = cache;
+  // }
+  // getCache() {
+  //   return this.cache;
+  // }
   setTexture() {
 
   }
@@ -28,10 +28,10 @@ export class Texture {
   //   const c = this.cache;
   //   // c.slice();
   // }
-  draw(id, x, y) {
-    // draws here
+  // draw(id, x, y) {
+  //   // draws here
     
-  }
+  // }
 }
 
 // function create(cache, id) {
