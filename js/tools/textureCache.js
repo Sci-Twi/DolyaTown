@@ -25,17 +25,18 @@ async function loadTexture(name) {
     return await new Promise((resolve, reject) => {
       image.src = "/images/" + assets[name];
       image.onload = function () {
-        // const width = ;
-        // const height = ;
         ctx.drawImage(image, 0, 0);
 
-        textures[name] = [];
+        // textures[name] = [];
+        textures[name] = new OffscreenCanvas(this.naturalWidth, this.naturalHeight);
+        textures[name].getContext("2d").drawImage(image, 0, 0);
+        // console.log(textures)
 
-        for (let y = 0; y < this.naturalHeight; y += 16) {
-          for (let x = 0; x < this.naturalWidth; x += 16) {
-            textures[name].push(ctx.getImageData(x, y, 16, 16));
-          }
-        }
+        // for (let y = 0; y < this.naturalHeight; y += 16) {
+        //   for (let x = 0; x < this.naturalWidth; x += 16) {
+        //     textures[name].push(ctx.getImageData(x, y, 16, 16));
+        //   }
+        // }
         
         // textures[name] = ctx.getImageData(0, 0, width, height);
         

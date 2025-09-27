@@ -129,6 +129,7 @@ export default class GameView {
   }
 
   preRenderMap({ctx, pixelSize}) {
+    const d = textureCache.getTexture(dungeon.level.tilesTextureName()).getContext("2d");
     for (let y = 0; y < 48; y++) {
       for (let x = 0; x < 48; x++) {
         // const block = this.game.gamecore.getBlock([x, y]);
@@ -136,11 +137,16 @@ export default class GameView {
         //   continue;
         // }
         // console.log(terrain[block.name], block.name)
+        // console.log(d)
+        const id = dungeon.level.levelAttr.getTile(x, y);
+        const sx = (id % 16) * 16;
+        const sy = Math.floor(id / 16) * 16;
         this.renderSingleBlockByS({
           ctx,
           // imgData: textureCache.getTexture(block.name),
           // imgData: textureCache.getTexture("tiles_town")[terrain[block.name]],
-          imgData: textureCache.getTexture(dungeon.level.tilesTextureName())[dungeon.level.levelAttr.getTile(x, y)],
+          // imgData: textureCache.getTexture(dungeon.level.tilesTextureName())[dungeon.level.levelAttr.getTile(x, y)],
+          imgData: d.getImageData(sx, sy, 16, 16),
           pixelSize,
           sx: x * 16 * pixelSize,
           sy: y * 16 * pixelSize,
@@ -149,20 +155,22 @@ export default class GameView {
     }
   }
 
-  renderMapByCut() {
-    const num = this.pixelSize;
-    const bctx = this.#bctx[num];
+  // renderMapByCut() {
+  //   const num = this.pixelSize;
+  //   const bctx = this.#bctx[num];
 
-    const sx = this.#camera[0] * 16 * num + 16 / 2 * num - this.mapCanvas.width / 2;
-    const sy = this.#camera[1] * 16 * num + 16 / 2 * num - this.mapCanvas.height / 2;
+  //   const sx = this.#camera[0] * 16 * num + 16 / 2 * num - this.mapCanvas.width / 2;
+  //   const sy = this.#camera[1] * 16 * num + 16 / 2 * num - this.mapCanvas.height / 2;
 
-    this.mtx.clearRect(0, 0, this.mapCanvas.width, this.mapCanvas.height);
-    const mapData = bctx.getImageData(sx, sy, this.mapCanvas.width, this.mapCanvas.height);
-    this.mtx.putImageData(mapData, 0, 0);
+  //   this.mtx.clearRect(0, 0, this.mapCanvas.width, this.mapCanvas.height);
+  //   const mapData = bctx.getImageData(sx, sy, this.mapCanvas.width, this.mapCanvas.height);
+  //   this.mtx.putImageData(mapData, 0, 0);
 
-  }
+  // }
 
   renderMapByWrite() {
+    if (gameScene.tilesMap) gameScene.tilesMap.render();
+    return;
     const num = this.pixelSize;
     const mapCanvas = this.mapCanvas;
 
@@ -180,7 +188,7 @@ export default class GameView {
     const coorStartY = this.#camera[1] - heightNumber;
 
 
-    // gameScene.tilesMap.render();
+    
     for (let y = coorStartY; y <= heightNumber + this.#camera[1]; y++) {
       for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
         // const block = this.game.gamecore.getBlock([x, y]);
@@ -336,11 +344,11 @@ export default class GameView {
   }
 
   renderGame() {
-    if (this.pixelSize <= 8) {
-      this.renderMapByCut();
-    } else {
-      this.renderMapByWrite();
-    }
+    // if (this.pixelSize <= 0) {
+    //   this.renderMapByCut();
+    // } else {
+    this.renderMapByWrite();
+    // }
     this.renderShadow();
     this.renderNPC();
 
@@ -416,6 +424,8 @@ export default class GameView {
     const player = this.game.gamecore.player;
     this.#camera[0] = player[0];
     this.#camera[1] = player[1];
+    // gameScene.camera[0] = player[0];
+    gameScene.camera = [...player];
     
     // too specific
     if (move[0] > 0) {

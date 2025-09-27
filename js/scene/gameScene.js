@@ -20,8 +20,8 @@ export const gameScene = {
     await textureCache.loadTextures(Object.keys(assets));
     new GameScene(map_dolya_block);
     keyboard.addListener("gameScene");
-    // this.tiles = tiles.create(48, 48);
     this.tilesMap = tiles.create();
+    // this.tiles = tiles.create(48, 48);
     
 
   },

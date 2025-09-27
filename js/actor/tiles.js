@@ -5,7 +5,7 @@ import { gameScene } from "../scene/gameScene.js";
 import { Texture } from "../tools/texture.js";
 import { textureCache } from "../tools/textureCache.js";
 import { canvas } from "../tools/canvas.js";
-// import { screen } from "../tools/screen.js";
+import { screen } from "../tools/screen.js";
 
 export const tiles = {
   create,
@@ -30,12 +30,13 @@ class TilesMap {
     // const width = dungeon.level.levelAttr.mapWidth;
     const ps = gameScene.pixelSize;
     const camera = gameScene.camera;
+    // console.log(camera)
 
 
     let startX = ((screen.width - ps * 16) / 2) % (ps * 16);
     let startY = ((screen.height - ps * 16) / 2) % (ps * 16);
-    startX = startX === 0 ? startX : startX  - ps * 16;
-    startY = startY === 0 ? startY : startY  - ps * 16;
+    startX = startX === 0 ? startX : startX - ps * 16;
+    startY = startY === 0 ? startY : startY - ps * 16;
 
     
     const widthNumber = Math.ceil(((screen.width - ps * 16) / 2) / (ps * 16));
@@ -47,16 +48,27 @@ class TilesMap {
     // canvas.clear();
     // canvas.scale(ps, ps);
 
+    const w = this.texture.width / 16;
     for (let y = coorStartY; y <= heightNumber + camera[1]; y++) {
       for (let x = coorStartX; x <= widthNumber + camera[0]; x++) {
+        // console.log(x, y)
         // const block = this.game.gamecore.getBlock([x, y]);
         // if (!block) {
         //   continue;
         // }
 
         // console.log(x, y)
-        const sx = (x - coorStartX) * 16 * ps + startX;
-        const sy = (y - coorStartY) * 16 * ps + startY;
+        const dx = (x - coorStartX) * 16 * ps + startX;
+        const dy = (y - coorStartY) * 16 * ps + startY;
+        // console.log(dx, dy)
+
+        const id = dungeon.level.levelAttr.getTile(x, y);
+        // const h = this.texture.height / 16;
+
+        const sx = (id % w) * 16;
+        const sy = Math.floor(id / w) * 16;
+        // const sy = Math.floor(id / this.texture.height) * 16;
+        canvas.draw(textureCache.getTexture(dungeon.level.tilesTextureName()), sx, sy, 16, 16, dx, dy, ps * 16, ps * 16);
         // canvas.draw(textureCache.getTexture("tiles_town")[dungeon.level.levelAttr.getTile(x, y)], sx, sy, ps);
 
         // this.renderMapBlock({
