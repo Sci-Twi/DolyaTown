@@ -1,12 +1,11 @@
 import GameCore from "../temp/gamecore.js";
 import GameView from "../temp/gameview.js";
-import { screen } from "../tools/screen.js";
+import { device } from "../tools/device.js";
 import { keyboard } from "../keyboard.js";
 import { map_dolya_block } from "../temp/dolya.js";
-import { tiles } from "../actor/tiles.js";
-import { textureCache } from "../tools/textureCache.js";
-import { assets } from "../assets.js";
-import { win } from "../ui/window.js";
+import { TilesMap } from "../sprites/tiles.js";
+
+import { win } from "../ui/win.js";
 
 export const gameScene = {
   // pixel size
@@ -17,13 +16,13 @@ export const gameScene = {
 
   async create() {
     console.log("creating game scene")
-    await textureCache.loadTextures(Object.keys(assets));
     new GameScene(map_dolya_block);
-    keyboard.addListener("gameScene");
-    this.tilesMap = tiles.create();
-    // this.tiles = tiles.create(48, 48);
-    
+    this.tilesMap = new TilesMap();
+    this.tilesMap.updateTiles();
 
+    keyboard.addListener("gameScene");
+
+    
   },
 
 };
@@ -31,20 +30,19 @@ export const gameScene = {
 class GameScene {
   gameview;
   gamecore;
-  phone;
+  // phone;
   constructor(map) {
     this.gamecore = new GameCore(this);
     this.gameview = new GameView(this);
     
-    if (screen.isPhone) {
+    if (device.isPhone) {
       this.gameview.initResizeButton();
     } else {
       this.gameview.initResize();
     }
     this.gamecore.initMap(map);
-    win.initWindow(this.gameview);
+    win.initWindow();
     this.gameview.initClick();
     this.gameview.renderGame();
-    this.gameview.initHz();
   }
 }

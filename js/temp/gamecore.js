@@ -1,7 +1,7 @@
 import { pathFinder } from "../mechanics/pathFinder.js";
 import {Block, blockMap, npcMap} from "./dolya.js";
-import { win } from "../ui/window.js";
-import { screen } from "../tools/screen.js";
+import { win } from "../ui/win.js";
+import { device } from "../tools/device.js";
 
 export default class GameCore {
   game;
@@ -32,7 +32,7 @@ export default class GameCore {
   
 
   async multiMove(move) {
-    const click = screen.clickName;
+    const click = device.clickName;
 
     if (move.length === 1) {
       this.game.gameview.move(move[0]);
@@ -139,7 +139,7 @@ export default class GameCore {
       const [x, y] = npcMap[npc].coor;
       this.npcmap[y][x] = new NPC(npc, npcMap[npc]);
     }
-    this.game.gameview.initMap();
+    // this.game.gameview.initMap();
 
   }
 }

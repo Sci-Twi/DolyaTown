@@ -1,4 +1,4 @@
-import { screen } from "../tools/screen.js";
+import { device } from "../tools/device.js";
 
 export const win = {
   renderWindow,
@@ -21,7 +21,7 @@ function renderWindow({name, description}, gameview) {
 
   // silly b, so many hardcoded shit
   if (name === "hmdzl001") {
-    if (screen.isPhone) {
+    if (device.isPhone) {
       document.getElementById("windowdescription").innerText += "\n\n点击交互 右上角缩放";
     } else {
       document.getElementById("windowdescription").innerText += "\n\nwsad移动视角 点击交互 ↑↓←→行走 鼠标滚轮缩放";
@@ -35,7 +35,7 @@ function renderWindow({name, description}, gameview) {
   windowCanvas.height = shortSide + num * 5 * 2;
   
 
-  windowCanvas.style.top = Math.floor((gameview.mapCanvas.height - (shortSide + num * 5 * 2)) / 2) + "px";
+  windowCanvas.style.top = Math.floor((device.height - (shortSide + num * 5 * 2)) / 2) + "px";
 
 
   const windowContent = document.getElementById("windowcontent");
@@ -97,15 +97,15 @@ function renderWindow({name, description}, gameview) {
   renderShortSide(5 * num + longSide, 5 * num);
 
   // const click = this.game.phone.click;
-  const click = screen.clickName;
+  const click = device.clickName;
   document.getElementById("canvasback").removeEventListener(click, gameview.mapClickHandler);
   document.getElementById("canvasback").addEventListener(click, gameview.removeWindowHandler);
 }
 
-function initWindow(gameview) {
+function initWindow() {
   const windowCanvas = document.getElementById("windowcanvas");
-  windowCanvas.width = Math.floor(gameview.mapCanvas.width * 0.8);
-  windowCanvas.style.left = Math.floor(gameview.mapCanvas.width * 0.1) + "px";
+  windowCanvas.width = Math.floor(device.width * 0.8);
+  windowCanvas.style.left = Math.floor(device.width * 0.1) + "px";
 
   const num = 6;
   const longSide = windowCanvas.width - num * 5 * 2;
@@ -116,7 +116,7 @@ function initWindow(gameview) {
   
   const windowContent = document.getElementById("windowcontent");
   windowContent.style.width = longSide - num * 2 + "px";
-  windowContent.style.left = Math.floor(gameview.mapCanvas.width * 0.1) + num * 6 + "px";
+  windowContent.style.left = Math.floor(device.width * 0.1) + num * 6 + "px";
 
   
   const windowAnimation = document.getElementById("windowanimation");

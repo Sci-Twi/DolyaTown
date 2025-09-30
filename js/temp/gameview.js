@@ -1,11 +1,11 @@
-import { dungeon } from "../dungeon.js";
+// import { dungeon } from "../dungeon.js";
 import { npcMap, Block } from "./dolya.js";
-import { screen } from "../tools/screen.js";
-import { textureCache } from "../tools/textureCache.js";
+import { device } from "../tools/device.js";
+// import { textureCache } from "../tools/textureCache.js";
 // import { assets } from "../assets.js";
 import { debug } from "../tools/debug.js";
 import { Shadow } from "../mechanics/shadow.js";
-import { gameScene } from "../scene/gameScene.js";
+import { gameScene } from "../scenes/gameScene.js";
 // import { terrain } from "../terrain.js";
 // import { canvas } from "../tools/canvas.js";
 
@@ -15,15 +15,15 @@ export default class GameView {
   game;
   pixelSize;
   #camera;
-  mapCanvas;
-  mtx;
+  // mapCanvas;
+  // mtx;
 
   #npcCanvas;
   ntx;
 
 
-  #blockCanvas;
-  #bctx;
+  // #blockCanvas;
+  // #bctx;
 
   currentShadow;
   // mapRenderData;
@@ -31,7 +31,7 @@ export default class GameView {
   #tempCanvas;
   #tempCtx;
 
-  hzTimes;
+  // hzTimes;
   sight;
   #NPCAnimation;
   currentAnimation;
@@ -45,14 +45,14 @@ export default class GameView {
     this.#camera[0] = player[0];
     this.#camera[1] = player[1];
     // hz / 60
-    this.hzTimes = 1;
+    // this.hzTimes = 1;
 
     this.#NPCAnimation = new NPCAnimationController({
       view: this,
     });
 
-    this.#blockCanvas = [];
-    this.#bctx = [];
+    // this.#blockCanvas = [];
+    // this.#bctx = [];
     
     this.oldPlayer = [];
     this.currentAnimation = null;
@@ -60,20 +60,18 @@ export default class GameView {
     
 
     
-    this.mapCanvas = screen.getScreen();
+    // this.mapCanvas = device.getDevice();
 
     
     this.#npcCanvas = document.getElementById("npc");
-    this.#npcCanvas.width = this.mapCanvas.width;
-    this.#npcCanvas.height = this.mapCanvas.height;
+    this.#npcCanvas.width = device.width;
+    this.#npcCanvas.height = device.height;
 
     
     this.shadowCanvas = document.getElementById("shadow");
-    this.shadowCanvas.width = this.mapCanvas.width;
-    this.shadowCanvas.height = this.mapCanvas.height;
+    this.shadowCanvas.width = device.width;
+    this.shadowCanvas.height = device.height;
 
-    this.mtx = this.mapCanvas.getContext("2d");
-    this.mtx.imageSmoothingEnabled = false;
     this.ntx = this.#npcCanvas.getContext("2d");
     this.stx = this.shadowCanvas.getContext("2d");
     this.#tempCanvas = document.getElementById("temp");
@@ -81,10 +79,7 @@ export default class GameView {
     // this.mapRenderData = {};
     this.npcRenderData = {};
   }
-
   
-  
-
   yell({name, yells}) {
     document.getElementById("yell").innerText = `${name}： ${yells[Math.floor(Math.random() * yells.length)]}`;  
   }
@@ -100,115 +95,11 @@ export default class GameView {
     document.getElementById("windowanimation").getContext("2d").clearRect(0, 0, 96, 96);
     this.currentAnimation = null;
     this.initClick();
-    document.getElementById("canvasback").removeEventListener(screen.clickName, this.removeWindowHandler);
+    document.getElementById("canvasback").removeEventListener(device.clickName, this.removeWindowHandler);
 
   }
 
-  initMap() {
-    [1, 2, 3, 4, 8].map((num) => {
 
-      const blockCanvas = document.createElement("canvas");
-      blockCanvas.style.display = "none";
-      document.getElementById("canvasback").append(blockCanvas);
-      const bctx = blockCanvas.getContext("2d", {"willReadFrequently": true});
-
-      blockCanvas.width = 48 * 16 * num;
-      blockCanvas.height = 48 * 16 * num;
-      
-      
-      this.#blockCanvas[num] = blockCanvas;
-      this.#bctx[num] = bctx;
-
-      this.preRenderMap({
-        ctx: bctx,
-        pixelSize: num,
-      });
-      
-
-    });
-  }
-
-  preRenderMap({ctx, pixelSize}) {
-    const d = textureCache.getTexture(dungeon.level.tilesTextureName()).getContext("2d");
-    for (let y = 0; y < 48; y++) {
-      for (let x = 0; x < 48; x++) {
-        // const block = this.game.gamecore.getBlock([x, y]);
-        // if (!block) {
-        //   continue;
-        // }
-        // console.log(terrain[block.name], block.name)
-        // console.log(d)
-        const id = dungeon.level.levelAttr.getTile(x, y);
-        const sx = (id % 16) * 16;
-        const sy = Math.floor(id / 16) * 16;
-        this.renderSingleBlockByS({
-          ctx,
-          // imgData: textureCache.getTexture(block.name),
-          // imgData: textureCache.getTexture("tiles_town")[terrain[block.name]],
-          // imgData: textureCache.getTexture(dungeon.level.tilesTextureName())[dungeon.level.levelAttr.getTile(x, y)],
-          imgData: d.getImageData(sx, sy, 16, 16),
-          pixelSize,
-          sx: x * 16 * pixelSize,
-          sy: y * 16 * pixelSize,
-        });
-      }
-    }
-  }
-
-  // renderMapByCut() {
-  //   const num = this.pixelSize;
-  //   const bctx = this.#bctx[num];
-
-  //   const sx = this.#camera[0] * 16 * num + 16 / 2 * num - this.mapCanvas.width / 2;
-  //   const sy = this.#camera[1] * 16 * num + 16 / 2 * num - this.mapCanvas.height / 2;
-
-  //   this.mtx.clearRect(0, 0, this.mapCanvas.width, this.mapCanvas.height);
-  //   const mapData = bctx.getImageData(sx, sy, this.mapCanvas.width, this.mapCanvas.height);
-  //   this.mtx.putImageData(mapData, 0, 0);
-
-  // }
-
-  renderMapByWrite() {
-    if (gameScene.tilesMap) gameScene.tilesMap.render();
-    return;
-    const num = this.pixelSize;
-    const mapCanvas = this.mapCanvas;
-
-    let startX = ((mapCanvas.width - num * 16) / 2) % (num * 16);
-    let startY = ((mapCanvas.height - num * 16) / 2) % (num * 16);
-    startX = startX === 0 ? startX : startX  - num * 16;
-    startY = startY === 0 ? startY : startY  - num * 16;
-
-    
-    const widthNumber = Math.ceil(((mapCanvas.width - num * 16) / 2) / (num * 16));
-    const heightNumber = Math.ceil(((mapCanvas.height - num * 16) / 2) / (num * 16));
-    
-    this.mtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
-    const coorStartX = this.#camera[0] - widthNumber;
-    const coorStartY = this.#camera[1] - heightNumber;
-
-
-    
-    for (let y = coorStartY; y <= heightNumber + this.#camera[1]; y++) {
-      for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
-        // const block = this.game.gamecore.getBlock([x, y]);
-        // if (!block) {
-        //   continue;
-        // }
-        // console.log(x, y)
-
-        const sx = (x - coorStartX) * 16 * num + startX;
-        const sy = (y - coorStartY) * 16 * num + startY;
-        this.renderMapBlock({
-          // imgData: this.mapRenderData[block.name],
-          // imgData: textureCache.getTexture("tiles_town")[terrain[block.name]],
-          imgData: textureCache.getTexture(dungeon.level.tilesTextureName())[dungeon.level.levelAttr.getTile(x, y)],
-          sx,
-          sy,
-        });
-      }
-    }
-  }
 
   // to be removed to shadow class?
   renderShadow() {
@@ -344,15 +235,13 @@ export default class GameView {
   }
 
   renderGame() {
-    // if (this.pixelSize <= 0) {
-    //   this.renderMapByCut();
-    // } else {
-    this.renderMapByWrite();
-    // }
+    if (gameScene.tilesMap) gameScene.tilesMap.render();
     this.renderShadow();
     this.renderNPC();
 
   }
+
+  
 
 
   renderNPCBlock({writer, imgData, sx, sy, reverseTexture, num}) {
@@ -375,50 +264,6 @@ export default class GameView {
   }
 
 
-  renderMapBlock({imgData, sx, sy}) {
-    if (this.pixelSize === 1) {
-      this.mtx.putImageData(imgData, sx, sy);
-      return;
-    }
-
-    for (let y = 0; y < 16; y++) {
-      for (let x = 0; x < 16; x++) {
-        const index = (y * 16 + x);
-        this.mtx.fillStyle = `rgb(${imgData.data[index * 4]}, ${imgData.data[index * 4 + 1]}, ${imgData.data[index * 4 + 2]})`;
-        this.mtx.fillRect(sx + x * this.pixelSize, sy + y * this.pixelSize, this.pixelSize, this.pixelSize);
-
-      }
-    }
-  }
-  
-  // renderPamBlock({imgData, sx, sy}) {
-  //   if (this.pixelSize === 1) {
-  //     this.mtx.putImageData(imgData, sx, sy);
-  //     return;
-  //   }
-
-  //   // this.mtx.putImageData(imgData, );
-    
-
-  // }
-
-  renderSingleBlockByS({ctx, imgData, sx, sy, pixelSize}) {
-    if (pixelSize === 1) {
-      ctx.putImageData(imgData, sx, sy);
-      return;
-    }
-
-    for (let y = 0; y < 16; y++) {
-      for (let x = 0; x < 16; x++) {
-        const index = (y * 16 + x);
-        ctx.fillStyle = `rgb(${imgData.data[index * 4]}, ${imgData.data[index * 4 + 1]}, ${imgData.data[index * 4 + 2]})`;
-        ctx.fillRect(sx + x * pixelSize, sy + y * pixelSize, pixelSize, pixelSize);
-      }
-    }
-  }
-
-  
-
   move(move) {
     this.game.gamecore.move(move);
     const player = this.game.gamecore.player;
@@ -439,28 +284,16 @@ export default class GameView {
 
   resize(isBigger) {
     const num = this.pixelSize;
-
     if (isBigger) {
-      if (num < 4) {
-        this.pixelSize += 1;
-      } else if (num < 8) {
-        this.pixelSize += 4;
-      } else if (num < 16){
-        this.pixelSize += 4;
-      } else {
+      if (num === 16) {
         return;
       }
+      this.pixelSize += 1;
     } else {
-      if (num > 8) {
-        this.pixelSize -= 4;
-      } else if (num > 4) {
-        this.pixelSize -= 4;
-      } else if (num > 1) {
-        this.pixelSize -= 1;
-      } else {
+      if (num === 1) {
         return;
       }
-
+      this.pixelSize -= 1;
     }
     gameScene.pixelSize = this.pixelSize;
     this.renderGame();
@@ -471,7 +304,7 @@ export default class GameView {
 
     for (const npc in npcMap) {
       const textureName = npcMap[npc].name;
-      this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.mapCanvas.height);
+      this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, device.height);
       const image = document.getElementById(textureName);
       this.#tempCtx.drawImage(image, 0, 0);
       const xLength = image.width / 16;
@@ -487,7 +320,7 @@ export default class GameView {
       }
     }
     
-    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.mapCanvas.height);
+    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, device.height);
   }
 
   initResizeButton() {
@@ -498,7 +331,6 @@ export default class GameView {
       this.pixelSize = pixleTypes[button.value];
       this.renderGame();
     });
-
   }
 
 
@@ -508,25 +340,22 @@ export default class GameView {
     });
   }
 
-  // initKeyboard() {
-  //   // document.addEventListener("keydown", );
-  // }
 
   initClick() {
-    document.getElementById("canvasback").addEventListener(screen.clickName, this.mapClickHandler);
+    document.getElementById("canvasback").addEventListener(device.clickName, this.mapClickHandler);
 
   }
 
   mapClickHandler = (event) => {
     const gamecore = this.game.gamecore;
-    const midX = this.mapCanvas.width / 2;
-    const midY = this.mapCanvas.height / 2;
+    const midX = device.width / 2;
+    const midY = device.height / 2;
     const num = this.pixelSize * 16;
 
     // bro...
     let clientX = event.clientX;
     let clientY = event.clientY;
-    if (screen.isPhone) {
+    if (device.isPhone) {
       clientX = event.touches[0].clientX;
       clientY = event.touches[0].clientY;
     }
@@ -558,17 +387,6 @@ export default class GameView {
   }
 
 
-  initHz() {
-    let now;
-    const past = performance.now();
-    requestAnimationFrame(() => {
-      now = performance.now();
-      // considering about performance...maybe round
-      let onehz = (1000 / (now - past) / 60);
-      this.hzTimes = onehz;
-    });
-
-  }
 
 
   // sadly, no dragging for now
@@ -577,15 +395,13 @@ export default class GameView {
 }
 
 class NPCAnimationController {
-  // #animation;
-  // #newAnimationList;
-  // #stop;
-  // #stoped;
   constructor({view}) {
     this.animationList = {};
     this.animation = new Animation(this);
     
     this.gameview = view;
+
+    
   }
   merge() {
     for (const npc in this.animationList) {
@@ -609,7 +425,7 @@ class NPCAnimationController {
   add({name, texture, sx, sy}) {
     let animate = this.animationList[name];
     if (!animate) {
-      this.animationList[name] = {texture, sx, sy, index: 0, hz: 0, dontdelete: true};
+      this.animationList[name] = {texture, sx, sy, index: 0, hz: 0, dontdelete: true, delay: 0};
     } else {
       animate.sx = sx;
       animate.sy = sy;
@@ -619,7 +435,7 @@ class NPCAnimationController {
     animate = this.animationList[name];
     let frameIndex = 0;
     
-      // not good
+    // not good
     const frames = npcMap[texture].animation.idle.frames;
 
     if (frames.length > animate.index) {
@@ -641,10 +457,21 @@ class NPCAnimationController {
 
 
 class Animation {
+  stoped;
+  controller;
+  now;
+  stoped;
+
   constructor(npcAnimationController) {
     this.controller = npcAnimationController;
     this.stoped = false;
+    
+    this.now = 0;
+    
   }
+
+  // step() {
+  // }
 
   stop() {
     this.stoped = true;
@@ -652,11 +479,23 @@ class Animation {
 
   start() {
     requestAnimationFrame(() => {
+      // if (gameScene.tilesMap) gameScene.tilesMap.render();
       this.animate();
     });
   }
 
+  updateStep() {
+
+    const now = window.performance.now();
+    const step = now - this.now;
+    this.step = step;
+    this.now = now;
+
+  }
+
   animate() {
+    this.updateStep();
+    // console.log(this.step);
     const gameview = this.controller.gameview;
 
     for (const npc in this.controller.animationList) {
@@ -667,13 +506,13 @@ class Animation {
       const frames = npcMap[texture].animation.idle.frames;
 
 
-
-      if (animate.hz < hz * gameview.hzTimes) {
-        animate.hz += 1;
+      const delay = 1 / npcMap[texture].animation.idle.hz * 1000;
+      if (animate.delay < delay) {
+        animate.delay += this.step;
         continue;
       }
-      animate.hz = 0;
-      
+      animate.delay = 0;
+
       if (frames.length <= animate.index) {
         animate.index = 0;
       }

@@ -109,6 +109,6 @@ export class Shadow {
 
   // static calcSectorShadow({blockMap, sx, sy, radius}) {
 
-  //   // maybe someday i will rewrite it to mine shadowcaster
+  // maybe someday i will rewrite it to mine shadowcaster
   
 }

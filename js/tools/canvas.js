@@ -1,8 +1,8 @@
-import { screen } from "./screen.js";
+import { device } from "./device.js";
 
 
 
-const ctx = screen.getScreen().getContext("2d");
+const ctx = device.getDevice().getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
 export const canvas = {
@@ -17,7 +17,7 @@ export const canvas = {
 // }
 
 function clear() {
-  ctx.clearRect(0, 0, screen.width, screen.height);
+  ctx.clearRect(0, 0, device.width, device.height);
   return canvas;
 }
 

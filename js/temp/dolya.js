@@ -1236,14 +1236,14 @@ const npcMap = {
   },
 };
 // load texture
-for (const block in blockMap) {
-  const textureName = blockMap[block].name;
-  const img = new Image();
-  img.id = textureName;
-  img.classList.add("texture");
-  img.src = `images/block/${textureName}.png`;
-  document.getElementById("back").appendChild(img);
-}
+// for (const block in blockMap) {
+//   const textureName = blockMap[block].name;
+//   const img = new Image();
+//   img.id = textureName;
+//   img.classList.add("texture");
+//   img.src = `images/block/${textureName}.png`;
+//   document.getElementById("back").appendChild(img);
+// }
 
 for (const npc in npcMap) {
   const textureName = npcMap[npc].name;

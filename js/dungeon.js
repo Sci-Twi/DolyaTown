@@ -1,4 +1,4 @@
-import { TownLevel } from "./level/levels/townLevel.js";
+import { TownLevel } from "./levels/levels/townLevel.js";
 
 export const dungeon = {
   depth: 0,

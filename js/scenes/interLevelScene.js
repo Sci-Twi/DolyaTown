@@ -1,7 +1,8 @@
 import { dungeon } from "../dungeon.js";
 import { game } from "../game.js";
 import { gameScene } from "./gameScene.js";
-
+import { textureCache } from "../tools/textureCache.js";
+import { assets } from "../assets.js";
 
 export const interLevelScene = {
   up,
@@ -10,8 +11,10 @@ export const interLevelScene = {
   destroy,
 };
 
-function create() {
+async function create() {
   console.log("creating inter level scene")
+  
+  await textureCache.loadTextures(Object.keys(assets));
 
   this.down();
 
@@ -32,6 +35,4 @@ function down() {
   dungeon.init();
   // }
   const level = dungeon.newLevel();
-  // console.log(level)
-
 }
