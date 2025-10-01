@@ -7,25 +7,101 @@ import { TilesMap } from "../sprites/tiles.js";
 
 import { win } from "../ui/win.js";
 
+const cellView = {
+  startCoor: [],
+  halfLength: [],
+};
+
+let pixelSize = 0;
+const camera = [];
+
 export const gameScene = {
   // pixel size
-  pixelSize: 8,
-  camera: [24, 24],
+  // pixelSize: 0,
+  // camera: null,
+  
 
   tiles: null,
 
   async create() {
     console.log("creating game scene")
-    new GameScene(map_dolya_block);
+
+    pixelSize = 8;
+    // camera[0] = [25]
+    // this.camera = [25, 21];
+    camera[0] = 25;
+    camera[1] = 21;
+
+    updateCellView();
+
+    const temp = new GameScene(map_dolya_block);
     this.tilesMap = new TilesMap();
     this.tilesMap.updateTiles();
 
+
     keyboard.addListener("gameScene");
+    temp.gameview.renderGame();
 
     
   },
 
+  updateCellView,
+
+  getPixelSize,
+  setPixelSize,
+
+  getCamera,
+  setCameraX,
+  setCameraY,
+  
+  // calculate dx dy by ps and camera (cellview)
+  calcScreenCoor(x, y) {
+    if (x < camera[0] - cellView.halfLength[0] || x > camera[0] + cellView.halfLength[0] || y < camera[1] - cellView.halfLength[1] || y > camera + cellView.halfLength[1]) {
+      return null;
+    }
+    return [cellView.startCoor[0] + (x - camera[0] + cellView.halfLength[0]) * pixelSize * 16, cellView.startCoor[1] + (y - camera[1] + cellView.halfLength[1]) * pixelSize * 16];
+  },
+  getCellView,
 };
+
+function getPixelSize() {
+  return pixelSize;
+}
+
+function setPixelSize(ps) {
+  pixelSize = ps;
+}
+
+function getCamera() {
+  return camera;
+}
+
+function setCameraX(x) {
+  camera[0] = x;
+}
+
+function setCameraY(y) {
+  camera[1] = y;
+}
+
+function getCellView() {
+  return cellView;
+}
+
+function updateCellView() {
+  const ps = pixelSize;
+  let startX = ((device.width - ps * 16) / 2) % (ps * 16);
+  let startY = ((device.height - ps * 16) / 2) % (ps * 16);
+  startX = startX === 0 ? startX : startX - ps * 16;
+  startY = startY === 0 ? startY : startY - ps * 16;
+  const halfWidth = Math.ceil(((device.width - ps * 16) / 2) / (ps * 16));
+  const halfHeight = Math.ceil(((device.height - ps * 16) / 2) / (ps * 16));
+
+  cellView.startCoor[0] = startX;
+  cellView.startCoor[1] = startY;
+  cellView.halfLength[0] = halfWidth;
+  cellView.halfLength[1] = halfHeight;
+}
 
 class GameScene {
   gameview;
@@ -36,13 +112,13 @@ class GameScene {
     this.gameview = new GameView(this);
     
     if (device.isPhone) {
-      this.gameview.initResizeButton();
+      // this.gameview.initResizeButton();
     } else {
       this.gameview.initResize();
     }
     this.gamecore.initMap(map);
     win.initWindow();
     this.gameview.initClick();
-    this.gameview.renderGame();
+    // this.gameview.renderGame();
   }
 }

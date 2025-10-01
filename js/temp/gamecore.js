@@ -120,7 +120,7 @@ export default class GameCore {
   }
   
   initMap(map) {
-    this.game.gameview.initRenderData();
+    // this.game.gameview.initRenderData();
     // customize
 
     this.blockmap = [];

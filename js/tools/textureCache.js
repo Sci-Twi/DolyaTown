@@ -1,23 +1,35 @@
 import {assets} from "../assets.js";
-const textures = {
-
-};
+const textures = {};
 
 export const textureCache = {
   // textures,
   loadTextures,
   getTexture,
+  calcSourceCoor,
+  // setTextureReversed,
 };
 
-// image 2 texture by canvas
-const canvas = new OffscreenCanvas(500, 500);
-const ctx = canvas.getContext("2d");
+
+class TextureCanvas {
+  canvas;
+  ctx;
+  step;
+  // this shouldn't be here
+  reversed;
+
+  constructor(width, height, step) {
+    this.canvas = new OffscreenCanvas(width, height);
+    this.ctx = this.canvas.getContext("2d");
+    this.reversed = false;
+  }
+}
+
+
 const image = new Image();
 
 function getTexture(name) {
   // console.log(name, textures[name])
   return textures[name];
-
 }
 
 async function loadTexture(name) {
@@ -25,24 +37,10 @@ async function loadTexture(name) {
     return await new Promise((resolve, reject) => {
       image.src = "/images/" + assets[name];
       image.onload = function () {
-        ctx.drawImage(image, 0, 0);
-
-        // textures[name] = [];
-        textures[name] = new OffscreenCanvas(this.naturalWidth, this.naturalHeight);
-        textures[name].getContext("2d").drawImage(image, 0, 0);
-        // console.log(textures)
-
-        // for (let y = 0; y < this.naturalHeight; y += 16) {
-        //   for (let x = 0; x < this.naturalWidth; x += 16) {
-        //     textures[name].push(ctx.getImageData(x, y, 16, 16));
-        //   }
-        // }
-        
-        // textures[name] = ctx.getImageData(0, 0, width, height);
-        
-        // console.log(textures)
+        const tc = new TextureCanvas(this.naturalWidth, this.naturalHeight);
+        tc.ctx.drawImage(image, 0, 0);
+        textures[name] = tc;
         image.src = "";
-        ctx.clearRect(0, 0, 500, 500);
         resolve();
       };
     });
@@ -57,3 +55,9 @@ async function loadTextures(names) {
   }
 }
 
+function calcSourceCoor(id, width) {
+  const w = width / 16;
+  const sx = (id % w) * 16;
+  const sy = Math.floor(id / w) * 16;
+  return [sx, sy];
+}

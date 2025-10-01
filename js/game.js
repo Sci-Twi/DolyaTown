@@ -2,7 +2,7 @@ import { interLevelScene } from "./scenes/interLevelScene.js";
 
 export const game = {
   scene: null,
-  inputProcessor: null,
+  // inputProcessor: null,
 
 
   // step: 0,

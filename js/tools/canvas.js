@@ -21,9 +21,9 @@ function clear() {
   return canvas;
 }
 
-function draw(imgData, sx, sy, sw, sh, dx, dy, dw, dh) {
+function draw(textureCanvas, sx, sy, sw, sh, dx, dy, dw, dh) {
   // ctx.scale(scale, scale);
-  ctx.drawImage(imgData, sx, sy, sw, sh, dx, dy, dw, dh);
+  ctx.drawImage(textureCanvas, sx, sy, sw, sh, dx, dy, dw, dh);
   // console.log("drawing", x, y)
   // ctx.putImageData(imgData, x, y, 0, 0, 16 * scale, 16 * scale);
   // ctx.reset();

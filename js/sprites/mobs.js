@@ -10,10 +10,10 @@ export class MobsMap {
     return this.mobsArray;
   }
   updateMobs() {
-    this.mobsArray = [...dungeon.level.levelAttr.mobs];
+    // this.mobsArray = [...dungeon.level.levelAttr.mobs];
   }
 
   render() {
-    const ps = gameScene.pixelSize;
+    // const ps = gameScene.pixelSize;
   }
 }

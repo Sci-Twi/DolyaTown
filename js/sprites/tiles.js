@@ -14,6 +14,7 @@ export class TilesMap {
   texture;
 
   constructor() {
+    // considering rewrite: MobSprite->CharSprite->texture,animation
     this.texture = new Texture(256, 64, 16);
   }
 
@@ -25,32 +26,22 @@ export class TilesMap {
   }
 
   render() {
-    const ps = gameScene.pixelSize;
-    const camera = gameScene.camera;
+    const ps = gameScene.getPixelSize();
+    const camera = gameScene.getCamera();
 
-
-    let startX = ((device.width - ps * 16) / 2) % (ps * 16);
-    let startY = ((device.height - ps * 16) / 2) % (ps * 16);
-    startX = startX === 0 ? startX : startX - ps * 16;
-    startY = startY === 0 ? startY : startY - ps * 16;
-
+    const halfLength = gameScene.getCellView().halfLength;
     
-    const widthNumber = Math.ceil(((device.width - ps * 16) / 2) / (ps * 16));
-    const heightNumber = Math.ceil(((device.height - ps * 16) / 2) / (ps * 16));
-    
-    const coorStartX = camera[0] - widthNumber;
-    const coorStartY = camera[1] - heightNumber;
+    const coorStartX = camera[0] - halfLength[0];
+    const coorStartY = camera[1] - halfLength[1];
 
-    const w = this.texture.width / 16;
-    for (let y = coorStartY; y <= heightNumber + camera[1]; y++) {
-      for (let x = coorStartX; x <= widthNumber + camera[0]; x++) {
-        const dx = (x - coorStartX) * 16 * ps + startX;
-        const dy = (y - coorStartY) * 16 * ps + startY;
-
+    for (let y = coorStartY; y <= camera[1] + halfLength[1]; y++) {
+      for (let x = coorStartX; x <= camera[0] + halfLength[0]; x++) {
         const id = dungeon.level.levelAttr.getTile(x, y);
-        const sx = (id % w) * 16;
-        const sy = Math.floor(id / w) * 16;
-        canvas.draw(textureCache.getTexture(dungeon.level.tilesTextureName()), sx, sy, 16, 16, dx, dy, ps * 16, ps * 16);
+
+        const source = textureCache.calcSourceCoor(id, this.texture.width);
+        const desti = gameScene.calcScreenCoor(x, y);
+
+        canvas.draw(textureCache.getTexture(dungeon.level.tilesTextureName()).canvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
       }
     }
 
