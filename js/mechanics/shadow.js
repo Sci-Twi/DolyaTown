@@ -1,3 +1,6 @@
+import { dungeon } from "../dungeon.js";
+import { checkFlag, flags } from "../levels/terrain.js";
+
 export class Shadow {
   static mult = [
     [1,  0,  0, -1, -1,  0,  0,  1],
@@ -6,8 +9,8 @@ export class Shadow {
     [1,  0,  0,  1, -1,  0,  0, -1]
   ]
 
-  constructor({map, view, width, height}) {
-    this.map = map;
+  constructor({view, width, height}) {
+    // this.map = map;
     this.gameview = view;
     this.width = width;
     this.height = height;
@@ -26,8 +29,9 @@ export class Shadow {
     }
 
     // ...bro
-    const lightPass = this.map[y][x].lightPass;
-    return !lightPass;
+    // const lightPass = this.map[y][x].lightPass;
+    const lightPass = checkFlag(dungeon.level.levelAttr.map.get(x, y), flags.los_blocking);
+    return lightPass;
   }
 
   

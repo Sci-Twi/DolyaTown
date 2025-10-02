@@ -1,7 +1,7 @@
-import { terrain } from "../../terrain.js";
+import { terrain } from "../terrain.js";
 // const M = terrain.;
 const W = terrain.wall_ground;
-const T = terrain.wall_deco;
+const T = terrain.shrub;
 const Z = terrain.high_grass;
 const D = terrain.door;
 const L = terrain.locked_door;

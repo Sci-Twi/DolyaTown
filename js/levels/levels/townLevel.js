@@ -5,7 +5,8 @@ export class TownLevel {
   levelAttr;
   constructor() {
     this.levelAttr = new Level(48, 48);
-    this.levelAttr.map = [...townLayouts];
+    this.levelAttr.map.setMapArray([...townLayouts]);
+    // this.levelAttr.map = [...townLayouts];
   }
 
   tilesTextureName() {

@@ -1,9 +1,11 @@
-import { npcMap, Block } from "./dolya.js";
+import { npcMap } from "./dolya.js";
 import { device } from "../tools/device.js";
 import { debug } from "../tools/debug.js";
 import { Shadow } from "../mechanics/shadow.js";
-import { gameScene } from "../scenes/gameScene.js";
+import { camera, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { textureCache } from "../tools/textureCache.js";
+import { checkFlag, flags } from "../levels/terrain.js";
+import { dungeon } from "../dungeon.js";
 
 
 
@@ -74,9 +76,8 @@ export default class GameView {
     if (debug.lightMode) {
       return;
     }
-    
 
-    const num = gameScene.getPixelSize();
+    const num = pixelSize;
     const shadowCanvas = this.shadowCanvas;
     const gamecore = this.game.gamecore;
     let startX = ((shadowCanvas.width - num * 16) / 2) % (num * 16);
@@ -84,7 +85,7 @@ export default class GameView {
     startX = startX === 0 ? startX : startX  - num * 16;
     startY = startY === 0 ? startY : startY  - num * 16;
 
-    const camera = gameScene.getCamera();
+    // const camera = gameScene.camera;
 
     const widthNumber = Math.ceil(((shadowCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((shadowCanvas.height - num * 16) / 2) / (num * 16));
@@ -101,7 +102,6 @@ export default class GameView {
       this.oldPlayer[1] = gamecore.player[1];
 
       this.currentShadow = new Shadow({
-        map: gamecore.blockmap,
         view: this,
         width: gamecore.worldSize[0],
         height: gamecore.worldSize[1],
@@ -121,29 +121,31 @@ export default class GameView {
     const height1 = heightNumber + camera[1] + 2 - coorStartY;
 
     const shadowArray = new ImageData(widthNumber + camera[0] + 2 - coorStartX, heightNumber + camera[1] + 2 - coorStartY);
-
+    const visitedArr = dungeon.level.levelAttr.visited;
 
     for (let y = coorStartY; y <= heightNumber + camera[1] + 1; y++) {
       for (let x = coorStartX; x <= widthNumber + camera[0] + 1; x++) {
-        const b1 = gamecore.getBlock([x, y]);
-        const b2 = gamecore.getBlock([x, y - 1]);
-        const b3 = gamecore.getBlock([x - 1, y]);
-        const b4 = gamecore.getBlock([x - 1, y - 1]);
+        const b1 = [x, y];
+        const b2 = [x, y - 1];
+        const b3 = [x - 1, y];
+        const b4 = [x - 1, y - 1];
+
         const index = (y - coorStartY) * (widthNumber + camera[0] + 2 - coorStartX) + (x - coorStartX);
         let c = invisible;
         
         let isLit = this.currentShadow.isLit(x, y) && this.currentShadow.isLit(x, y - 1) && this.currentShadow.isLit(x - 1, y) && this.currentShadow.isLit(x - 1, y - 1);
         if (isLit) {
           // ugly
-          if (b1) b1.isVisited = true;
-          if (b2) b2.isVisited = true;
-          if (b3) b3.isVisited = true;
-          if (b4) b4.isVisited = true;
+          visitedArr.set(...b1, true);
+          visitedArr.set(...b2, true);
+          visitedArr.set(...b3, true);
+          visitedArr.set(...b4, true);
+
           c = visible;
 
         } else {
           if ((b1 && b2 && b3 && b4)) {
-            if (!b1.isVisited || !b2.isVisited || !b3.isVisited || !b4.isVisited) {
+            if (!visitedArr.get(...b1) || !visitedArr.get(...b2) || !visitedArr.get(...b3) || !visitedArr.get(...b4)) {
               c = invisible;
             } else {
               c = visited;
@@ -159,21 +161,19 @@ export default class GameView {
       }
     }
     this.#tempCtx.putImageData(shadowArray, 0, 0);
-    this.stx.drawImage(this.#tempCanvas, 0, 0, width1, height1, startX - num * 8, startY - num * 8, width1 * gameScene.getPixelSize() * 16, height1 * gameScene.getPixelSize() * 16);
+    this.stx.drawImage(this.#tempCanvas, 0, 0, width1, height1, startX - num * 8, startY - num * 8, width1 * pixelSize * 16, height1 * pixelSize * 16);
     this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#tempCanvas.height);
 
   }
 
 
   renderNPC() {
-    const num = gameScene.getPixelSize();
+    const num = pixelSize;
     const npcCanvas = this.#npcCanvas;
     let startX = ((npcCanvas.width - num * 16) / 2) % (num * 16);
     let startY = ((npcCanvas.height - num * 16) / 2) % (num * 16);
     startX = startX === 0 ? startX : startX  - num * 16;
     startY = startY === 0 ? startY : startY  - num * 16;
-
-    const camera = gameScene.getCamera();
     
     const widthNumber = Math.ceil(((npcCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((npcCanvas.height - num * 16) / 2) / (num * 16));
@@ -220,13 +220,12 @@ export default class GameView {
 
 
   renderNPCBlock({writer, name, sx, sy, id}) {
-    const ps = gameScene.getPixelSize();
+    const ps = pixelSize;
     const textureCanvas = textureCache.getTexture(name).canvas;
     const source = textureCache.calcSourceCoor(id, textureCanvas.width);
     writer.clearRect(sx, sy, ps * 16, ps * 16);
     writer.save();
-    if (
-      textureCache.getTexture(name).reversed) {
+    if (textureCache.getTexture(name).reversed) {
       writer.translate(sx + ps * 16, 0);
       writer.scale(-1, 1);
       // stupid but running
@@ -235,9 +234,6 @@ export default class GameView {
       writer.drawImage(textureCanvas, ...source, 16, 16, sx, sy, ps * 16, ps * 16);
     }
     writer.restore();
-    
-    
-
   }
 
 
@@ -260,7 +256,7 @@ export default class GameView {
 
 
   resize(isBigger) {
-    let num = gameScene.getPixelSize();
+    let num = pixelSize;
     if (isBigger) {
       if (num === 16) {
         return;
@@ -272,6 +268,7 @@ export default class GameView {
       }
       num -= 1;
     }
+    // pixelSize = num;
     gameScene.setPixelSize(num);
     gameScene.updateCellView();
     this.renderGame();
@@ -293,7 +290,7 @@ export default class GameView {
     const gamecore = this.game.gamecore;
     const midX = device.width / 2;
     const midY = device.height / 2;
-    const num = gameScene.getPixelSize() * 16;
+    const num = pixelSize * 16;
 
     // bro...
     let clientX = event.clientX;
@@ -306,12 +303,13 @@ export default class GameView {
     const biasX = Math.floor((clientX - midX - num / 2) / num) + 1;
     const biasY = Math.floor((clientY - midY - num / 2) / num) + 1;
 
-    const [cx, cy] = gameScene.getCamera();
+    const [cx, cy] = camera;
     const tobe = [cx + biasX, cy + biasY];
 
-    const block = gamecore.getBlock(tobe);
-
-    const isBlockEmpty = block?.type === Block.FLOOR;
+    const visited = dungeon.level.levelAttr.visited.get(...tobe);
+    
+    const isBlockEmpty = checkFlag(dungeon.level.levelAttr.map.get(...tobe), flags.passable);
+    
     if (this.currentShadow.isLit(cx + biasX, cy + biasY)) {
       const isNPCEmpty = !gamecore.getNPC(tobe);
       if (!isNPCEmpty) {
@@ -321,7 +319,7 @@ export default class GameView {
     }
 
     if (isBlockEmpty) {
-      if (!block.isVisited && !debug.lightMode) {
+      if (!visited && !debug.lightMode) {
         return;
       }
       gamecore.blockClickHandler({to: [cx + biasX, cy + biasY]});
@@ -402,7 +400,6 @@ class Animation {
   stoped;
   controller;
   now;
-  stoped;
 
   constructor(npcAnimationController) {
     this.controller = npcAnimationController;
@@ -411,9 +408,6 @@ class Animation {
     this.now = 0;
     
   }
-
-  // step() {
-  // }
 
   stop() {
     this.stoped = true;

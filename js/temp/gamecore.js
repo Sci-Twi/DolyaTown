@@ -1,12 +1,13 @@
 import { pathFinder } from "../mechanics/pathFinder.js";
-import {Block, blockMap, npcMap} from "./dolya.js";
+import { npcMap } from "./dolya.js";
 import { win } from "../ui/win.js";
 import { device } from "../tools/device.js";
+import { checkFlag, flags } from "../levels/terrain.js";
+import { dungeon } from "../dungeon.js";
 
 export default class GameCore {
   game;
   worldSize;
-  blockmap;
   npcmap;
   player;
   sight;
@@ -20,8 +21,8 @@ export default class GameCore {
   npcClickHandler({to}) {
     const name = this.getNPC(to).name;
     const text = npcMap[name].text;
-    this.game.gameview.currentAnimation = name;
-    win.renderWindow(text, this.game.gameview);
+    // this.game.gameview.currentAnimation = name;
+    // win.renderWindow(text, this.game.gameview);
     this.game.gameview.yell(text);
   }
 
@@ -90,7 +91,7 @@ export default class GameCore {
     if (toX <= 0 || toX > 48 || toY <= 0 || toY > 48) {
       return;
     }
-    if (this.getBlock([toX, toY]).type !== Block.FLOOR) {
+    if (!checkFlag(dungeon.level.levelAttr.map.get(toX, toY), flags.passable)) {
       return;
     }
     if (this.getNPC([toX, toY])) {
@@ -105,13 +106,6 @@ export default class GameCore {
     this.player[1] = toY;
     
   }
-
-  getBlock([x, y]) {
-    if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {
-      return null;
-    }
-    return this.blockmap[y][x];
-  }
   getNPC([x, y]) {
     if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {
       return null;
@@ -119,16 +113,9 @@ export default class GameCore {
     return this.npcmap[y][x];
   }
   
-  initMap(map) {
+  initMap() {
     // customize
 
-    this.blockmap = [];
-    for (let y = 0; y < this.worldSize[1]; y++) {
-      this.blockmap[y] = [];
-      for (let x = 0; x < this.worldSize[0]; x++) {
-        this.blockmap[y][x] = new Block(blockMap[map[y][x]]);
-      }
-    }
 
     this.npcmap = [];
     for (let y = 0; y < this.worldSize[1]; y++) {

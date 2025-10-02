@@ -2,26 +2,22 @@ import GameCore from "../temp/gamecore.js";
 import GameView from "../temp/gameview.js";
 import { device } from "../tools/device.js";
 import { keyboard } from "../keyboard.js";
-import { map_dolya_block } from "../temp/dolya.js";
 import { TilesMap } from "../sprites/tiles.js";
 
 import { win } from "../ui/win.js";
+import { dungeon } from "../dungeon.js";
 
 // TODO: export
 
-const cellView = {
+export const cellView = {
   startCoor: [],
   halfLength: [],
 };
 
-let pixelSize = 0;
-let camera = [];
+export let pixelSize = 0;
+export let camera = [];
 
 export const gameScene = {
-  // pixel size
-  // pixelSize: 0,
-  // camera: null,
-  
 
   tiles: null,
 
@@ -33,9 +29,9 @@ export const gameScene = {
 
     updateCellView();
 
-    const temp = new GameScene(map_dolya_block);
-    this.tilesMap = new TilesMap();
-    this.tilesMap.updateTiles();
+    const temp = new GameScene();
+    this.tilesMap = new TilesMap(dungeon.level.levelAttr.map);
+    // this.tilesMap.updateTiles();
 
 
     keyboard.addListener("gameScene");
@@ -45,11 +41,8 @@ export const gameScene = {
   },
 
   updateCellView,
-
-  getPixelSize,
   setPixelSize,
 
-  getCamera,
   setCamera,
   
   // calculate dx dy by ps and camera (cellview)
@@ -59,26 +52,14 @@ export const gameScene = {
     }
     return [cellView.startCoor[0] + (x - camera[0] + cellView.halfLength[0]) * pixelSize * 16, cellView.startCoor[1] + (y - camera[1] + cellView.halfLength[1]) * pixelSize * 16];
   },
-  getCellView,
 };
-
-function getPixelSize() {
-  return pixelSize;
-}
 
 function setPixelSize(ps) {
   pixelSize = ps;
 }
 
-function getCamera() {
-  return camera;
-}
-
 function setCamera(x, y) {
   camera = [x, y];
-}
-function getCellView() {
-  return cellView;
 }
 
 function updateCellView() {
@@ -99,8 +80,7 @@ function updateCellView() {
 class GameScene {
   gameview;
   gamecore;
-  // phone;
-  constructor(map) {
+  constructor() {
     this.gamecore = new GameCore(this);
     this.gameview = new GameView(this);
     
@@ -109,9 +89,8 @@ class GameScene {
     } else {
       this.gameview.initResize();
     }
-    this.gamecore.initMap(map);
+    this.gamecore.initMap();
     win.initWindow();
     this.gameview.initClick();
-    // this.gameview.renderGame();
   }
 }

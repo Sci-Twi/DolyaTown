@@ -1,37 +1,35 @@
 import { dungeon } from "../dungeon.js";
-import { gameScene } from "../scenes/gameScene.js";
+import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { textureCache } from "../tools/textureCache.js";
 import { canvas } from "../tools/canvas.js";
 
 export class TilesMap {
-  tilesArray;
-  texture;
-
-  constructor() {
+  map;
+  
+  constructor(map) {
+    this.map = map;
     // considering rewrite: MobSprite->CharSprite->animation
   }
 
-  getTiles() {
-    return this.tilesArray;
-  }
-  updateTiles() {
-    this.tilesArray = [...dungeon.level.levelAttr.map];
-  }
-
   render() {
-    const ps = gameScene.getPixelSize();
-    const camera = gameScene.getCamera();
+    canvas.clear();
+    const ps = pixelSize;
 
-    const halfLength = gameScene.getCellView().halfLength;
+    const halfLength = cellView.halfLength;
     
-    const coorStartX = camera[0] - halfLength[0];
-    const coorStartY = camera[1] - halfLength[1];
+    const startX = Math.max(camera[0] - halfLength[0], 0);
+    const startY = Math.max(camera[1] - halfLength[1], 0);
+
+    const endX = Math.min(camera[0] + halfLength[0], this.map.width);
+    const endY = Math.min(camera[1] + halfLength[1], this.map.height);
+
+
 
     const textureCanvas = textureCache.getTexture(dungeon.level.tilesTextureName()).canvas;
 
-    for (let y = coorStartY; y <= camera[1] + halfLength[1]; y++) {
-      for (let x = coorStartX; x <= camera[0] + halfLength[0]; x++) {
-        const id = dungeon.level.levelAttr.getTile(x, y);
+    for (let y = startY; y <= endY; y++) {
+      for (let x = startX; x <= endX; x++) {
+        const id = dungeon.level.levelAttr.map.get(x, y);
 
         const source = textureCache.calcSourceCoor(id, textureCanvas.width);
         const desti = gameScene.calcScreenCoor(x, y);
