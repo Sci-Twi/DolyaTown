@@ -2,6 +2,25 @@
 
 
 export const npcMap = {
+  apostle: {
+    name: "apostle",
+    animation: {
+      idle: {
+        frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
+        hz: 3,
+      }
+    },
+    coor: [20, 21],
+    text: {
+      name: "apostle",
+      description: "一个闪着光芒的立方体，发声机械而又有磁性，可能是其他世界的测试者。",
+      yells: [
+        "只有，魔法，才能，战胜，魔法。",
+        "魔法，战胜，才能，魔法，只有。",
+        "看来你通过了这轮测试。和其他测试者聊聊吧，没准能得到什么。",
+      ]
+    }
+  },
   hmdzl001: {
     name: "hmdzl001",
     animation: {
@@ -895,25 +914,6 @@ export const npcMap = {
       yells: [
         "你看见过我们的镇长了吗?我们还有许多事情要做。",
         "如果你对这一切有疑问的话，你可以在pixeldungeon.wikia.com寻找SpeciaSurprisePixelDungeon.还等什么，赶紧上船吧!",
-      ]
-    }
-  },
-  apostle: {
-    name: "apostle",
-    animation: {
-      idle: {
-        frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-        hz: 3,
-      }
-    },
-    coor: [20, 21],
-    text: {
-      name: "apostle",
-      description: "一个闪着光芒的立方体，发声机械而又有磁性，可能是其他世界的测试者。",
-      yells: [
-        "只有，魔法，才能，战胜，魔法。",
-        "魔法，战胜，才能，魔法，只有。",
-        "看来你通过了这轮测试。和其他测试者聊聊吧，没准能得到什么。",
       ]
     }
   },

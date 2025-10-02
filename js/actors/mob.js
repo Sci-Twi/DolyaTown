@@ -1,3 +1,4 @@
+// import { dungeon } from "../dungeon.js";
 import { Character } from "./character.js";
 
 export class Mob {
@@ -7,7 +8,6 @@ export class Mob {
 
   constructor() {
     this.character = new Character();
+    
   }
-
-
 }

@@ -1,9 +1,6 @@
 // import { tiles } from "../actor/tiles";
 
 export class Level {
-  // width;
-  // height;
-  // length;
   map;
   visited;
 
