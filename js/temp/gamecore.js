@@ -120,7 +120,6 @@ export default class GameCore {
   }
   
   initMap(map) {
-    // this.game.gameview.initRenderData();
     // customize
 
     this.blockmap = [];
@@ -139,8 +138,6 @@ export default class GameCore {
       const [x, y] = npcMap[npc].coor;
       this.npcmap[y][x] = new NPC(npc, npcMap[npc]);
     }
-    // this.game.gameview.initMap();
-
   }
 }
 

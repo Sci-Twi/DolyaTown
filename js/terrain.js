@@ -36,3 +36,18 @@ export const terrain = {
   
   water: 63,
 };
+
+const flags = {
+  passable: 1,
+  los_blocking: 2,
+  flamable: 4,
+  secret: 8,
+  solid: 16,
+  avoid: 32,
+  liquid: 64,
+  pit: 128,
+
+  unstichable: 256,
+};
+export const terrainFlag = [];
+// flag[0] = 

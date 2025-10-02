@@ -7,13 +7,15 @@ import { TilesMap } from "../sprites/tiles.js";
 
 import { win } from "../ui/win.js";
 
+// TODO: export
+
 const cellView = {
   startCoor: [],
   halfLength: [],
 };
 
 let pixelSize = 0;
-const camera = [];
+let camera = [];
 
 export const gameScene = {
   // pixel size
@@ -27,10 +29,7 @@ export const gameScene = {
     console.log("creating game scene")
 
     pixelSize = 8;
-    // camera[0] = [25]
-    // this.camera = [25, 21];
-    camera[0] = 25;
-    camera[1] = 21;
+    camera = [25, 21];
 
     updateCellView();
 
@@ -51,8 +50,7 @@ export const gameScene = {
   setPixelSize,
 
   getCamera,
-  setCameraX,
-  setCameraY,
+  setCamera,
   
   // calculate dx dy by ps and camera (cellview)
   calcScreenCoor(x, y) {
@@ -76,14 +74,9 @@ function getCamera() {
   return camera;
 }
 
-function setCameraX(x) {
-  camera[0] = x;
+function setCamera(x, y) {
+  camera = [x, y];
 }
-
-function setCameraY(y) {
-  camera[1] = y;
-}
-
 function getCellView() {
   return cellView;
 }

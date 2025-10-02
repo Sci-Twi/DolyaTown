@@ -9,7 +9,6 @@ import { textureCache } from "../tools/textureCache.js";
 
 export default class GameView {
   game;
-  #camera;
 
   #npcCanvas;
   ntx;
@@ -25,13 +24,6 @@ export default class GameView {
   constructor(game) {
     this.game = game;
     this.sight = 6;
-    const player = this.game.gamecore.player;
-    this.#camera = [];
-    this.#camera[0] = player[0];
-    this.#camera[1] = player[1];
-    
-    // hz / 60
-    // this.hzTimes = 1;
 
     this.#NPCAnimation = new NPCAnimationController({
       view: this,
@@ -92,11 +84,14 @@ export default class GameView {
     startX = startX === 0 ? startX : startX  - num * 16;
     startY = startY === 0 ? startY : startY  - num * 16;
 
+    const camera = gameScene.getCamera();
+
     const widthNumber = Math.ceil(((shadowCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((shadowCanvas.height - num * 16) / 2) / (num * 16));
-    const coorStartX = this.#camera[0] - widthNumber;
-    const coorStartY = this.#camera[1] - heightNumber;
+    const coorStartX = camera[0] - widthNumber;
+    const coorStartY = camera[1] - heightNumber;
 
+    
     this.stx.clearRect(0, 0, shadowCanvas.width, shadowCanvas.height);
 
 
@@ -120,19 +115,21 @@ export default class GameView {
     const visited = [17, 17, 17, 204];
     const visible = [0, 0, 0, 0];
 
-    const width1 = widthNumber + this.#camera[0] + 2 - coorStartX;
-    const height1 = heightNumber + this.#camera[1] + 2 - coorStartY;
+    // const camera = gameScene.getCamera();
 
-    const shadowArray = new ImageData(widthNumber + this.#camera[0] + 2 - coorStartX, heightNumber + this.#camera[1] + 2 - coorStartY);
+    const width1 = widthNumber + camera[0] + 2 - coorStartX;
+    const height1 = heightNumber + camera[1] + 2 - coorStartY;
+
+    const shadowArray = new ImageData(widthNumber + camera[0] + 2 - coorStartX, heightNumber + camera[1] + 2 - coorStartY);
 
 
-    for (let y = coorStartY; y <= heightNumber + this.#camera[1] + 1; y++) {
-      for (let x = coorStartX; x <= widthNumber + this.#camera[0] + 1; x++) {
+    for (let y = coorStartY; y <= heightNumber + camera[1] + 1; y++) {
+      for (let x = coorStartX; x <= widthNumber + camera[0] + 1; x++) {
         const b1 = gamecore.getBlock([x, y]);
         const b2 = gamecore.getBlock([x, y - 1]);
         const b3 = gamecore.getBlock([x - 1, y]);
         const b4 = gamecore.getBlock([x - 1, y - 1]);
-        const index = (y - coorStartY) * (widthNumber + this.#camera[0] + 2 - coorStartX) + (x - coorStartX);
+        const index = (y - coorStartY) * (widthNumber + camera[0] + 2 - coorStartX) + (x - coorStartX);
         let c = invisible;
         
         let isLit = this.currentShadow.isLit(x, y) && this.currentShadow.isLit(x, y - 1) && this.currentShadow.isLit(x - 1, y) && this.currentShadow.isLit(x - 1, y - 1);
@@ -175,16 +172,18 @@ export default class GameView {
     let startY = ((npcCanvas.height - num * 16) / 2) % (num * 16);
     startX = startX === 0 ? startX : startX  - num * 16;
     startY = startY === 0 ? startY : startY  - num * 16;
+
+    const camera = gameScene.getCamera();
     
     const widthNumber = Math.ceil(((npcCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((npcCanvas.height - num * 16) / 2) / (num * 16));
-    const coorStartX = this.#camera[0] - widthNumber;
-    const coorStartY = this.#camera[1] - heightNumber;
+    const coorStartX = camera[0] - widthNumber;
+    const coorStartY = camera[1] - heightNumber;
     this.ntx.clearRect(0, 0, npcCanvas.width, npcCanvas.height);
 
 
-    for (let y = coorStartY; y <= heightNumber + this.#camera[1]; y++) {
-      for (let x = coorStartX; x <= widthNumber + this.#camera[0]; x++) {
+    for (let y = coorStartY; y <= heightNumber + camera[1]; y++) {
+      for (let x = coorStartX; x <= widthNumber + camera[0]; x++) {
         const npc = this.game.gamecore.getNPC([x, y]);
         if (!npc) {
           continue;
@@ -235,7 +234,6 @@ export default class GameView {
     } else {
       writer.drawImage(textureCanvas, ...source, 16, 16, sx, sy, ps * 16, ps * 16);
     }
-    // writer.scale(1, 1);
     writer.restore();
     
     
@@ -246,11 +244,9 @@ export default class GameView {
   move(move) {
     this.game.gamecore.move(move);
     const player = this.game.gamecore.player;
-    this.#camera[0] = player[0];
-    this.#camera[1] = player[1];
-    // gameScene.camera = [...player];
-    gameScene.setCameraX(player[0]);
-    gameScene.setCameraY(player[1]);
+
+
+    gameScene.setCamera(...player);
     gameScene.updateCellView();
     
     // too specific
@@ -310,7 +306,7 @@ export default class GameView {
     const biasX = Math.floor((clientX - midX - num / 2) / num) + 1;
     const biasY = Math.floor((clientY - midY - num / 2) / num) + 1;
 
-    const [cx, cy] = this.#camera;
+    const [cx, cy] = gameScene.getCamera();
     const tobe = [cx + biasX, cy + biasY];
 
     const block = gamecore.getBlock(tobe);
