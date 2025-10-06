@@ -14,9 +14,6 @@ export default class GameView {
   #npcCanvas;
   ntx;
 
-  // currentShadow;
-  #tempCanvas;
-  #tempCtx;
 
   sight;
   #NPCAnimation;
@@ -24,13 +21,11 @@ export default class GameView {
 
   constructor(game) {
     this.game = game;
-    this.sight = 6;
 
     this.#NPCAnimation = new NPCAnimationController({
       view: this,
     });
     
-    // this.oldPlayer = [];
     this.currentAnimation = null;
     
     this.#npcCanvas = document.getElementById("npc");
@@ -38,15 +33,8 @@ export default class GameView {
     this.#npcCanvas.height = device.height;
 
     
-    this.shadowCanvas = document.getElementById("shadow");
-    this.shadowCanvas.width = device.width;
-    this.shadowCanvas.height = device.height;
-
     this.ntx = this.#npcCanvas.getContext("2d");
     this.ntx.imageSmoothingEnabled = false;
-    this.stx = this.shadowCanvas.getContext("2d");
-    this.#tempCanvas = document.getElementById("temp");
-    this.#tempCtx = this.#tempCanvas.getContext("2d");
   }
   
   yell({name, yells}) {
@@ -68,98 +56,13 @@ export default class GameView {
 
   }
 
-
-
-  // to be removed to shadow class?
-  renderShadow() {
-    if (debug.lightMode) {
-      return;
-    }
-    const shadow = dungeon.level.levelAttr.shadow;
-
-    const num = pixelSize;
-    const shadowCanvas = this.shadowCanvas;
-    const gamecore = this.game.gamecore;
-    let startX = ((shadowCanvas.width - num * 16) / 2) % (num * 16);
-    let startY = ((shadowCanvas.height - num * 16) / 2) % (num * 16);
-    startX = startX === 0 ? startX : startX  - num * 16;
-    startY = startY === 0 ? startY : startY  - num * 16;
-
-    const widthNumber = Math.ceil(((shadowCanvas.width - num * 16) / 2) / (num * 16));
-    const heightNumber = Math.ceil(((shadowCanvas.height - num * 16) / 2) / (num * 16));
-    const coorStartX = camera[0] - widthNumber;
-    const coorStartY = camera[1] - heightNumber;
-
-    
-    this.stx.clearRect(0, 0, shadowCanvas.width, shadowCanvas.height);
-
-
-    shadow.scanAllSector(...dungeon.hero.character.pos, this.sight);
-    // holy i swear i will redo this later
-
-    const invisible = [0, 0, 0, 255];
-    const visited = [17, 17, 17, 204];
-    const visible = [0, 0, 0, 0];
-
-    // const camera = gameScene.getCamera();
-
-    const width1 = widthNumber + camera[0] + 2 - coorStartX;
-    const height1 = heightNumber + camera[1] + 2 - coorStartY;
-
-    const shadowArray = new ImageData(widthNumber + camera[0] + 2 - coorStartX, heightNumber + camera[1] + 2 - coorStartY);
-    const visitedArr = dungeon.level.levelAttr.visited;
-
-    for (let y = coorStartY; y <= heightNumber + camera[1] + 1; y++) {
-      for (let x = coorStartX; x <= widthNumber + camera[0] + 1; x++) {
-        const b1 = [x, y];
-        const b2 = [x, y - 1];
-        const b3 = [x - 1, y];
-        const b4 = [x - 1, y - 1];
-
-        const index = (y - coorStartY) * (widthNumber + camera[0] + 2 - coorStartX) + (x - coorStartX);
-        let c = invisible;
-        
-        let isLit = shadow.isLit(x, y) && shadow.isLit(x, y - 1) && shadow.isLit(x - 1, y) && shadow.isLit(x - 1, y - 1);
-        if (isLit) {
-          // ugly
-          visitedArr.set(...b1, true);
-          visitedArr.set(...b2, true);
-          visitedArr.set(...b3, true);
-          visitedArr.set(...b4, true);
-
-          c = visible;
-
-        } else {
-          if ((b1 && b2 && b3 && b4)) {
-            if (!visitedArr.get(...b1) || !visitedArr.get(...b2) || !visitedArr.get(...b3) || !visitedArr.get(...b4)) {
-              c = invisible;
-            } else {
-              c = visited;
-            }
-          }
-        }
-        
-        shadowArray.data[index * 4] = c[0];
-        shadowArray.data[index * 4 + 1] = c[1];
-        shadowArray.data[index * 4 + 2] = c[2];
-        shadowArray.data[index * 4 + 3] = c[3];
-      
-      }
-    }
-    this.#tempCtx.putImageData(shadowArray, 0, 0);
-    this.stx.drawImage(this.#tempCanvas, 0, 0, width1, height1, startX - num * 8, startY - num * 8, width1 * pixelSize * 16, height1 * pixelSize * 16);
-    this.#tempCtx.clearRect(0, 0, this.#tempCanvas.width, this.#tempCanvas.height);
-
-  }
-
-
   renderNPC() {
     const num = pixelSize;
     const npcCanvas = this.#npcCanvas;
     let startX = ((npcCanvas.width - num * 16) / 2) % (num * 16);
     let startY = ((npcCanvas.height - num * 16) / 2) % (num * 16);
-    startX = startX === 0 ? startX : startX  - num * 16;
-    startY = startY === 0 ? startY : startY  - num * 16;
+    startX = startX === 0 ? startX : startX - num * 16;
+    startY = startY === 0 ? startY : startY - num * 16;
     
     const widthNumber = Math.ceil(((npcCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((npcCanvas.height - num * 16) / 2) / (num * 16));
@@ -196,7 +99,6 @@ export default class GameView {
   }
 
   renderGame() {
-    this.renderShadow();
     this.renderNPC();
 
   }
@@ -253,7 +155,6 @@ export default class GameView {
       }
       num -= 1;
     }
-    // pixelSize = num;
     gameScene.setPixelSize(num);
     gameScene.updateCellView();
     this.renderGame();

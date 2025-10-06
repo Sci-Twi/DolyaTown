@@ -1,12 +1,17 @@
 import { debug } from "../tools/debug.js";
 import { dungeon } from "../dungeon.js";
-import { camera, pixelSize } from "../scenes/gameScene.js";
+import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { canvas } from "../tools/canvas.js";
+// import { device } from "../tools/device.js";
 
 export class ShadowMap {
   shadow;
+  shadowCanvas;
+  
   constructor() {
     this.shadow = dungeon.level.levelAttr.shadow;
+    // 100 100 must be enough
+    this.shadowCanvas = new OffscreenCanvas(100, 100);
   }
 
   render() {
@@ -16,42 +21,34 @@ export class ShadowMap {
     const shadow = this.shadow;
 
     const ps = pixelSize;
-    const shadowCanvas = document.getElementById("shadow");
-    
-    let startX = ((shadowCanvas.width - ps * 16) / 2) % (ps * 16);
-    let startY = ((shadowCanvas.height - ps * 16) / 2) % (ps * 16);
-    startX = startX === 0 ? startX : startX  - ps * 16;
-    startY = startY === 0 ? startY : startY  - ps * 16;
 
-    const widthNumber = Math.ceil(((shadowCanvas.width - ps * 16) / 2) / (ps * 16));
-    const heightNumber = Math.ceil(((shadowCanvas.height - ps * 16) / 2) / (ps * 16));
-    const coorStartX = camera[0] - widthNumber;
-    const coorStartY = camera[1] - heightNumber;
+    const halfLength = cellView.halfLength;
 
-    
-    // this.stx.clearRect(0, 0, shadowCanvas.width, shadowCanvas.height);
-    shadow.scanAllSector(...dungeon.hero.character.pos, dungeon.hero.character.sight);
-    
-    // holy i swear i will redo this later
+    const startX = Math.max(camera[0] - halfLength[0], 0);
+    const startY = Math.max(camera[1] - halfLength[1], 0);
+
+    const endX = Math.min(camera[0] + halfLength[0], this.shadow.width - 1);
+    const endY = Math.min(camera[1] + halfLength[1], this.shadow.height - 1);
 
     const invisible = [0, 0, 0, 255];
     const visited = [17, 17, 17, 204];
     const visible = [0, 0, 0, 0];
 
-    const width1 = widthNumber + camera[0] + 2 - coorStartX;
-    const height1 = heightNumber + camera[1] + 2 - coorStartY;
+    const shadowWidth = endX + 2 - startX;
+    const shadowHeight = endY + 2 - startY;
 
-    const shadowArray = new ImageData(widthNumber + camera[0] + 2 - coorStartX, heightNumber + camera[1] + 2 - coorStartY);
+    const shadowArray = new ImageData(shadowWidth, shadowHeight);
     const visitedArr = dungeon.level.levelAttr.visited;
 
-    for (let y = coorStartY; y <= heightNumber + camera[1] + 1; y++) {
-      for (let x = coorStartX; x <= widthNumber + camera[0] + 1; x++) {
+
+    for (let y = startY; y <= endY + 1; y++) {
+      for (let x = startX; x <= endX + 1; x++) {
         const b1 = [x, y];
         const b2 = [x, y - 1];
         const b3 = [x - 1, y];
         const b4 = [x - 1, y - 1];
 
-        const index = (y - coorStartY) * (widthNumber + camera[0] + 2 - coorStartX) + (x - coorStartX);
+        const index = (y - startY) * shadowWidth + (x - startX);
         let c = invisible;
         
         let isLit = shadow.isLit(x, y) && shadow.isLit(x, y - 1) && shadow.isLit(x - 1, y) && shadow.isLit(x - 1, y - 1);
@@ -82,9 +79,13 @@ export class ShadowMap {
     }
 
     // honestly i've forgot how does this work
+    const stx = this.shadowCanvas.getContext("2d");
 
-    
-    // canvas.draw(, 0, 0, width1, height1, startX - ps * 8, startY - ps * 8, width1 * ps * 16, height1 * ps * 16);
-
+    stx.putImageData(shadowArray, 0, 0);
+    canvas.setSmooth(true);
+    const desti = gameScene.calcScreenCoor(startX, startY).map((coor) => {return coor - ps * 8});
+    canvas.draw(this.shadowCanvas, 0, 0, shadowWidth, shadowHeight, ...desti, shadowWidth * ps * 16, shadowHeight * ps * 16);
+    canvas.setSmooth(false);
+    stx.clearRect(0, 0, this.shadowCanvas.width, this.shadowCanvas.height);
   }
 }

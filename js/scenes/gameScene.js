@@ -9,6 +9,9 @@ import { game } from "../game.js";
 import { MobsMap } from "../sprites/mobs.js";
 import { ShadowMap } from "../sprites/shadow.js";
 
+// export const events = {
+
+// };
 
 export let cellView = {
   startCoor: [],
@@ -39,6 +42,9 @@ export const gameScene = {
     this.mobsMap = new MobsMap();
 
     this.shadowMap = new ShadowMap();
+    
+
+    
     // this.tilesMap.updateTiles();
 
 
@@ -57,13 +63,15 @@ export const gameScene = {
   setCamera,
   
   // calculate dx dy by ps and camera (cellview)
-  calcScreenCoor(x, y) {
-    if (x < camera[0] - cellView.halfLength[0] || x > camera[0] + cellView.halfLength[0] || y < camera[1] - cellView.halfLength[1] || y > camera + cellView.halfLength[1]) {
-      return null;
-    }
-    return [cellView.startCoor[0] + (x - camera[0] + cellView.halfLength[0]) * pixelSize * 16, cellView.startCoor[1] + (y - camera[1] + cellView.halfLength[1]) * pixelSize * 16];
-  },
+  calcScreenCoor,
 };
+
+function calcScreenCoor(x, y) {
+  if (x < camera[0] - cellView.halfLength[0] || x > camera[0] + cellView.halfLength[0] || y < camera[1] - cellView.halfLength[1] || y > camera + cellView.halfLength[1]) {
+    return null;
+  }
+  return [cellView.startCoor[0] + (x - camera[0] + cellView.halfLength[0]) * pixelSize * 16, cellView.startCoor[1] + (y - camera[1] + cellView.halfLength[1]) * pixelSize * 16];
+}
 
 function setPixelSize(ps) {
   pixelSize = ps;

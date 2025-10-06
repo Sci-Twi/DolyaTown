@@ -9,13 +9,9 @@ export default class GameCore {
   game;
   worldSize;
   npcmap;
-  // player;
-  // sight;
   constructor(game) {
     this.game = game;
     this.worldSize = [48, 48];
-    // this.player = [25, 21];
-    // this.sight = 7;
   }
 
   npcClickHandler({to}) {
@@ -103,6 +99,7 @@ export default class GameCore {
     this.npcmap[toY][toX] = t;
     this.npcmap[originY][originX] = null;
     dungeon.hero.character.pos = [toX, toY];
+    dungeon.level.levelAttr.updateFieldOfView();
   }
   getNPC([x, y]) {
     if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {

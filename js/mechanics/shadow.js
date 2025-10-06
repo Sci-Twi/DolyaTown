@@ -33,7 +33,7 @@ export class Shadow {
     if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
       return false;
     }
-    return this.light.get(x, y) === true;
+    return this.light.get(x, y);
   }
   setLit(x, y) {
     if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
@@ -93,7 +93,6 @@ export class Shadow {
   }
 
   scanAllSector(x, y, radius) {
-    // this.flag = true;
     this.light.fill(false);
     for (let oct = 0; oct < 8; oct++) {
       this.castLight(x, y, 1, 1, 0, radius, mult[0][oct], mult[1][oct], mult[2][oct], mult[3][oct], 0);

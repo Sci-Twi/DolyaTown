@@ -74,5 +74,5 @@ export const townLayouts = [
   M, 	M, 	W, 	F, 	F, 	F, 	F, 	F, 	W, 	F, 	I, 	W, 	M, 	M, 	M, 	M, 	M, 	O, 	I, 	I, 	I, 	I, 	O, 	E, 	E, 	M, 	M, 	M, 	M, 	M, 	E, 	E, 	W, 	O, 	O, 	O, 	W, 	W, 	W, 	W, 	W, 	W, 	W, 	Z, 	O, 	O, 	W, 	M,
   M, 	M, 	W, 	W, 	W, 	W, 	W, 	W, 	W, 	W, 	W, 	W, 	M, 	M, 	M, 	M, 	M, 	O, 	O, 	O, 	O, 	O, 	O, 	E, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	W, 	W, 	W, 	W, 	W, 	M, 	M, 	M, 	M, 	W, 	Z, 	Z, 	O, 	O, 	W, 	M,
   M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	W, 	W, 	W, 	W, 	W, 	W, 	M,
-  M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M
+  M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M, 	M,
 ];

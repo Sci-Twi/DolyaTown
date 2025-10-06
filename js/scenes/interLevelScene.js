@@ -37,4 +37,6 @@ function down() {
     dungeon.init();
   }
   dungeon.newLevel();
+  
+  dungeon.level.levelAttr.updateFieldOfView();
 }

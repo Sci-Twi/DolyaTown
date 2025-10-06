@@ -1,5 +1,6 @@
 // import { tiles } from "../actor/tiles";
 
+import { dungeon } from "../dungeon.js";
 import { Shadow } from "../mechanics/shadow.js";
 
 export class Level {
@@ -21,7 +22,7 @@ export class Level {
 
     this.fieldOfView = new Map2D(width, height);
     this.shadow = new Shadow(this.fieldOfView);
-    
+    // this.updateFieldOfView();
   }
 
   addMob(mob) {
@@ -30,7 +31,7 @@ export class Level {
   }
 
   updateFieldOfView() {
-
+    this.shadow.scanAllSector(...dungeon.hero.character.pos, dungeon.hero.character.sight);
   }
 }
 

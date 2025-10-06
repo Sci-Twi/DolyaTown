@@ -28,7 +28,6 @@ class TextureCanvas {
 const image = new Image();
 
 function getTexture(name) {
-  // console.log(name, textures[name])
   return textures[name];
 }
 

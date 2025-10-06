@@ -25,12 +25,15 @@ export class MobsMap {
     const startX = Math.max(camera[0] - halfLength[0], 0);
     const startY = Math.max(camera[1] - halfLength[1], 0);
 
-    const endX = Math.min(camera[0] + halfLength[0], this.mobs2D.width);
-    const endY = Math.min(camera[1] + halfLength[1], this.mobs2D.height);
+    const endX = Math.min(camera[0] + halfLength[0], this.mobs2D.width - 1);
+    const endY = Math.min(camera[1] + halfLength[1], this.mobs2D.height - 1);
     for (let y = startY; y <= endY; y++) {
       for (let x = startX; x <= endX; x++) {
         const mob = dungeon.level.levelAttr.mobs2D.get(x, y);
         if (!mob) {
+          continue;
+        }
+        if (!dungeon.level.levelAttr.shadow.isLit(x, y)) {
           continue;
         }
         if (!dungeon.level.levelAttr.visited.get(x, y)) {
@@ -56,7 +59,6 @@ export class MobsMap {
         
         canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
         sprite.index += 1;
-        // console.log(sprite.index)
       }
     }
     

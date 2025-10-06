@@ -21,8 +21,8 @@ export class TilesMap {
     const startX = Math.max(camera[0] - halfLength[0], 0);
     const startY = Math.max(camera[1] - halfLength[1], 0);
 
-    const endX = Math.min(camera[0] + halfLength[0], this.map.width);
-    const endY = Math.min(camera[1] + halfLength[1], this.map.height);
+    const endX = Math.min(camera[0] + halfLength[0], this.map.width - 1);
+    const endY = Math.min(camera[1] + halfLength[1], this.map.height - 1);
 
 
 
@@ -34,7 +34,7 @@ export class TilesMap {
 
         const source = textureCache.calcSourceCoor(id, textureCanvas.width);
         const desti = gameScene.calcScreenCoor(x, y);
-
+        
         canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
       }
     }

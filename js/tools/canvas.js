@@ -1,31 +1,30 @@
 import { device } from "./device.js";
 
-
+// this is weird
 
 const ctx = device.getDevice().getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
 export const canvas = {
   draw,
-  // scale,
+  // save,
   clear,
+
+  setSmooth,
 };
 
-// function scale(sx, sy) {
-//   ctx.scale(sx, sy);
-//   return canvas;
+function setSmooth(smooth) {
+  ctx.imageSmoothingEnabled = smooth;
+}
+
+// function save() {
+//   ctx.save();
 // }
 
 function clear() {
   ctx.clearRect(0, 0, device.width, device.height);
-  return canvas;
 }
 
 function draw(textureCanvas, sx, sy, sw, sh, dx, dy, dw, dh) {
-  // ctx.scale(scale, scale);
   ctx.drawImage(textureCanvas, sx, sy, sw, sh, dx, dy, dw, dh);
-  // console.log("drawing", x, y)
-  // ctx.putImageData(imgData, x, y, 0, 0, 16 * scale, 16 * scale);
-  // ctx.reset();
-  return canvas;
 }
