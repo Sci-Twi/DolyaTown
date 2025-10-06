@@ -30,9 +30,11 @@ function up() {
   
 }
 
+
+// this should be in dungeon.js
 function down() {
-  // if (dungeon.hero) {
-  dungeon.init();
-  // }
-  const level = dungeon.newLevel();
+  if (!dungeon.hero) {
+    dungeon.init();
+  }
+  dungeon.newLevel();
 }

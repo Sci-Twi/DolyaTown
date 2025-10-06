@@ -3,8 +3,15 @@ export class CharacterSprite {
   run;
   die;
   attack;
-  
-  constructor() {
 
+  current;
+
+  delay;
+  index;
+  constructor() {
+    this.index = 0;
+    this.delay = 0;
+
+    // this.current = this.idle;
   }
 }

@@ -1,35 +1,29 @@
 import { dungeon } from "../dungeon.js";
 import { checkFlag, flags } from "../levels/terrain.js";
 
-export class Shadow {
-  static mult = [
-    [1,  0,  0, -1, -1,  0,  0,  1],
-    [0,  1, -1,  0,  0, -1,  1,  0],
-    [0,  1,  1,  0,  0, -1, -1,  0],
-    [1,  0,  0,  1, -1,  0,  0, -1]
-  ]
+const mult = [
+  [1,  0,  0, -1, -1,  0,  0,  1],
+  [0,  1, -1,  0,  0, -1,  1,  0],
+  [0,  1,  1,  0,  0, -1, -1,  0],
+  [1,  0,  0,  1, -1,  0,  0, -1],
+];
 
-  constructor({view, width, height}) {
-    // this.map = map;
-    this.gameview = view;
-    this.width = width;
-    this.height = height;
-    this.light = [];
-    for (let i = 0; i < height; i++) {
-      this.light[i] = new Array(width).fill(false);
-    }
-    this.flag = false;
+export class Shadow {
+  light;
+  width;
+  height;
+  constructor(fieldOfView) {
+    this.light = fieldOfView;
+    this.width = this.light.width;
+    this.height = this.light.height;
   }
 
   blocked(x, y) {
-    // here
     const blocked = x < 0 || y < 0 || x >= this.width || y >= this.height;
     if (blocked) {
       return true;
     }
 
-    // ...bro
-    // const lightPass = this.map[y][x].lightPass;
     const lightPass = checkFlag(dungeon.level.levelAttr.map.get(x, y), flags.los_blocking);
     return lightPass;
   }
@@ -39,11 +33,11 @@ export class Shadow {
     if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
       return false;
     }
-    return this.light[y][x] === this.flag;
+    return this.light.get(x, y) === true;
   }
   setLit(x, y) {
     if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
-      this.light[y][x] = this.flag;
+      this.light.set(x, y, true);
     }
   }
 
@@ -59,14 +53,10 @@ export class Shadow {
       let dx = -j - 1;
       const dy = -j;
 
-      
-      
-
       while(dx <= 0) {
         dx += 1;
         const x = cx + dx * xx + dy * xy;
         const y = cy + dx * yx + dy * yy;
-        // b r o
         
         const leftSlope = (dx - 0.5) / (dy + 0.5);
         const rightSlope = (dx + 0.5) / (dy - 0.5);
@@ -103,16 +93,13 @@ export class Shadow {
   }
 
   scanAllSector(x, y, radius) {
-    
-    this.flag = true;
+    // this.flag = true;
+    this.light.fill(false);
     for (let oct = 0; oct < 8; oct++) {
-      this.castLight(x, y, 1, 1, 0, radius, Shadow.mult[0][oct], Shadow.mult[1][oct], Shadow.mult[2][oct], Shadow.mult[3][oct], 0);
+      this.castLight(x, y, 1, 1, 0, radius, mult[0][oct], mult[1][oct], mult[2][oct], mult[3][oct], 0);
     }
-    this.light[y][x] = true;
+    this.light.set(x, y, true);
   }
-
-  // static calcSectorShadow({blockMap, sx, sy, radius}) {
-
   // maybe someday i will rewrite it to mine shadowcaster
   
 }

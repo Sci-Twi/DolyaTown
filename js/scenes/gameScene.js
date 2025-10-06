@@ -5,11 +5,12 @@ import { keyboard } from "../keyboard.js";
 import { TilesMap } from "../sprites/tiles.js";
 
 import { win } from "../ui/win.js";
-import { dungeon } from "../dungeon.js";
+import { game } from "../game.js";
+import { MobsMap } from "../sprites/mobs.js";
+import { ShadowMap } from "../sprites/shadow.js";
 
-// TODO: export
 
-export const cellView = {
+export let cellView = {
   startCoor: [],
   halfLength: [],
 };
@@ -19,7 +20,9 @@ export let camera = [];
 
 export const gameScene = {
 
-  tiles: null,
+  tilesMap: null,
+  mobsMap: null,
+  shadowMap: null,
 
   async create() {
     console.log("creating game scene")
@@ -29,19 +32,27 @@ export const gameScene = {
 
     updateCellView();
 
+    // should i inject dungeon.level.levelAttr...?
     const temp = new GameScene();
-    this.tilesMap = new TilesMap(dungeon.level.levelAttr.map);
+    this.tilesMap = new TilesMap();
+    
+    this.mobsMap = new MobsMap();
+
+    this.shadowMap = new ShadowMap();
     // this.tilesMap.updateTiles();
 
 
     keyboard.addListener("gameScene");
     temp.gameview.renderGame();
 
+    game.render();
+    
     
   },
 
   updateCellView,
   setPixelSize,
+  render,
 
   setCamera,
   
@@ -71,10 +82,17 @@ function updateCellView() {
   const halfWidth = Math.ceil(((device.width - ps * 16) / 2) / (ps * 16));
   const halfHeight = Math.ceil(((device.height - ps * 16) / 2) / (ps * 16));
 
-  cellView.startCoor[0] = startX;
-  cellView.startCoor[1] = startY;
-  cellView.halfLength[0] = halfWidth;
-  cellView.halfLength[1] = halfHeight;
+  cellView = {
+    startCoor: [startX, startY],
+    halfLength: [halfWidth, halfHeight],
+  };
+
+}
+
+function render() {
+  this.tilesMap.render();
+  this.mobsMap.render();
+  this.shadowMap.render();
 }
 
 class GameScene {

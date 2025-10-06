@@ -1,7 +1,6 @@
 import { npcMap } from "./dolya.js";
 import { device } from "../tools/device.js";
 import { debug } from "../tools/debug.js";
-import { Shadow } from "../mechanics/shadow.js";
 import { camera, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { textureCache } from "../tools/textureCache.js";
 import { checkFlag, flags } from "../levels/terrain.js";
@@ -15,7 +14,7 @@ export default class GameView {
   #npcCanvas;
   ntx;
 
-  currentShadow;
+  // currentShadow;
   #tempCanvas;
   #tempCtx;
 
@@ -31,7 +30,7 @@ export default class GameView {
       view: this,
     });
     
-    this.oldPlayer = [];
+    // this.oldPlayer = [];
     this.currentAnimation = null;
     
     this.#npcCanvas = document.getElementById("npc");
@@ -76,6 +75,7 @@ export default class GameView {
     if (debug.lightMode) {
       return;
     }
+    const shadow = dungeon.level.levelAttr.shadow;
 
     const num = pixelSize;
     const shadowCanvas = this.shadowCanvas;
@@ -84,8 +84,6 @@ export default class GameView {
     let startY = ((shadowCanvas.height - num * 16) / 2) % (num * 16);
     startX = startX === 0 ? startX : startX  - num * 16;
     startY = startY === 0 ? startY : startY  - num * 16;
-
-    // const camera = gameScene.camera;
 
     const widthNumber = Math.ceil(((shadowCanvas.width - num * 16) / 2) / (num * 16));
     const heightNumber = Math.ceil(((shadowCanvas.height - num * 16) / 2) / (num * 16));
@@ -96,19 +94,7 @@ export default class GameView {
     this.stx.clearRect(0, 0, shadowCanvas.width, shadowCanvas.height);
 
 
-    // temp...bruh
-    if (this.oldPlayer[0] !== gamecore.player[0] || this.oldPlayer[1] !== gamecore.player[1]) {
-      this.oldPlayer[0] = gamecore.player[0];
-      this.oldPlayer[1] = gamecore.player[1];
-
-      this.currentShadow = new Shadow({
-        view: this,
-        width: gamecore.worldSize[0],
-        height: gamecore.worldSize[1],
-      });
-      this.currentShadow.scanAllSector(gamecore.player[0], gamecore.player[1], this.sight);
-    }
-    
+    shadow.scanAllSector(...dungeon.hero.character.pos, this.sight);
     // holy i swear i will redo this later
 
     const invisible = [0, 0, 0, 255];
@@ -133,7 +119,7 @@ export default class GameView {
         const index = (y - coorStartY) * (widthNumber + camera[0] + 2 - coorStartX) + (x - coorStartX);
         let c = invisible;
         
-        let isLit = this.currentShadow.isLit(x, y) && this.currentShadow.isLit(x, y - 1) && this.currentShadow.isLit(x - 1, y) && this.currentShadow.isLit(x - 1, y - 1);
+        let isLit = shadow.isLit(x, y) && shadow.isLit(x, y - 1) && shadow.isLit(x - 1, y) && shadow.isLit(x - 1, y - 1);
         if (isLit) {
           // ugly
           visitedArr.set(...b1, true);
@@ -189,7 +175,7 @@ export default class GameView {
           continue;
         }
         
-        if (!debug.lightMode && !this.currentShadow.isLit(x, y)) {
+        if (!debug.lightMode && !dungeon.level.levelAttr.shadow.isLit(x, y)) {
           continue;
         }
 
@@ -210,7 +196,6 @@ export default class GameView {
   }
 
   renderGame() {
-    if (gameScene.tilesMap) gameScene.tilesMap.render();
     this.renderShadow();
     this.renderNPC();
 
@@ -239,7 +224,7 @@ export default class GameView {
 
   move(move) {
     this.game.gamecore.move(move);
-    const player = this.game.gamecore.player;
+    const player = dungeon.hero.character.pos;
 
 
     gameScene.setCamera(...player);
@@ -310,7 +295,8 @@ export default class GameView {
     
     const isBlockEmpty = checkFlag(dungeon.level.levelAttr.map.get(...tobe), flags.passable);
     
-    if (this.currentShadow.isLit(cx + biasX, cy + biasY)) {
+    // if (debug.lightMode) return;
+    if (dungeon.level.levelAttr.shadow.isLit(cx + biasX, cy + biasY)) {
       const isNPCEmpty = !gamecore.getNPC(tobe);
       if (!isNPCEmpty) {
         gamecore.npcClickHandler({to: [cx + biasX, cy + biasY]});

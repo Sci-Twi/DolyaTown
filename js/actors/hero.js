@@ -1,4 +1,4 @@
-import { Character } from "./character";
+import { Character } from "./character.js";
 
 export class Hero {
   character;
@@ -6,9 +6,11 @@ export class Hero {
   lvl = 1;
   exp = 0;
 
+
   enemy;
   constructor() {
     this.character = new Character();
+    this.character.sight = 6;
   }
 
 

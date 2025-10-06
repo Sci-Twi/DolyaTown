@@ -1,6 +1,6 @@
 import { pathFinder } from "../mechanics/pathFinder.js";
 import { npcMap } from "./dolya.js";
-import { win } from "../ui/win.js";
+// import { win } from "../ui/win.js";
 import { device } from "../tools/device.js";
 import { checkFlag, flags } from "../levels/terrain.js";
 import { dungeon } from "../dungeon.js";
@@ -9,13 +9,13 @@ export default class GameCore {
   game;
   worldSize;
   npcmap;
-  player;
-  sight;
+  // player;
+  // sight;
   constructor(game) {
     this.game = game;
     this.worldSize = [48, 48];
-    this.player = [25, 21];
-    this.sight = 7;
+    // this.player = [25, 21];
+    // this.sight = 7;
   }
 
   npcClickHandler({to}) {
@@ -27,7 +27,7 @@ export default class GameCore {
   }
 
   blockClickHandler({to}) {
-    this.multiMove(pathFinder.findPath(this.player, to, this));
+    this.multiMove(pathFinder.findPath(dungeon.hero.character.pos, to, this));
   }
 
   
@@ -83,7 +83,7 @@ export default class GameCore {
   }
 
   move(move) {
-    const [originX, originY] = this.player;
+    const [originX, originY] = dungeon.hero.character.pos;
 
     const toX = move[0] + originX;
     const toY = move[1] + originY;
@@ -99,12 +99,10 @@ export default class GameCore {
     }
 
 
-    const t = this.getNPC(this.player);
+    const t = this.getNPC(dungeon.hero.character.pos);
     this.npcmap[toY][toX] = t;
     this.npcmap[originY][originX] = null;
-    this.player[0] = toX;
-    this.player[1] = toY;
-    
+    dungeon.hero.character.pos = [toX, toY];
   }
   getNPC([x, y]) {
     if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {

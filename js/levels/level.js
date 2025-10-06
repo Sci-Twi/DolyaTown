@@ -1,5 +1,7 @@
 // import { tiles } from "../actor/tiles";
 
+import { Shadow } from "../mechanics/shadow.js";
+
 export class Level {
   map;
   visited;
@@ -15,8 +17,20 @@ export class Level {
     this.visited.fill(false);
     
     this.mobs = new Set();
+    this.mobs2D = new Map2D(width, height);
 
-    // this.map = null;
+    this.fieldOfView = new Map2D(width, height);
+    this.shadow = new Shadow(this.fieldOfView);
+    
+  }
+
+  addMob(mob) {
+    this.mobs.add(mob);
+    this.mobs2D.set(...mob.mob.character.pos, mob);
+  }
+
+  updateFieldOfView() {
+
   }
 }
 
@@ -44,3 +58,4 @@ class Map2D {
     this.mapArray.fill(value);
   }
 }
+

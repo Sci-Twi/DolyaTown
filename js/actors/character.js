@@ -4,6 +4,8 @@ export class Character {
   sprite;
 
   pos;
+  
+  sight;
 
   constructor() {
     this.actor = new Actor();

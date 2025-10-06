@@ -6,13 +6,14 @@ import { canvas } from "../tools/canvas.js";
 export class TilesMap {
   map;
   
-  constructor(map) {
-    this.map = map;
+  constructor() {
+    this.map = dungeon.level.levelAttr.map;
     // considering rewrite: MobSprite->CharSprite->animation
   }
 
   render() {
     canvas.clear();
+    
     const ps = pixelSize;
 
     const halfLength = cellView.halfLength;
@@ -25,7 +26,7 @@ export class TilesMap {
 
 
 
-    const textureCanvas = textureCache.getTexture(dungeon.level.tilesTextureName()).canvas;
+    const textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
 
     for (let y = startY; y <= endY; y++) {
       for (let x = startX; x <= endX; x++) {
