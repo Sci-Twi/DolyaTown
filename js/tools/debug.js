@@ -1,3 +1,3 @@
 export const debug = {
-  lightMode: false,
+  lightMode: true,
 };

@@ -1,17 +1,20 @@
 import { debug } from "../tools/debug.js";
 import { dungeon } from "../dungeon.js";
 import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
-import { canvas } from "../tools/canvas.js";
+import { canvas, ctx } from "../tools/canvas.js";
 // import { device } from "../tools/device.js";
 
 export class ShadowMap {
   shadow;
   shadowCanvas;
+
+  // changed;
   
   constructor() {
     this.shadow = dungeon.level.levelAttr.shadow;
     // 100 100 must be enough
     this.shadowCanvas = new OffscreenCanvas(100, 100);
+    // this.changed = false;
   }
 
   render() {
@@ -27,12 +30,10 @@ export class ShadowMap {
     const startX = Math.max(camera[0] - halfLength[0], 0);
     const startY = Math.max(camera[1] - halfLength[1], 0);
 
-    const endX = Math.min(camera[0] + halfLength[0], this.shadow.width - 1);
-    const endY = Math.min(camera[1] + halfLength[1], this.shadow.height - 1);
+    const endX = Math.min(camera[0] + halfLength[0], shadow.width - 1);
+    const endY = Math.min(camera[1] + halfLength[1], shadow.height - 1);
 
-    const invisible = [0, 0, 0, 255];
-    const visited = [17, 17, 17, 204];
-    const visible = [0, 0, 0, 0];
+    
 
     const shadowWidth = endX + 2 - startX;
     const shadowHeight = endY + 2 - startY;
@@ -43,10 +44,6 @@ export class ShadowMap {
 
     for (let y = startY; y <= endY + 1; y++) {
       for (let x = startX; x <= endX + 1; x++) {
-        const b1 = [x, y];
-        const b2 = [x, y - 1];
-        const b3 = [x - 1, y];
-        const b4 = [x - 1, y - 1];
 
         const index = (y - startY) * shadowWidth + (x - startX);
         let c = invisible;
@@ -54,20 +51,18 @@ export class ShadowMap {
         let isLit = shadow.isLit(x, y) && shadow.isLit(x, y - 1) && shadow.isLit(x - 1, y) && shadow.isLit(x - 1, y - 1);
         if (isLit) {
           // ugly
-          visitedArr.set(...b1, true);
-          visitedArr.set(...b2, true);
-          visitedArr.set(...b3, true);
-          visitedArr.set(...b4, true);
+          visitedArr.set(x, y, true);
+          visitedArr.set(x, y - 1, true);
+          visitedArr.set(x - 1, y, true);
+          visitedArr.set(x - 1, y - 1, true);
 
           c = visible;
 
         } else {
-          if ((b1 && b2 && b3 && b4)) {
-            if (!visitedArr.get(...b1) || !visitedArr.get(...b2) || !visitedArr.get(...b3) || !visitedArr.get(...b4)) {
-              c = invisible;
-            } else {
-              c = visited;
-            }
+          if (!visitedArr.get(x, y) || !visitedArr.get(x, y - 1) || !visitedArr.get(x - 1, y) || !visitedArr.get(x - 1, y - 1)) {
+            c = invisible;
+          } else {
+            c = visited;
           }
         }
         
@@ -82,10 +77,15 @@ export class ShadowMap {
     const stx = this.shadowCanvas.getContext("2d");
 
     stx.putImageData(shadowArray, 0, 0);
-    canvas.setSmooth(true);
+    ctx.imageSmoothingEnabled = true;
     const desti = gameScene.calcScreenCoor(startX, startY).map((coor) => {return coor - ps * 8});
     canvas.draw(this.shadowCanvas, 0, 0, shadowWidth, shadowHeight, ...desti, shadowWidth * ps * 16, shadowHeight * ps * 16);
-    canvas.setSmooth(false);
+    ctx.imageSmoothingEnabled = false;
     stx.clearRect(0, 0, this.shadowCanvas.width, this.shadowCanvas.height);
   }
 }
+
+
+const invisible = [0, 0, 0, 255];
+const visited = [17, 17, 17, 204];
+const visible = [0, 0, 0, 0];

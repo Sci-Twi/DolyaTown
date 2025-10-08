@@ -29,9 +29,12 @@ export class Level {
     this.mobs.add(mob);
     this.mobs2D.set(...mob.mob.character.pos, mob);
   }
+  getMob(x, y) {
+    return this.mobs2D.get(x, y);
+  }
 
   updateFieldOfView() {
-    this.shadow.scanAllSector(...dungeon.hero.character.pos, dungeon.hero.character.sight);
+    this.shadow.scanAllSector(...dungeon.hero.heroAttr.character.pos, dungeon.hero.heroAttr.character.sight);
   }
 }
 

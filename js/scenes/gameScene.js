@@ -8,6 +8,8 @@ import { win } from "../ui/win.js";
 import { game } from "../game.js";
 import { MobsMap } from "../sprites/mobs.js";
 import { ShadowMap } from "../sprites/shadow.js";
+import { input } from "../tools/input.js";
+// import { HeroSprite } from "../sprites/hero.js";
 
 // export const events = {
 
@@ -42,6 +44,8 @@ export const gameScene = {
     this.mobsMap = new MobsMap();
 
     this.shadowMap = new ShadowMap();
+
+    // this.heroSprite = new HeroSprite();
     
 
     
@@ -53,12 +57,19 @@ export const gameScene = {
 
     game.render();
     
-    
+    // input.register(device.getDevice(), "wheel", resize);
+    input.register(document.getElementById("canvasback"), "wheel", resize);
+
   },
 
   updateCellView,
   setPixelSize,
-  render,
+  render() {
+    this.tilesMap.render();
+    // this.heroSprite.render();
+    this.mobsMap.render();
+    this.shadowMap.render();
+  },
 
   setCamera,
   
@@ -97,10 +108,24 @@ function updateCellView() {
 
 }
 
-function render() {
-  this.tilesMap.render();
-  this.mobsMap.render();
-  this.shadowMap.render();
+
+function resize(event) {
+  const isBigger = event.deltaY < 0;
+  let ps = pixelSize;
+  if (isBigger) {
+    if (ps === 16) {
+      return;
+    }
+    ps += 1;
+  } else {
+    if (ps === 1) {
+      return;
+    }
+    ps -= 1;
+  }
+  pixelSize = ps;
+  updateCellView();
+  gameScene.render();
 }
 
 class GameScene {
@@ -113,7 +138,7 @@ class GameScene {
     if (device.isPhone) {
       // this.gameview.initResizeButton();
     } else {
-      this.gameview.initResize();
+      // this.gameview.initResize();
     }
     this.gamecore.initMap();
     win.initWindow();

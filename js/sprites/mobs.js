@@ -1,19 +1,22 @@
+import { debug } from "../tools/debug.js";
 import { dungeon } from "../dungeon.js";
 import { game } from "../game.js";
 import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
-import { canvas } from "../tools/canvas.js";
+import { canvas, ctx } from "../tools/canvas.js";
 import { textureCache } from "../tools/textureCache.js";
 // import { gameScene } from "../scenes/gameScene.js";
 
 export class MobsMap {
-  // mobsArray;
+  hero;
   mobs;
   mobs2D;
 
 
   constructor() {
+    this.hero = dungeon.hero;
     this.mobs = dungeon.level.levelAttr.mobs;
     this.mobs2D = dungeon.level.levelAttr.mobs2D;
+
   }
   
 
@@ -33,12 +36,16 @@ export class MobsMap {
         if (!mob) {
           continue;
         }
-        if (!dungeon.level.levelAttr.shadow.isLit(x, y)) {
-          continue;
+
+        if (!debug.lightMode) {
+          if (!dungeon.level.levelAttr.shadow.isLit(x, y)) {
+            continue;
+          }
+          if (!dungeon.level.levelAttr.visited.get(x, y)) {
+            continue;
+          }
         }
-        if (!dungeon.level.levelAttr.visited.get(x, y)) {
-          continue;
-        }
+        
         // too long
         const sprite = mob.mob.character.sprite.characterSprite;
         
@@ -50,16 +57,47 @@ export class MobsMap {
         const desti = gameScene.calcScreenCoor(x, y);
         if (sprite.delay < 1 / sprite.current.hz * 1000) {
           sprite.delay += game.step;
-          canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
-          continue;
+          // canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
         } else {
           sprite.delay = 0;
+          sprite.index += 1;
         }
-
-        
         canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
-        sprite.index += 1;
       }
+    }
+
+    // render hero
+    const [x, y] = this.hero.heroAttr.character.pos;
+    if (x < startX || x > endX || y < startY || y > endY ) {
+      return;
+    }
+    const sprite = this.hero.heroAttr.character.sprite.characterSprite;
+    if (sprite.current.frames.length <= sprite.index) {
+      sprite.index = 0;
+    }
+
+    const texture = textureCache.getTexture(this.hero.heroAttr.character.sprite.getTextureName());
+
+    // const textureCanvas = texture.canvas;
+    const source = textureCache.calcSourceCoor(sprite.current.frames[sprite.index], texture.canvas.width);
+    let [sx, sy] = gameScene.calcScreenCoor(x, y);
+    if (sprite.delay < 1 / sprite.current.hz * 1000) {
+      sprite.delay += game.step;
+    } else {
+      sprite.delay = 0;
+      sprite.index += 1;
+    }
+
+    
+    if (texture.reversed) {
+      ctx.save();
+      ctx.translate(sx + ps * 16, 0);
+      ctx.scale(-1, 1);
+      sx = 0;
+    }
+    canvas.draw(texture.canvas, ...source, 16, 16, sx, sy, ps * 16, ps * 16);
+    if (texture.reversed) {
+      ctx.restore();
     }
     
 

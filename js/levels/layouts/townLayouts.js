@@ -39,7 +39,7 @@ export const townLayouts = [
   M, 	M, 	M, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	O, 	G, 	O, 	O, 	O, 	W, 	E, 	E, 	W, 	R, 	J, 	O, 	O, 	O, 	O, 	O, 	O, 	O, 	E, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	O, 	W, 	O, 	O, 	W, 	R, 	R, 	R, 	R, 	M, 	E, 	M,
   M, 	M, 	M, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	O, 	G, 	O, 	O, 	O, 	J, 	E, 	E, 	W, 	R, 	J, 	O, 	O, 	O, 	O, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	W, 	W, 	D, 	W, 	D, 	W, 	W, 	W, 	W, 	R, 	R, 	R, 	U, 	T, 	E, 	M,
   M, 	M, 	M, 	M, 	E, 	E, 	W, 	W, 	W, 	D, 	W, 	W, 	O, 	O, 	O, 	W, 	E, 	E, 	W, 	W, 	J, 	O, 	O, 	O, 	O, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	W, 	O, 	O, 	W, 	O, 	O, 	O,  J, 	E, 	E, 	R, 	R, 	R, 	M, 	M, 	M,
-  M, 	M, 	M, 	M, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	W, 	O, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	J, 	O, 	O, 	W, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	R, 	R, 	M, 	M, 	M,
+  M, 	M, 	M, 	M, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	O, 	O, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	J, 	O, 	O, 	W, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	R, 	R, 	M, 	M, 	M,
   M, 	M, 	M, 	M, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	W, 	E, 	E, 	E, 	W, 	E, 	E, 	E, 	W, 	W, 	Y, 	O, 	O, 	W, 	E, 	E, 	E, 	W, 	O, 	H, 	W, 	O, 	H, 	O, 	W, 	W, 	W, 	D,  W, 	W, 	M, 	M, 	M,
   M, 	M, 	M, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	W, 	W, 	W, 	W, 	W, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E,  W, 	W, 	W, 	W, 	W, 	E, 	E, 	E, 	W, 	W, 	W, 	W, 	J, 	W, 	W, 	W, 	O, 	O, 	O, 	O, 	W, 	M, 	M, 	M,
   M, 	M, 	M, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	E, 	W, 	O, 	O, 	O, 	O, 	W, 	M, 	M, 	M, 

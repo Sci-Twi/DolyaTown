@@ -2,24 +2,13 @@ import { device } from "./device.js";
 
 // this is weird
 
-const ctx = device.getDevice().getContext("2d");
+export const ctx = device.getDevice().getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
 export const canvas = {
   draw,
-  // save,
   clear,
-
-  setSmooth,
 };
-
-function setSmooth(smooth) {
-  ctx.imageSmoothingEnabled = smooth;
-}
-
-// function save() {
-//   ctx.save();
-// }
 
 function clear() {
   ctx.clearRect(0, 0, device.width, device.height);

@@ -102,10 +102,6 @@ export default class GameView {
     this.renderNPC();
 
   }
-
-
-
-
   renderNPCBlock({writer, name, sx, sy, id}) {
     const ps = pixelSize;
     const textureCanvas = textureCache.getTexture(name).canvas;
@@ -126,7 +122,7 @@ export default class GameView {
 
   move(move) {
     this.game.gamecore.move(move);
-    const player = dungeon.hero.character.pos;
+    const player = dungeon.hero.heroAttr.character.pos;
 
 
     gameScene.setCamera(...player);

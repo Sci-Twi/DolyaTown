@@ -5,16 +5,21 @@ import { canvas } from "../tools/canvas.js";
 
 export class TilesMap {
   map;
+  textureCanvas;
+
+  // changed;
   
   constructor() {
     this.map = dungeon.level.levelAttr.map;
+    this.textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
+
+    // this.changed = false;
     // considering rewrite: MobSprite->CharSprite->animation
   }
 
   render() {
     canvas.clear();
     
-    const ps = pixelSize;
 
     const halfLength = cellView.halfLength;
     
@@ -26,20 +31,23 @@ export class TilesMap {
 
 
 
-    const textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
+    // const textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
 
     for (let y = startY; y <= endY; y++) {
       for (let x = startX; x <= endX; x++) {
-        const id = dungeon.level.levelAttr.map.get(x, y);
-
-        const source = textureCache.calcSourceCoor(id, textureCanvas.width);
-        const desti = gameScene.calcScreenCoor(x, y);
-        
-        canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
+        this.renderSingle(x, y);
       }
     }
+  }
 
+  renderSingle(x, y) {
+    const ps = pixelSize;
+    const id = dungeon.level.levelAttr.map.get(x, y);
 
+    const source = textureCache.calcSourceCoor(id, this.textureCanvas.width);
+    const desti = gameScene.calcScreenCoor(x, y);
+    
+    canvas.draw(this.textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
   }
 
 }

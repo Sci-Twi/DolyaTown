@@ -1,4 +1,5 @@
-import { Hero } from "./actors/hero.js";
+// import { Hero } from "./actors/hero.js";
+import { Hmdzl001 } from "./actors/hero/hmdzl001.js";
 import { TownLevel } from "./levels/levels/townLevel.js";
 
 export const dungeon = {
@@ -20,7 +21,8 @@ export const dungeon = {
   },
 
   init() {
-    this.hero = new Hero();
+    // this.hero = new Hero();
+    this.hero = new Hmdzl001();
   }
 };
 

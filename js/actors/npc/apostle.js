@@ -7,8 +7,5 @@ export class Apostle {
   constructor() {
     this.mob = new Mob();
     this.mob.character.linkSprite(ApostleSprite);
-    // this.mob.spriteClass = ApostleSprite;
-
   }
-
 }

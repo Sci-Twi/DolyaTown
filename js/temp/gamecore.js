@@ -23,7 +23,7 @@ export default class GameCore {
   }
 
   blockClickHandler({to}) {
-    this.multiMove(pathFinder.findPath(dungeon.hero.character.pos, to, this));
+    this.multiMove(pathFinder.findPath(dungeon.hero.heroAttr.character.pos, to, this));
   }
 
   
@@ -79,7 +79,7 @@ export default class GameCore {
   }
 
   move(move) {
-    const [originX, originY] = dungeon.hero.character.pos;
+    const [originX, originY] = dungeon.hero.heroAttr.character.pos;
 
     const toX = move[0] + originX;
     const toY = move[1] + originY;
@@ -90,15 +90,15 @@ export default class GameCore {
     if (!checkFlag(dungeon.level.levelAttr.map.get(toX, toY), flags.passable)) {
       return;
     }
-    if (this.getNPC([toX, toY])) {
+    if (this.getNPC([toX, toY]) || dungeon.level.levelAttr.getMob(toX, toY)) {
       return;
     }
 
 
-    const t = this.getNPC(dungeon.hero.character.pos);
+    const t = this.getNPC(dungeon.hero.heroAttr.character.pos);
     this.npcmap[toY][toX] = t;
     this.npcmap[originY][originX] = null;
-    dungeon.hero.character.pos = [toX, toY];
+    dungeon.hero.heroAttr.character.pos = [toX, toY];
     dungeon.level.levelAttr.updateFieldOfView();
   }
   getNPC([x, y]) {
