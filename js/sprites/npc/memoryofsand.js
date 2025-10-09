@@ -1,6 +1,6 @@
 import { CharacterSprite } from "../character.js";
 
-export class ApostleSprite {
+export class MemoryOfSandSprite {
   characterSprite;
 
   constructor() {
@@ -12,12 +12,12 @@ export class ApostleSprite {
   }
 
   getTextureName() {
-    return "apostle";
+    return "memoryofsand";
   }
 }
 
 const idle = {
-  frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
+  frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
   hz: 3,
   looped: true,
 };

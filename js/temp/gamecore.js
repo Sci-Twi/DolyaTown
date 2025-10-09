@@ -1,29 +1,27 @@
 import { pathFinder } from "../mechanics/pathFinder.js";
-import { npcMap } from "./dolya.js";
-// import { win } from "../ui/win.js";
 import { device } from "../tools/device.js";
 import { checkFlag, flags } from "../levels/terrain.js";
 import { dungeon } from "../dungeon.js";
 
 export default class GameCore {
   game;
-  worldSize;
   npcmap;
   constructor(game) {
     this.game = game;
-    this.worldSize = [48, 48];
   }
 
   npcClickHandler({to}) {
-    const name = this.getNPC(to).name;
-    const text = npcMap[name].text;
+
+    // dont delete temp
+    // const name = this.getNPC(to).name;
+    // const text = npcMap[name].text;
     // this.game.gameview.currentAnimation = name;
     // win.renderWindow(text, this.game.gameview);
-    this.game.gameview.yell(text);
+    // this.game.gameview.yell(text);
   }
 
   blockClickHandler({to}) {
-    this.multiMove(pathFinder.findPath(dungeon.hero.heroAttr.character.pos, to, this));
+    this.multiMove(pathFinder.findPath(dungeon.hero.heroAttr.character.pos, to));
   }
 
   
@@ -90,48 +88,12 @@ export default class GameCore {
     if (!checkFlag(dungeon.level.levelAttr.map.get(toX, toY), flags.passable)) {
       return;
     }
-    if (this.getNPC([toX, toY]) || dungeon.level.levelAttr.getMob(toX, toY)) {
+    if (dungeon.level.levelAttr.getMob(toX, toY)) {
       return;
     }
 
 
-    const t = this.getNPC(dungeon.hero.heroAttr.character.pos);
-    this.npcmap[toY][toX] = t;
-    this.npcmap[originY][originX] = null;
     dungeon.hero.heroAttr.character.pos = [toX, toY];
     dungeon.level.levelAttr.updateFieldOfView();
-  }
-  getNPC([x, y]) {
-    if (x < 1 || y < 1 || x >= this.worldSize[0] || y >= this.worldSize[1]) {
-      return null;
-    }
-    return this.npcmap[y][x];
-  }
-  
-  initMap() {
-    // customize
-
-
-    this.npcmap = [];
-    for (let y = 0; y < this.worldSize[1]; y++) {
-      this.npcmap[y] = [];
-    }
-    for (const npc in npcMap) {
-      const [x, y] = npcMap[npc].coor;
-      this.npcmap[y][x] = new NPC(npc, npcMap[npc]);
-    }
-  }
-}
-
-
-
-class NPC {
-  name;
-  texture;
-
-  // dont code like that
-  constructor(realName, {name}) {
-    this.name = realName;
-    this.texture = name;
   }
 }

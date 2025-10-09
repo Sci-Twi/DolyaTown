@@ -1,6 +1,6 @@
 import { CharacterSprite } from "../character.js";
 
-export class ApostleSprite {
+export class NoodleMireSprite {
   characterSprite;
 
   constructor() {
@@ -12,7 +12,7 @@ export class ApostleSprite {
   }
 
   getTextureName() {
-    return "apostle";
+    return "noodlemire";
   }
 }
 

@@ -53,7 +53,7 @@ export const gameScene = {
 
 
     keyboard.addListener("gameScene");
-    temp.gameview.renderGame();
+    // temp.gameview.renderGame();
 
     game.render();
     
@@ -135,12 +135,6 @@ class GameScene {
     this.gamecore = new GameCore(this);
     this.gameview = new GameView(this);
     
-    if (device.isPhone) {
-      // this.gameview.initResizeButton();
-    } else {
-      // this.gameview.initResize();
-    }
-    this.gamecore.initMap();
     win.initWindow();
     this.gameview.initClick();
   }
