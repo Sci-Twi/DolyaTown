@@ -12,24 +12,18 @@
   </style>
 </head>
 <body>
-
+  <canvas id="block"></canvas>
   
-  <div id="back">
-    <div id="canvasback">
-      <canvas id="block"></canvas>
-      <canvas id="npc"></canvas>
-      <div id="npcwindow">
-        <canvas id="windowcanvas"></canvas>
-        <div id="windowcontent">
-          <canvas id="windowanimation"></canvas>
-          <div id="windowname"></div>
-          <div id="windowdescription"></div>
-        </div>
-      </div>
+  <div id="npcwindow">
+    <canvas id="windowcanvas"></canvas>
+    <div id="windowcontent">
+      <canvas id="windowanimation"></canvas>
+      <div id="windowname"></div>
+      <div id="windowdescription"></div>
     </div>
-    <input id="resizeButton" type="range" min="0" max="6" value="4" step="1" orient="vertical"/>
-    <div id="yell"></div>
   </div>
+  <input id="resizeButton" type="range" min="0" max="6" value="4" step="1" orient="vertical"/>
+  <div id="yell"></div>
   
   <script type="module" src="main.js"></script>
 </body>

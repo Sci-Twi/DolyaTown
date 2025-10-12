@@ -53,6 +53,8 @@ import { Sadsaltan } from "../../actors/npc/sadsaltan.js";
 import { NoodleMire } from "../../actors/npc/noodlemire.js";
 import { Juh9870 } from "../../actors/npc/juh9870.js";
 import { NutPainter } from "../../actors/npc/nutpainter.js";
+import { StormAndRain } from "../../actors/npc/stormandrain.js";
+import { OldNewsTwist } from "../../actors/npc/oldnewstwist.js";
 import { AdultDragonViolet } from "../../actors/mob/adultdragonviolet.js";
 import { Scarecrow } from "../../actors/mob/scarecrow.js";
 import { Piranha } from "../../actors/mob/piranha.js";
@@ -286,7 +288,7 @@ export class TownLevel {
     shopKeeper2.mob.character.pos = [8, 23];
     this.levelAttr.addMob(shopKeeper2);
 
-    const stormAndRain = new ShopKeeper();
+    const stormAndRain = new StormAndRain();
     stormAndRain.mob.character.pos = [21, 6];
     this.levelAttr.addMob(stormAndRain);
 
@@ -298,7 +300,7 @@ export class TownLevel {
     hatesokoban.mob.character.pos = [23, 10];
     this.levelAttr.addMob(hatesokoban);
 
-    const oldnewstwist = new HateSokoban();
+    const oldnewstwist = new OldNewsTwist();
     oldnewstwist.mob.character.pos = [20, 3];
     this.levelAttr.addMob(oldnewstwist);
 

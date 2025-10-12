@@ -1,19 +1,15 @@
-import GameCore from "../temp/gamecore.js";
-import GameView from "../temp/gameview.js";
 import { device } from "../tools/device.js";
 import { keyboard } from "../keyboard.js";
 import { TilesMap } from "../sprites/tiles.js";
-
 import { win } from "../ui/win.js";
 import { game } from "../game.js";
 import { MobsMap } from "../sprites/mobs.js";
 import { ShadowMap } from "../sprites/shadow.js";
 import { input } from "../tools/input.js";
-// import { HeroSprite } from "../sprites/hero.js";
-
-// export const events = {
-
-// };
+import { checkFlag, flags } from "../levels/terrain.js";
+import { dungeon } from "../dungeon.js";
+import { debug } from "../tools/debug.js";
+import { pathFinder } from "../mechanics/pathFinder.js";
 
 export let cellView = {
   startCoor: [],
@@ -38,27 +34,22 @@ export const gameScene = {
     updateCellView();
 
     // should i inject dungeon.level.levelAttr...?
-    const temp = new GameScene();
+    
+
     this.tilesMap = new TilesMap();
     
     this.mobsMap = new MobsMap();
 
     this.shadowMap = new ShadowMap();
 
-    // this.heroSprite = new HeroSprite();
-    
-
-    
-    // this.tilesMap.updateTiles();
-
-
     keyboard.addListener("gameScene");
-    // temp.gameview.renderGame();
 
     game.render();
     
-    // input.register(device.getDevice(), "wheel", resize);
-    input.register(document.getElementById("canvasback"), "wheel", resize);
+    input.register("wheel", resize);
+    input.pushLayer(gameClick);
+
+    // win.initWindow();
 
   },
 
@@ -66,7 +57,6 @@ export const gameScene = {
   setPixelSize,
   render() {
     this.tilesMap.render();
-    // this.heroSprite.render();
     this.mobsMap.render();
     this.shadowMap.render();
   },
@@ -128,14 +118,96 @@ function resize(event) {
   gameScene.render();
 }
 
-class GameScene {
-  gameview;
-  gamecore;
-  constructor() {
-    this.gamecore = new GameCore(this);
-    this.gameview = new GameView(this);
-    
-    win.initWindow();
-    this.gameview.initClick();
+function gameClick(event) {
+  const num = pixelSize * 16;
+
+  const clientX = device.isPhone ? event.touches[0].clientX : event.clientX;
+  const clientY = device.isPhone ? event.touches[0].clientY : event.clientY;
+  
+  // not good here
+  const biasX = Math.floor((clientX - device.midx - num / 2) / num) + 1;
+  const biasY = Math.floor((clientY - device.midy - num / 2) / num) + 1;
+
+  const x = camera[0] + biasX;
+  const y = camera[1] + biasY;
+
+  if (dungeon.level.levelAttr.shadow.isLit(x, y)) {
+    if (dungeon.level.levelAttr.mobs2D.get(x, y)) {
+      npcClick(x, y);
+      return true;
+    }
   }
+
+  if (checkFlag(dungeon.level.levelAttr.map.get(x, y), flags.passable)) {
+    if (dungeon.level.levelAttr.visited.get(x, y) || debug.lightMode) {
+      mapClick(x, y);
+    }
+    return true;
+  }
+
+  return false;
 }
+
+function npcClick(x, y) {
+  // dont delete
+  // const name = this.getNPC(to).name;
+  // const text = npcMap[name].text;
+  // this.game.gameview.currentAnimation = name;
+  // win.renderWindow(text, this.game.gameview);
+  // this.game.gameview.yell(text);
+
+  // yell({name, yells}) {
+  //   document.getElementById("yell").innerText = `${name}： ${yells[Math.floor(Math.random() * yells.length)]}`;  
+  // }
+
+  
+
+  // removeWindowHandler = () => {
+  //   const windowCanvas = document.getElementById("windowcanvas");
+  //   windowCanvas.getContext("2d").clearRect(0, 0, windowCanvas.width, windowCanvas.height);
+    
+  //   document.getElementById("windowdescription").innerText = "";
+  //   document.getElementById("windowname").innerText = "";
+  //   document.getElementById("windowanimation").getContext("2d").clearRect(0, 0, 96, 96);
+  //   this.initClick();
+  //   document.getElementById("canvasback").removeEventListener(device.clickName, this.removeWindowHandler);
+
+  // }
+}
+
+function mapClick(x, y) {
+  multiMove(pathFinder.findPath(dungeon.hero.heroAttr.character.pos, [x, y]));
+}
+
+
+// temp
+let stopMoving = false;
+async function multiMove(moves) {
+  stopMoving = false;
+  input.addLayer(stopMove);
+
+
+  
+  for (const m of moves) {
+    if (stopMoving) {
+      break;
+    }
+    dungeon.hero.heroAttr.move(...m);
+    await delay(100);
+  }
+  input.deleteLayer(stopMove);
+}
+async function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function stopMove() {
+  stopMoving = true;
+  return true;
+}
+
+// sadly, no dragging for now
+// initDrag() {
+// }

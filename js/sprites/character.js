@@ -6,12 +6,13 @@ export class CharacterSprite {
 
   current;
 
-  delay;
-  index;
-  constructor() {
-    this.index = 0;
-    this.delay = 0;
+  delay = 0;
+  index = 0;
 
+  reversed = false;
+  constructor() {
+    // this.index = 0;
+    // this.delay = 0;
     // this.current = this.idle;
   }
 }

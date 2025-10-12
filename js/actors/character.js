@@ -1,3 +1,5 @@
+import { dungeon } from "../dungeon.js";
+import { checkFlag, flags } from "../levels/terrain.js";
 import { Actor } from "./actor.js";
 export class Character {
   actor;
@@ -14,5 +16,24 @@ export class Character {
   linkSprite(spriteClass) {
     this.sprite = new spriteClass();
   }
-  
+
+  move(x, y) {
+    const map = dungeon.level.levelAttr.map;
+    
+    const toX = x + this.pos[0];
+    const toY = y + this.pos[1];
+
+    if (toX < 0 || toX >= map.width || toY < 0 || toY >= map.height) {
+      return;
+    }
+    if (!checkFlag(dungeon.level.levelAttr.map.get(toX, toY), flags.passable)) {
+      return;
+    }
+    if (dungeon.level.levelAttr.getMob(toX, toY)) {
+      return;
+    }
+
+
+    this.pos = [toX, toY];
+  }
 }

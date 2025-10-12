@@ -14,13 +14,10 @@ class TextureCanvas {
   canvas;
   ctx;
   step;
-  // this shouldn't be here
-  reversed;
 
   constructor(width, height, step) {
     this.canvas = new OffscreenCanvas(width, height);
     this.ctx = this.canvas.getContext("2d");
-    this.reversed = false;
   }
 }
 

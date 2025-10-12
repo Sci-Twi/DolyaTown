@@ -57,7 +57,6 @@ export class MobsMap {
         const desti = gameScene.calcScreenCoor(x, y);
         if (sprite.delay < 1 / sprite.current.hz * 1000) {
           sprite.delay += game.step;
-          // canvas.draw(textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
         } else {
           sprite.delay = 0;
           sprite.index += 1;
@@ -78,7 +77,6 @@ export class MobsMap {
 
     const texture = textureCache.getTexture(this.hero.heroAttr.character.sprite.getTextureName());
 
-    // const textureCanvas = texture.canvas;
     const source = textureCache.calcSourceCoor(sprite.current.frames[sprite.index], texture.canvas.width);
     let [sx, sy] = gameScene.calcScreenCoor(x, y);
     if (sprite.delay < 1 / sprite.current.hz * 1000) {
@@ -89,14 +87,14 @@ export class MobsMap {
     }
 
     
-    if (texture.reversed) {
+    if (sprite.reversed) {
       ctx.save();
       ctx.translate(sx + ps * 16, 0);
       ctx.scale(-1, 1);
       sx = 0;
     }
     canvas.draw(texture.canvas, ...source, 16, 16, sx, sy, ps * 16, ps * 16);
-    if (texture.reversed) {
+    if (sprite.reversed) {
       ctx.restore();
     }
     

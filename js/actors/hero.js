@@ -1,3 +1,5 @@
+import { dungeon } from "../dungeon.js";
+import { gameScene } from "../scenes/gameScene.js";
 import { Character } from "./character.js";
 
 export class Hero {
@@ -13,5 +15,15 @@ export class Hero {
     this.character.sight = 6;
   }
 
+  move(x, y) {
+    this.character.move(x, y);
+    dungeon.level.levelAttr.updateFieldOfView();
+    
+    gameScene.setCamera(...this.character.pos);
+    gameScene.updateCellView();
 
+    if (x !== 0) {
+      this.character.sprite.characterSprite.reversed = x < 0;
+    }
+  }
 }
