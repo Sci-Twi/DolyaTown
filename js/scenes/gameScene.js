@@ -1,7 +1,7 @@
 import { device } from "../tools/device.js";
 import { keyboard } from "../keyboard.js";
 import { TilesMap } from "../sprites/tiles.js";
-import { win } from "../ui/win.js";
+// import { win } from "../ui/win.js";
 import { game } from "../game.js";
 import { MobsMap } from "../sprites/mobs.js";
 import { ShadowMap } from "../sprites/shadow.js";
@@ -10,6 +10,8 @@ import { checkFlag, flags } from "../levels/terrain.js";
 import { dungeon } from "../dungeon.js";
 import { debug } from "../tools/debug.js";
 import { pathFinder } from "../mechanics/pathFinder.js";
+import { UIMap } from "../sprites/ui.js";
+import { Search } from "../ui/search.js";
 
 export let cellView = {
   startCoor: [],
@@ -24,6 +26,7 @@ export const gameScene = {
   tilesMap: null,
   mobsMap: null,
   shadowMap: null,
+  uiMap: null,
 
   async create() {
     console.log("creating game scene")
@@ -42,11 +45,17 @@ export const gameScene = {
 
     this.shadowMap = new ShadowMap();
 
-    keyboard.addListener("gameScene");
+    this.uiMap = new UIMap();
+
+    dungeon.level.levelAttr.ui.push(new Search());
+    
+    // keyboard.addListener("gameScene");
 
     game.render();
     
     input.register("wheel", resize);
+    
+    input.pushLayer(uiClick);
     input.pushLayer(gameClick);
 
     // win.initWindow();
@@ -59,6 +68,7 @@ export const gameScene = {
     this.tilesMap.render();
     this.mobsMap.render();
     this.shadowMap.render();
+    this.uiMap.render();
   },
 
   setCamera,
@@ -103,7 +113,7 @@ function resize(event) {
   const isBigger = event.deltaY < 0;
   let ps = pixelSize;
   if (isBigger) {
-    if (ps === 16) {
+    if (ps === 12) {
       return;
     }
     ps += 1;
@@ -116,6 +126,19 @@ function resize(event) {
   pixelSize = ps;
   updateCellView();
   gameScene.render();
+}
+
+function uiClick(event) {
+  const clientX = device.isPhone ? event.touches[0].clientX : event.clientX;
+  const clientY = device.isPhone ? event.touches[0].clientY : event.clientY;
+  for (const ui of dungeon.level.levelAttr.ui) {
+    if (clientX < ui.uiAttr.dx || clientX > ui.uiAttr.dx + ui.uiAttr.dWidth || clientY < ui.uiAttr.dy || clientY > ui.uiAttr.dy + ui.uiAttr.dHeight) {
+      continue;
+    }
+    return ui.onClick();
+  }
+
+  return false;
 }
 
 function gameClick(event) {

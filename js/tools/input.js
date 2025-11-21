@@ -3,6 +3,7 @@ import { device } from "./device.js";
 export const input = {
   register,
   pushLayer,
+  insertLayer,
   addLayer,
   deleteLayer,
 };
@@ -41,6 +42,11 @@ function processClick(event) {
 
 function pushLayer(processor) {
   layers.push(processor);
+}
+
+// temp
+function insertLayer(processor, index) {
+  layers.splice(index, 0, processor);
 }
 
 function addLayer(processor) {

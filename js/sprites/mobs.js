@@ -4,6 +4,7 @@ import { game } from "../game.js";
 import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { canvas, ctx } from "../tools/canvas.js";
 import { textureCache } from "../tools/textureCache.js";
+import { Description } from "../ui/description.js";
 // import { gameScene } from "../scenes/gameScene.js";
 
 export class MobsMap {
@@ -32,8 +33,8 @@ export class MobsMap {
     const endY = Math.min(camera[1] + halfLength[1], this.mobs2D.height - 1);
     for (let y = startY; y <= endY; y++) {
       for (let x = startX; x <= endX; x++) {
-        const mob = dungeon.level.levelAttr.mobs2D.get(x, y);
-        if (!mob) {
+        const npc = dungeon.level.levelAttr.mobs2D.get(x, y);
+        if (!npc) {
           continue;
         }
 
@@ -47,12 +48,12 @@ export class MobsMap {
         }
         
         // too long
-        const sprite = mob.mob.character.sprite.characterSprite;
+        const sprite = npc.mob.character.sprite.characterSprite;
         
         if (sprite.current.frames.length <= sprite.index) {
           sprite.index = 0;
         }
-        const textureCanvas = textureCache.getTexture(mob.mob.character.sprite.getTextureName()).canvas;
+        const textureCanvas = textureCache.getTexture(npc.mob.character.sprite.getTextureName()).canvas;
         const source = textureCache.calcSourceCoor(sprite.current.frames[sprite.index], textureCanvas.width);
         const desti = gameScene.calcScreenCoor(x, y);
         if (sprite.delay < 1 / sprite.current.hz * 1000) {
@@ -65,7 +66,7 @@ export class MobsMap {
       }
     }
 
-    // render hero
+    // hero
     const [x, y] = this.hero.heroAttr.character.pos;
     if (x < startX || x > endX || y < startY || y > endY ) {
       return;
@@ -97,7 +98,6 @@ export class MobsMap {
     if (sprite.reversed) {
       ctx.restore();
     }
-    
 
   }
 }

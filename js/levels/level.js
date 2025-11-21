@@ -9,6 +9,8 @@ export class Level {
 
   mobs;
   fieldOfView;
+  shadow;
+  ui;
 
   constructor(width, height) {
 
@@ -22,6 +24,9 @@ export class Level {
 
     this.fieldOfView = new Map2D(width, height);
     this.shadow = new Shadow(this.fieldOfView);
+
+    this.ui = [];
+    // this.ui.push();
     // this.updateFieldOfView();
   }
 

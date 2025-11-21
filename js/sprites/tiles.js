@@ -29,8 +29,6 @@ export class TilesMap {
     const endX = Math.min(camera[0] + halfLength[0], this.map.width - 1);
     const endY = Math.min(camera[1] + halfLength[1], this.map.height - 1);
 
-
-
     // const textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
 
     for (let y = startY; y <= endY; y++) {

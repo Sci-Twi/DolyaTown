@@ -1,5 +1,6 @@
 export const assets = {
   tiles_town: "tiles/tiles_town.png",
+  
   shopkeeper: "npc/shopkeeper.png",
   hmdzl001: "npc/hmdzl001.png",
   shopkeeper: "npc/shopkeeper.png",
@@ -62,4 +63,7 @@ export const assets = {
   rustyblade: "npc/rustyblade.png",
   tempest102: "npc/tempest102.png",
   ashwolf: "npc/ashwolf.png",
+  
+  toolbar: "ui/toolbar.png",
+  chrome: "ui/chrome.png",
 };

@@ -38,6 +38,9 @@ const alchemy = 42;
 const shrub = 47;
 const water = 63;
 
+// 67
+const shadow = 67;
+
 
 export const terrain = {
   chasm,
@@ -77,6 +80,8 @@ export const terrain = {
   
   shrub,
   water,
+
+  shadow,
 };
 
 const passable = 1;

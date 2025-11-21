@@ -8,6 +8,7 @@
 
 
 #npcwindow {
+  display: none;
   position: absolute;
 }
 

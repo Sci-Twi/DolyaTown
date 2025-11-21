@@ -10,6 +10,7 @@ export class CharacterSprite {
   index = 0;
 
   reversed = false;
+  inDescription = false;
   constructor() {
     // this.index = 0;
     // this.delay = 0;
