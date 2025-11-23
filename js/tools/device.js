@@ -12,7 +12,7 @@ export const device = {
   },
 };
 
-device.clickName = device.isPhone ? "touchstart" : "click";
+device.clickName = device.isPhone ? "touchend" : "click";
 device.midx = device.width / 2;
 device.midy = device.height / 2;
 

@@ -157,7 +157,8 @@ function descriptionClick() {
 
 function closeDescription() {
   // bad
-  dungeon.level.levelAttr.ui = dungeon.level.levelAttr.ui.filter((u) => !(u instanceof Description));
+  const level = dungeon.level.levelAttr;
+  level.ui = level.ui.filter((u) => !(u instanceof Description));
   // dungeon.level.levelAttr.ui.
 }
 

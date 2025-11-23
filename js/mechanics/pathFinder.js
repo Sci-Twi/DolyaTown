@@ -5,6 +5,8 @@ export const pathFinder = {
   findPath,
 };
 
+// warning: this function is old and bad. will be rewrited in some day.
+
 function findPath(from, to) {
   // is this fast?
   const pathMap = [];
@@ -19,14 +21,14 @@ function findPath(from, to) {
   let found = false;
 
   // ...dont wanna talk about it
-  let maxTimes = 1;
+  let maxTimes = 0;
   while (!found && maxTimes < 100) {
     maxTimes += 1;
     let newFind = [];
     for (const coor of toBeFind) {
       const [x, y] = coor;
       const toFind = [[x + 1, y], [x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 1], [x - 1, y + 1]].filter((c) => {
-        return (checkFlag(dungeon.level.levelAttr.map.get(...c), flags.passable)) && ((to[0] === c[0] && to[1] === c[1]) ? true : !dungeon.level.levelAttr.getMob(...c)) && !pathMap[c[1]][c[0]];
+        return (checkFlag(dungeon.level.levelAttr.map.get(...c), flags.passable)) && ((to[0] === c[0] && to[1] === c[1]) ? true : !dungeon.level.levelAttr.getMob(...c)) && !pathMap[c[1]][c[0]] && dungeon.level.levelAttr.visited.get(...c);
       });
 
       for (const c of toFind) {

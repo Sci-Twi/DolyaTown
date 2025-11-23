@@ -41,6 +41,15 @@ export class Level {
   updateFieldOfView() {
     this.shadow.scanAllSector(...dungeon.hero.heroAttr.character.pos, dungeon.hero.heroAttr.character.sight);
   }
+
+  getUI(UIclass) {
+    return this.ui.find((ui) => ui instanceof UIclass);
+  }
+
+  // TODO
+  deleteUI(UIclass) {
+    // this.ui.filter()
+  }
 }
 
 class Map2D {

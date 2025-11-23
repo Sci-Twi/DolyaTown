@@ -78,8 +78,8 @@ function searchClick(event) {
   // input.insertLayer(searchClick, );
   const num = pixelSize * 16;
 
-  const clientX = device.isPhone ? event.touches[0].clientX : event.clientX;
-  const clientY = device.isPhone ? event.touches[0].clientY : event.clientY;
+  const clientX = device.isPhone ? event.changedTouches[0].clientX : event.clientX;
+  const clientY = device.isPhone ? event.changedTouches[0].clientY : event.clientY;
   
   // not good here
   const biasX = Math.floor((clientX - device.midx - num / 2) / num) + 1;

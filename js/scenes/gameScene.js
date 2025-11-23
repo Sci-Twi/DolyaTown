@@ -12,6 +12,10 @@ import { debug } from "../tools/debug.js";
 import { pathFinder } from "../mechanics/pathFinder.js";
 import { UIMap } from "../sprites/ui.js";
 import { Search } from "../ui/search.js";
+import { getDistance } from "../tools/touch.js";
+import { Yell } from "../ui/yell.js";
+import { texts } from "../text/text.js";
+import { getLanguage } from "../text/language.js";
 
 export let cellView = {
   startCoor: [],
@@ -48,7 +52,8 @@ export const gameScene = {
     this.uiMap = new UIMap();
 
     dungeon.level.levelAttr.ui.push(new Search());
-    
+    dungeon.level.levelAttr.ui.push(new Yell(""));
+
     // keyboard.addListener("gameScene");
 
     game.render();
@@ -129,8 +134,9 @@ function resize(event) {
 }
 
 function uiClick(event) {
-  const clientX = device.isPhone ? event.touches[0].clientX : event.clientX;
-  const clientY = device.isPhone ? event.touches[0].clientY : event.clientY;
+  // console.log(event)
+  const clientX = device.isPhone ? event.changedTouches[0].clientX : event.clientX;
+  const clientY = device.isPhone ? event.changedTouches[0].clientY : event.clientY;
   for (const ui of dungeon.level.levelAttr.ui) {
     if (clientX < ui.uiAttr.dx || clientX > ui.uiAttr.dx + ui.uiAttr.dWidth || clientY < ui.uiAttr.dy || clientY > ui.uiAttr.dy + ui.uiAttr.dHeight) {
       continue;
@@ -142,10 +148,17 @@ function uiClick(event) {
 }
 
 function gameClick(event) {
+  
+  if (resized) {
+    if (event.touches.length === 0) {
+      resetResized();
+    }
+    return;
+  }
   const num = pixelSize * 16;
 
-  const clientX = device.isPhone ? event.touches[0].clientX : event.clientX;
-  const clientY = device.isPhone ? event.touches[0].clientY : event.clientY;
+  const clientX = device.isPhone ? event.changedTouches[0].clientX : event.clientX;
+  const clientY = device.isPhone ? event.changedTouches[0].clientY : event.clientY;
   
   // not good here
   const biasX = Math.floor((clientX - device.midx - num / 2) / num) + 1;
@@ -153,10 +166,17 @@ function gameClick(event) {
 
   const x = camera[0] + biasX;
   const y = camera[1] + biasY;
+  
+  const hero = dungeon.hero.heroAttr.character.pos;
+  if (hero[0] === x && hero[1] === y) {
+    heroClick();
+    return true;
+  }
 
   if (dungeon.level.levelAttr.shadow.isLit(x, y)) {
-    if (dungeon.level.levelAttr.mobs2D.get(x, y)) {
-      npcClick(x, y);
+    const npc = dungeon.level.levelAttr.mobs2D.get(x, y);
+    if (npc) {
+      npcClick(npc);
       return true;
     }
   }
@@ -171,7 +191,30 @@ function gameClick(event) {
   return false;
 }
 
-function npcClick(x, y) {
+function heroClick() {
+  const level = dungeon.level.levelAttr;
+  const heroText = texts[getLanguage()][dungeon.hero.heroAttr.character.sprite.getTextureName()].text;
+  level.getUI(Yell).changeText(`${heroText.name}： ${heroText.yells[Math.floor(Math.random() * heroText.yells.length)]}`);
+}
+
+function npcClick(npc) {
+
+  // yell
+  const level = dungeon.level.levelAttr;
+  
+  // console.log(npc)
+  // if (!level.getUI(Yell)) {
+  //   const npcText = texts[getLanguage()][npc.mob.character.sprite.getTextureName()].text;
+  //   level.ui.push(new Yell(`${npcText.name}： ${npcText.yells[Math.floor(Math.random() * npcText.yells.length)]}`));
+  // }
+
+
+  const npcText = texts[getLanguage()][npc.mob.character.sprite.getTextureName()].text;
+
+  level.getUI(Yell).changeText(`${npcText.name}： ${npcText.yells[Math.floor(Math.random() * npcText.yells.length)]}`);
+  
+  // hero
+
   // dont delete
   // const name = this.getNPC(to).name;
   // const text = npcMap[name].text;
@@ -203,18 +246,24 @@ function mapClick(x, y) {
 }
 
 
-// temp
+// temp move
 let stopMoving = false;
+
 async function multiMove(moves) {
   stopMoving = false;
   input.addLayer(stopMove);
 
-
+  // let firstMoving = true;
   
   for (const m of moves) {
     if (stopMoving) {
       break;
     }
+    // if (firstMoving) {
+    //   await delay(50);
+    //   alert(1)
+    //   firstMoving = false;
+    // }
     dungeon.hero.heroAttr.move(...m);
     await delay(100);
   }
@@ -234,3 +283,72 @@ function stopMove() {
 // sadly, no dragging for now
 // initDrag() {
 // }
+
+
+
+// drag
+
+input.register("touchstart", resizeTouchStart);
+input.register("touchmove", resizeTouchMove);
+input.register("touchend", resizeTouchEnd);
+
+// TODO: remove these to touch.js
+let touches;
+export let initialDistance = 0;
+// let scaled = 0;
+
+export let resized = false;
+// let initialPixelSize;
+function resizeTouchStart(event) {
+  // touches = Array.from(event.touches);
+  if (event.touches.length !== 2) {
+    return;
+  }
+  initialDistance = getDistance(...event.touches);
+  // initialPixelSize = pixelSize;
+  // alert(initialDistance)
+
+}
+
+function resizeTouchMove(event) {
+  if (event.touches.length !== 2) {
+    return;
+  }
+  touches = Array.from(event.touches);
+  event.preventDefault();
+  // alert(2)
+  if (initialDistance === 0) {
+    return;
+  }
+  const distance = getDistance(...touches);
+
+  const scale = Math.max(Math.min(Math.trunc((distance - initialDistance) / 80), 1), -1);
+  
+  if (scale === 0) {
+    return;
+  }
+  // console.log(scale)
+  // alert(pixelSize * scale)
+  resized = true;
+  initialDistance = distance;
+  const ps = Math.min(Math.max(pixelSize + scale, 1), 12);
+  // scaled = scale;
+  // initialDistance = distance;
+  // if (ps !== pixelSize) {
+  //   return;
+  // }
+  setPixelSize(ps);
+  updateCellView();
+
+}
+
+function resizeTouchEnd(event) {
+  if (event.touches.length < 2) {
+    initialDistance = 0;
+    // scaled = 0;
+  }
+}
+
+export function resetResized() {
+  resized = false;
+}

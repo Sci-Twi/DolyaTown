@@ -1,3 +1,5 @@
+// import { resetResized, resized } from "../scenes/gameScene.js";
+// import { initialDistance } from "../scenes/gameScene.js";
 import { device } from "./device.js";
 
 export const input = {
@@ -31,12 +33,20 @@ function register(name, callback, element) {
 let layers = [];
 
 function processClick(event) {
-  // cancel(device.clickName, processClick);
+  // console.log(event)
+  // if (event?.touches?.length === 1) {
+  //   return;
+  // }
   for (const processor of layers) {
     if (processor(event)) {
       break;
     }
   }
+  
+  // alert(event.touches.length)
+
+  // cancel(device.clickName, processClick);
+  
   // register(device.clickName, processClick);
 }
 
