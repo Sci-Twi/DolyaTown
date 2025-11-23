@@ -2,6 +2,7 @@ import { dungeon } from "../dungeon.js";
 import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { textureCache } from "../tools/textureCache.js";
 import { canvas } from "../tools/canvas.js";
+import { terrain } from "../levels/terrain.js";
 
 export class TilesMap {
   map;
@@ -44,6 +45,10 @@ export class TilesMap {
 
     const source = textureCache.calcSourceCoor(id, this.textureCanvas.width);
     const desti = gameScene.calcScreenCoor(x, y);
+
+    if (id === terrain.well || id === terrain.alchemy) {
+      canvas.draw(this.textureCanvas, ...textureCache.calcSourceCoor(terrain.water, this.textureCanvas.width), 16, 16, ...desti, ps * 16, ps * 16);
+    }
     
     canvas.draw(this.textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
   }

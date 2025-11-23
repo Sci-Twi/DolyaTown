@@ -32,7 +32,8 @@ export const texts = {
       coor: [25, 21],
       text: {
         name: "hmdzl001",
-        description: "特别坚果地牢的缔造者，同时也是一位玩家。",
+        // edited
+        description: "特别坚果地牢的缔造者，同时也是一位玩家。这个项目重写了像素地牢的一小部分（和它的一个改版：特别惊喜像素地牢中的一张地图）。你可以把它叫做“有着像素地牢风格的网页”。项目地址：https://github.com/Sci-Twi/DolyaTown",
         yells: [
           "我该说欢迎吗，这是为2019春节专门准备的地图，但是就算是2022年，世界依然没有好转。",
           "椰子...它会处理之后的一切。作为一台机器，它很可爱，但它并不能缓解我的忙碌。",
@@ -216,6 +217,8 @@ export const texts = {
         yells: [
           "为什么不试试我的其他游戏呢?",
           "像素地牢现在停止更新了......",
+          // edited
+          "我为什么会卡在墙里？我也不知道，是坚果把我放在这里的...对了，你知道我旁边的暗门和一些矮灌木可以被搜索么？",
         ]
       }
     },
@@ -838,6 +841,8 @@ export const texts = {
         yells: [
           "嗨，需要买些密宝吗。这些可是高级货。",
           "严格意义上我并不属于人类...但没人规定只有人类才能当财宝猎人。",
+          // edited
+          "试着搜索我后面吧！",
         ]
       }
     },
@@ -1121,7 +1126,7 @@ export const texts = {
         ]
       }
     },
-    scarecrow2: {
+    springscarecrow: {
       name: "scarecrow", 
       animation: {
         idle: {
@@ -1197,12 +1202,15 @@ export const texts = {
       default: "这里没什么有趣的东西。",
       blocks: [],
     },
+
+    search: "点击查看信息 双击进行搜索",
   }
 };
 
 const T = texts.cn.terrain.blocks;
 T[terrain.empty] = {name: "地板"};
 T[terrain.high_grass] = {name: "高草", description: "茂密的植被阻挡了视线。"};
+T[terrain.grass] = {name: "草"};
 T[terrain.water] = {name: "清澈透明的水", description: "着火的时候踩进水里可以灭火。"};
 T[terrain.glass_wall] = {name: "玻璃", description: "常见的玻璃，但非常坚固。"};
 T[terrain.door] = {name: "关着的门"};

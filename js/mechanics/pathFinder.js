@@ -1,3 +1,4 @@
+import { debug } from "../tools/debug.js";
 import { dungeon } from "../dungeon.js";
 import { checkFlag, flags } from "../levels/terrain.js";
 
@@ -28,7 +29,7 @@ function findPath(from, to) {
     for (const coor of toBeFind) {
       const [x, y] = coor;
       const toFind = [[x + 1, y], [x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y + 1], [x - 1, y - 1], [x - 1, y + 1]].filter((c) => {
-        return (checkFlag(dungeon.level.levelAttr.map.get(...c), flags.passable)) && ((to[0] === c[0] && to[1] === c[1]) ? true : !dungeon.level.levelAttr.getMob(...c)) && !pathMap[c[1]][c[0]] && dungeon.level.levelAttr.visited.get(...c);
+        return (checkFlag(dungeon.level.levelAttr.map.get(...c), flags.passable)) && ((to[0] === c[0] && to[1] === c[1]) ? true : !dungeon.level.levelAttr.getMob(...c)) && !pathMap[c[1]][c[0]] && (dungeon.level.levelAttr.visited.get(...c) || debug.lightMode);
       });
 
       for (const c of toFind) {

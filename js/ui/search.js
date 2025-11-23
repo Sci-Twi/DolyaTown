@@ -8,6 +8,7 @@ import { camera, pixelSize } from "../scenes/gameScene.js";
 import { input } from "../tools/input.js";
 import { Description } from "./description.js";
 import { terrain } from "../levels/terrain.js";
+import { FruitCat } from "../actors/npc/fruitcat.js";
 // import { getLanguage } from "../text/language.js";
 // import { text } from "../text/text.js";
 
@@ -51,8 +52,7 @@ export class Search {
     }
 
     if (clicked) {
-      // not done:
-      // search();
+      dungeon.hero.heroAttr.search();
       closeConfirmHint();
       input.deleteLayer(searchClick);
       return true;
@@ -68,6 +68,7 @@ export class Search {
 
   
 }
+
 
 function closeConfirmHint() {
   // bad

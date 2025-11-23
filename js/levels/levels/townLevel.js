@@ -61,6 +61,7 @@ import { Piranha } from "../../actors/mob/piranha.js";
 import { ShopKeeper } from "../../actors/npc/shopkeeper.js";
 import { Laji } from "../../actors/npc/laji.js";
 import { HateSokoban } from "../../actors/npc/hatesokoban.js";
+import { SpringScarecrow } from "../../actors/mob/springscarecrow.js";
 
 export class TownLevel {
   levelAttr;
@@ -313,7 +314,7 @@ export class TownLevel {
     scarecrow.mob.character.pos = [18, 44];
     this.levelAttr.addMob(scarecrow);
 
-    const scarecrow2 = new Scarecrow();
+    const scarecrow2 = new SpringScarecrow();
     scarecrow2.mob.character.pos = [21, 44];
     this.levelAttr.addMob(scarecrow2);
 

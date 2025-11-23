@@ -181,6 +181,7 @@ function gameClick(event) {
     }
   }
 
+  // pathfinder
   if (checkFlag(dungeon.level.levelAttr.map.get(x, y), flags.passable)) {
     if (dungeon.level.levelAttr.visited.get(x, y) || debug.lightMode) {
       mapClick(x, y);

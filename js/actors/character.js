@@ -1,5 +1,5 @@
 import { dungeon } from "../dungeon.js";
-import { checkFlag, flags } from "../levels/terrain.js";
+import { checkFlag, flags, terrain } from "../levels/terrain.js";
 import { Actor } from "./actor.js";
 export class Character {
   actor;
@@ -33,6 +33,9 @@ export class Character {
       return;
     }
 
+    if (map.get(toX, toY) === terrain.high_grass) {
+      map.set(toX, toY, terrain.grass);
+    }
 
     this.pos = [toX, toY];
   }

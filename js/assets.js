@@ -59,6 +59,7 @@ export const assets = {
   xavier251998: "npc/xavier251998.png",
   adultdragonviolet: "npc/adultdragonviolet.png",
   scarecrow: "npc/scarecrow.png",
+  springscarecrow: "npc/scarecrow.png",
   raintrainer: "npc/raintrainer.png",
   rustyblade: "npc/rustyblade.png",
   tempest102: "npc/tempest102.png",

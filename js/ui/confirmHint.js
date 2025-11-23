@@ -1,3 +1,5 @@
+import { getLanguage } from "../text/language.js";
+import { texts } from "../text/text.js";
 import { ctx } from "../tools/canvas.js";
 import { device } from "../tools/device.js";
 import { textureCache } from "../tools/textureCache.js";
@@ -17,7 +19,7 @@ export class ConfirmHint {
 
     
     // hardcoded for now
-    this.padding = ctx.measureText("点击查看信息").width;
+    this.padding = ctx.measureText(texts[getLanguage()].search).width;
     const triangleLength = 5 * 6;
 
     // const relativeWidth = 0.4;
@@ -40,7 +42,7 @@ export class ConfirmHint {
 
     const pixelSize = 6;
     renderWindow(texture.canvas, uiSprite.sx, uiSprite.sy, 5, 8, 8, this.uiAttr.dx, this.uiAttr.dy, 5 * pixelSize, this.padding, 30);
-    ctx.fillText("点击查看信息", this.uiAttr.dx + 5 * pixelSize, this.uiAttr.dy + 5 * pixelSize);
+    ctx.fillText(texts[getLanguage()].search, this.uiAttr.dx + 5 * pixelSize, this.uiAttr.dy + 5 * pixelSize);
   }
 
   onClick() {

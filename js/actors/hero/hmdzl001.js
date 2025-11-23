@@ -7,6 +7,5 @@ export class Hmdzl001 {
   constructor() {
     this.heroAttr = new Hero();
     this.heroAttr.character.linkSprite(Hmdzl001Sprite);
-    // console.log(this)
   }
 }

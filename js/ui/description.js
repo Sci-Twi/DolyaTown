@@ -40,9 +40,10 @@ export class Description {
       //   // npcText = {name: };
       // }
       npcText = texts[getLanguage()][name].blocks[showing];
-      if (!npcText) {
-        npcText = {name: "未填充", description: "看到了提醒作者修复"};
-      }
+      // panic immediately
+      // if (!npcText) {
+      //   npcText = {name: "未填充", description: "看到了提醒作者修复"};
+      // }
       if (!npcText?.description) {
         text = texts[getLanguage()][name].default;
       } else {
