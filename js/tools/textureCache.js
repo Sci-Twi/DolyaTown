@@ -31,7 +31,7 @@ function getTexture(name) {
 async function loadTexture(name) {
   try {
     return await new Promise((resolve, reject) => {
-      image.src = "/images/" + assets[name];
+      image.src = "./images/" + assets[name];
       image.onload = function () {
         const tc = new TextureCanvas(this.naturalWidth, this.naturalHeight);
         tc.ctx.drawImage(image, 0, 0);
