@@ -1,5 +1,3 @@
-
-
 export const device = {
   width: window.innerWidth % 2 === 0 ? window.innerWidth : window.innerWidth + 1,
   height: window.innerHeight % 2 === 0 ? window.innerHeight : window.innerHeight + 1,
@@ -12,9 +10,10 @@ export const device = {
   },
 };
 
+device.getDevice().width = device.width;
+device.getDevice().height = device.height;
+
 device.clickName = device.isPhone ? "touchend" : "click";
 device.midx = device.width / 2;
 device.midy = device.height / 2;
 
-device.getDevice().width = device.width;
-device.getDevice().height = device.height;

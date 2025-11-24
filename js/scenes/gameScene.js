@@ -1,7 +1,5 @@
 import { device } from "../tools/device.js";
-import { keyboard } from "../keyboard.js";
 import { TilesMap } from "../sprites/tiles.js";
-// import { win } from "../ui/win.js";
 import { game } from "../game.js";
 import { MobsMap } from "../sprites/mobs.js";
 import { ShadowMap } from "../sprites/shadow.js";
@@ -54,16 +52,12 @@ export const gameScene = {
     dungeon.level.levelAttr.ui.push(new Search());
     dungeon.level.levelAttr.ui.push(new Yell(""));
 
-    // keyboard.addListener("gameScene");
-
     game.render();
     
     input.register("wheel", resize);
     
     input.pushLayer(uiClick);
     input.pushLayer(gameClick);
-
-    // win.initWindow();
 
   },
 
@@ -134,7 +128,6 @@ function resize(event) {
 }
 
 function uiClick(event) {
-  // console.log(event)
   const clientX = device.isPhone ? event.changedTouches[0].clientX : event.clientX;
   const clientY = device.isPhone ? event.changedTouches[0].clientY : event.clientY;
   for (const ui of dungeon.level.levelAttr.ui) {
@@ -198,48 +191,13 @@ function heroClick() {
   level.getUI(Yell).changeText(`${heroText.name}： ${heroText.yells[Math.floor(Math.random() * heroText.yells.length)]}`);
 }
 
+// yell
 function npcClick(npc) {
-
-  // yell
   const level = dungeon.level.levelAttr;
-  
-  // console.log(npc)
-  // if (!level.getUI(Yell)) {
-  //   const npcText = texts[getLanguage()][npc.mob.character.sprite.getTextureName()].text;
-  //   level.ui.push(new Yell(`${npcText.name}： ${npcText.yells[Math.floor(Math.random() * npcText.yells.length)]}`));
-  // }
-
 
   const npcText = texts[getLanguage()][npc.mob.character.sprite.getTextureName()].text;
 
   level.getUI(Yell).changeText(`${npcText.name}： ${npcText.yells[Math.floor(Math.random() * npcText.yells.length)]}`);
-  
-  // hero
-
-  // dont delete
-  // const name = this.getNPC(to).name;
-  // const text = npcMap[name].text;
-  // this.game.gameview.currentAnimation = name;
-  // win.renderWindow(text, this.game.gameview);
-  // this.game.gameview.yell(text);
-
-  // yell({name, yells}) {
-  //   document.getElementById("yell").innerText = `${name}： ${yells[Math.floor(Math.random() * yells.length)]}`;  
-  // }
-
-  
-
-  // removeWindowHandler = () => {
-  //   const windowCanvas = document.getElementById("windowcanvas");
-  //   windowCanvas.getContext("2d").clearRect(0, 0, windowCanvas.width, windowCanvas.height);
-    
-  //   document.getElementById("windowdescription").innerText = "";
-  //   document.getElementById("windowname").innerText = "";
-  //   document.getElementById("windowanimation").getContext("2d").clearRect(0, 0, 96, 96);
-  //   this.initClick();
-  //   document.getElementById("canvasback").removeEventListener(device.clickName, this.removeWindowHandler);
-
-  // }
 }
 
 function mapClick(x, y) {
@@ -253,18 +211,11 @@ let stopMoving = false;
 async function multiMove(moves) {
   stopMoving = false;
   input.addLayer(stopMove);
-
-  // let firstMoving = true;
   
   for (const m of moves) {
     if (stopMoving) {
       break;
     }
-    // if (firstMoving) {
-    //   await delay(50);
-    //   alert(1)
-    //   firstMoving = false;
-    // }
     dungeon.hero.heroAttr.move(...m);
     await delay(100);
   }
@@ -281,12 +232,6 @@ function stopMove() {
   return true;
 }
 
-// sadly, no dragging for now
-// initDrag() {
-// }
-
-
-
 // drag
 
 input.register("touchstart", resizeTouchStart);
@@ -296,19 +241,14 @@ input.register("touchend", resizeTouchEnd);
 // TODO: remove these to touch.js
 let touches;
 export let initialDistance = 0;
-// let scaled = 0;
 
 export let resized = false;
-// let initialPixelSize;
+
 function resizeTouchStart(event) {
-  // touches = Array.from(event.touches);
   if (event.touches.length !== 2) {
     return;
   }
   initialDistance = getDistance(...event.touches);
-  // initialPixelSize = pixelSize;
-  // alert(initialDistance)
-
 }
 
 function resizeTouchMove(event) {
@@ -317,7 +257,6 @@ function resizeTouchMove(event) {
   }
   touches = Array.from(event.touches);
   event.preventDefault();
-  // alert(2)
   if (initialDistance === 0) {
     return;
   }
@@ -328,16 +267,11 @@ function resizeTouchMove(event) {
   if (scale === 0) {
     return;
   }
-  // console.log(scale)
-  // alert(pixelSize * scale)
+
   resized = true;
   initialDistance = distance;
   const ps = Math.min(Math.max(pixelSize + scale, 1), 12);
-  // scaled = scale;
-  // initialDistance = distance;
-  // if (ps !== pixelSize) {
-  //   return;
-  // }
+  
   setPixelSize(ps);
   updateCellView();
 
@@ -346,7 +280,6 @@ function resizeTouchMove(event) {
 function resizeTouchEnd(event) {
   if (event.touches.length < 2) {
     initialDistance = 0;
-    // scaled = 0;
   }
 }
 

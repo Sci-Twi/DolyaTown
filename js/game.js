@@ -1,8 +1,8 @@
+import "./tools/device.js";
 import { interLevelScene } from "./scenes/interLevelScene.js";
 
 export const game = {
   scene: null,
-  // inputProcessor: null,
 
   now: 0,
 
@@ -16,7 +16,6 @@ export const game = {
   
   start() {
     this.switchScene(interLevelScene);
-    // this.updateStep();
   },
 
   updateStep() {

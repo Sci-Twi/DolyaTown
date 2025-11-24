@@ -1,12 +1,14 @@
-import {assets} from "../assets.js";
+import { assets } from "../assets.js";
+import { getLanguage } from "../text/language.js";
+import { texts } from "../text/text.js";
+import { ctx } from "./canvas.js";
+import { device } from "./device.js";
 const textures = {};
 
 export const textureCache = {
-  // textures,
   loadTextures,
   getTexture,
   calcSourceCoor,
-  // setTextureReversed,
 };
 
 
@@ -31,6 +33,10 @@ function getTexture(name) {
 async function loadTexture(name) {
   try {
     return await new Promise((resolve, reject) => {
+      ctx.clearRect(0, 0, device.width, device.height);
+      const text = texts[getLanguage()].loading + name;
+      const length = ctx.measureText(text).width;
+      ctx.fillText(text, (device.width - length) / 2, device.midy);
       image.src = "./images/" + assets[name];
       image.onload = function () {
         const tc = new TextureCanvas(this.naturalWidth, this.naturalHeight);

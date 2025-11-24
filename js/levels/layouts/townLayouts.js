@@ -1,5 +1,4 @@
 import { terrain } from "../terrain.js";
-// const M = terrain.;
 const W = terrain.wall_ground;
 const T = terrain.shrub;
 const Z = terrain.high_grass;

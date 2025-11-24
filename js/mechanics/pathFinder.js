@@ -14,7 +14,6 @@ function findPath(from, to) {
   for (let i = 1; i <= 48; i++) {
     pathMap[i] = [];
   }
-  // [x, y]
   // bruh
   pathMap[from[1]][from[0]] = "start";
 

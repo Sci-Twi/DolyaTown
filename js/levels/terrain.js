@@ -3,7 +3,6 @@ const chasm = 0;
 const empty = 1;
 const grass = 2;
 const empty_well = 3;
-// const empty_well: 3,
 const wall = 4;
 const door = 5;
 const open_door = 6;

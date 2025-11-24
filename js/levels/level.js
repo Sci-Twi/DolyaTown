@@ -1,5 +1,3 @@
-// import { tiles } from "../actor/tiles";
-
 import { dungeon } from "../dungeon.js";
 import { Shadow } from "../mechanics/shadow.js";
 
@@ -26,8 +24,6 @@ export class Level {
     this.shadow = new Shadow(this.fieldOfView);
 
     this.ui = [];
-    // this.ui.push();
-    // this.updateFieldOfView();
   }
 
   addMob(mob) {
@@ -47,9 +43,9 @@ export class Level {
   }
 
   // TODO
-  deleteUI(UIclass) {
-    // this.ui.filter()
-  }
+  // deleteUI(UIclass) {
+  //   // this.ui.filter()
+  // }
 }
 
 class Map2D {

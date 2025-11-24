@@ -99,6 +99,6 @@ export class Shadow {
     }
     this.light.set(x, y, true);
   }
-  // maybe someday i will rewrite it to mine shadowcaster
+  // maybe someday i will rewrite it to my shadowcaster
   
 }

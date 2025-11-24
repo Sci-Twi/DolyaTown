@@ -27,23 +27,16 @@ export class Description {
     this.name = name;
 
     const relativeX = 0.7;
-
-    // TODO: ctx.store
     const fontSize = 30;
 
     // runs
     let npcText;
     let text;
     
+    // TODO
     if (name === "terrain") {
-      // if (texts[getLanguage()][name][showing]) {
-      //   // npcText = {name: };
-      // }
       npcText = texts[getLanguage()][name].blocks[showing];
-      // panic immediately
-      // if (!npcText) {
-      //   npcText = {name: "未填充", description: "看到了提醒作者修复"};
-      // }
+      // if null panic immediately
       if (!npcText?.description) {
         text = texts[getLanguage()][name].default;
       } else {
@@ -58,12 +51,7 @@ export class Description {
 
 
     this.displayName = npcText.name;
-    // const txt = "这是超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级v长的一行测试文本";
-    // ctx.textBaseline = "top";
-    // ctx.fillStyle = "white";
-    // ctx.font = fontSize + "px sans-serif";
 
-    // hardcoded for now
     this.uiAttr.dx = Math.floor(device.width * (1 - relativeX) / 2);
 
     this.rowSideLength = Math.floor(device.width * relativeX - triangleLength * 2);
@@ -81,18 +69,6 @@ export class Description {
     input.addLayer(descriptionClick);
 
     this.showing = showing;
-    // console.log(this.showing)
-    // this.contentLength = ctx.measureText(txt).width;
-
-    // const relativeWidth = 0.4;
-    // const relativeHeight = 0.6;
-
-
-    // this.uiAttr.dy = relativeY * device.height;
-
-    // this.uiAttr.dWidth = triangleLength * 2 + this.padding;
-    // this.uiAttr.dHeight = triangleLength * 2 + 30;
-    // this.uiAttr.dHeight = 
 
   }
 
@@ -100,7 +76,6 @@ export class Description {
     const texture = textureCache.getTexture(this.uiAttr.sprite.getTextureName());
     const uiSprite = this.uiAttr.sprite.uiSprite;
 
-    // const pixelSize = 6;
     renderWindow(texture.canvas, uiSprite.sx, uiSprite.sy, 6, 8, 8, this.uiAttr.dx, this.uiAttr.dy, triangleLength, this.rowSideLength, this.columnSideLength);
     
 
@@ -136,13 +111,6 @@ export class Description {
     let index = Math.min(this.showing.current.frames.length - 1, this.showing.index);
     const source = textureCache.calcSourceCoor(this.showing.current.frames[index], textureCanvas.width);
     canvas.draw(textureCanvas, ...source, 16, 16, this.uiAttr.dx + triangleLength, this.uiAttr.dy + triangleLength, pixelSize * 16, pixelSize * 16);
-    
-    // if in description render it by the way
-    // if (sprite.inDescription) {
-    //   const description = dungeon.level.levelAttr.ui.find((ui) => ui instanceof Description);
-    //   canvas.draw(textureCanvas, ...source, 16, 16, description.uiAttr.dx, description.uiAttr.dy, 6 * 16, 6 * 16);
-    //   console.log(description)
-    // }
   }
 
   onClick() {
@@ -159,8 +127,8 @@ function descriptionClick() {
 function closeDescription() {
   // bad
   const level = dungeon.level.levelAttr;
+  // TODO
   level.ui = level.ui.filter((u) => !(u instanceof Description));
-  // dungeon.level.levelAttr.ui.
 }
 
 

@@ -2,19 +2,15 @@ import { debug } from "../tools/debug.js";
 import { dungeon } from "../dungeon.js";
 import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { canvas, ctx } from "../tools/canvas.js";
-// import { device } from "../tools/device.js";
 
 export class ShadowMap {
   shadow;
   shadowCanvas;
-
-  // changed;
   
   constructor() {
     this.shadow = dungeon.level.levelAttr.shadow;
     // 100 100 must be enough
     this.shadowCanvas = new OffscreenCanvas(100, 100);
-    // this.changed = false;
   }
 
   render() {

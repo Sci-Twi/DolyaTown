@@ -7,15 +7,10 @@ import { terrain } from "../levels/terrain.js";
 export class TilesMap {
   map;
   textureCanvas;
-
-  // changed;
   
   constructor() {
     this.map = dungeon.level.levelAttr.map;
     this.textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
-
-    // this.changed = false;
-    // considering rewrite: MobSprite->CharSprite->animation
   }
 
   render() {
@@ -29,8 +24,6 @@ export class TilesMap {
 
     const endX = Math.min(camera[0] + halfLength[0], this.map.width - 1);
     const endY = Math.min(camera[1] + halfLength[1], this.map.height - 1);
-
-    // const textureCanvas = textureCache.getTexture(dungeon.level.getTextureName()).canvas;
 
     for (let y = startY; y <= endY; y++) {
       for (let x = startX; x <= endX; x++) {
@@ -52,5 +45,4 @@ export class TilesMap {
     
     canvas.draw(this.textureCanvas, ...source, 16, 16, ...desti, ps * 16, ps * 16);
   }
-
 }

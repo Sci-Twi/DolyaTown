@@ -1,4 +1,3 @@
-// import { Hero } from "./actors/hero.js";
 import { Hmdzl001 } from "./actors/hero/hmdzl001.js";
 import { TownLevel } from "./levels/levels/townLevel.js";
 
@@ -8,7 +7,7 @@ export const dungeon = {
   hero: null,
   newLevel() {
     this.level = null;
-    // actor.clear();
+    
     this.depth++;
 
     switch (this.depth) {
@@ -21,7 +20,6 @@ export const dungeon = {
   },
 
   init() {
-    // this.hero = new Hero();
     this.hero = new Hmdzl001();
   }
 };

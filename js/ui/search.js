@@ -8,9 +8,6 @@ import { camera, pixelSize } from "../scenes/gameScene.js";
 import { input } from "../tools/input.js";
 import { Description } from "./description.js";
 import { terrain } from "../levels/terrain.js";
-import { FruitCat } from "../actors/npc/fruitcat.js";
-// import { getLanguage } from "../text/language.js";
-// import { text } from "../text/text.js";
 
 // all right here we come back to single sample
 export class Search {
@@ -57,12 +54,11 @@ export class Search {
       input.deleteLayer(searchClick);
       return true;
     }
-    // index might change
+    // bad, index might change
     input.insertLayer(searchClick, 1);
-    // // TODO: create a window
+
     dungeon.level.levelAttr.ui.push(new ConfirmHint());
-    // TODO: create a thing to create a window
-    // console.log("press a tile to examine")
+    
     return true;
   }
 
@@ -76,7 +72,6 @@ function closeConfirmHint() {
 }
 
 function searchClick(event) {
-  // input.insertLayer(searchClick, );
   const num = pixelSize * 16;
 
   const clientX = device.isPhone ? event.changedTouches[0].clientX : event.clientX;
@@ -88,8 +83,6 @@ function searchClick(event) {
 
   const x = camera[0] + biasX;
   const y = camera[1] + biasY;
-
-  // alert(x + "," + y)
 
   closeConfirmHint();
   input.deleteLayer(searchClick);
@@ -126,12 +119,6 @@ function searchClick(event) {
   const block = dungeon.level.levelAttr.map.get(x, y);
   ui.push(new Description("terrain", block));
   return true;
-  // if (dungeon.level.levelAttr.visited.get(x, y) || debug.lightMode) {
-  //   mapClick(x, y);
-  // }
-  
-
-
 }
 
 class SearchSprite {

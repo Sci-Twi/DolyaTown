@@ -1,7 +1,5 @@
 import { device } from "./device.js";
 
-// this is weird
-
 export const ctx = device.getDevice().getContext("2d");
 ctx.imageSmoothingEnabled = false;
 

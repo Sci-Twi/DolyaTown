@@ -14,16 +14,11 @@ export class ConfirmHint {
     this.uiAttr = new UI();
     this.uiAttr.linkSprite(ConfirmHintSprite);
 
-    // const relativeX = 0.3;
     const relativeY = 0.7;
 
-    
-    // hardcoded for now
+    // TODO
     this.padding = ctx.measureText(texts[getLanguage()].search).width;
     const triangleLength = 5 * 6;
-
-    // const relativeWidth = 0.4;
-    // const relativeHeight = 0.6;
 
     this.uiAttr.dx = (device.width - this.padding - triangleLength * 2) / 2;
 
@@ -31,8 +26,6 @@ export class ConfirmHint {
 
     this.uiAttr.dWidth = triangleLength * 2 + this.padding;
     this.uiAttr.dHeight = triangleLength * 2 + 30;
-    // this.uiAttr.dHeight = 
-    // console.log(dungeon.hero)
 
   }
 
@@ -46,7 +39,6 @@ export class ConfirmHint {
   }
 
   onClick() {
-    // alert(1)
     return false;
   }
 }
@@ -64,9 +56,6 @@ class ConfirmHintSprite {
     this.uiSprite.sx = 22;
     this.uiSprite.sy = 0;
 
-    // unused
-    // this.uiSprite.sWidth = 20;
-    // this.uiSprite.sHeight = 25;
   }
 
   getTextureName() {

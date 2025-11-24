@@ -11,9 +11,4 @@ export class CharacterSprite {
 
   reversed = false;
   inDescription = false;
-  constructor() {
-    // this.index = 0;
-    // this.delay = 0;
-    // this.current = this.idle;
-  }
 }

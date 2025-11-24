@@ -4,8 +4,6 @@ import { game } from "../game.js";
 import { camera, cellView, gameScene, pixelSize } from "../scenes/gameScene.js";
 import { canvas, ctx } from "../tools/canvas.js";
 import { textureCache } from "../tools/textureCache.js";
-import { Description } from "../ui/description.js";
-// import { gameScene } from "../scenes/gameScene.js";
 
 export class MobsMap {
   hero;

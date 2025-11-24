@@ -3,14 +3,6 @@ import { terrain } from "../levels/terrain.js";
 export const texts = {
   cn: {
     apostle: {
-      name: "apostle",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [20, 21],
       text: {
         name: "apostle",
         description: "一个闪着光芒的立方体，发声机械而又有磁性，可能是其他世界的测试者。",
@@ -22,14 +14,6 @@ export const texts = {
       }
     },
     hmdzl001: {
-      name: "hmdzl001",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 1, 1, 1, 6, 6, 7, 7, 7, 1, 1, 0, 0, 0],
-          hz: 10
-        }
-      },
-      coor: [25, 21],
       text: {
         name: "hmdzl001",
         // edited
@@ -42,31 +26,6 @@ export const texts = {
       },
     },
     shopkeeper: {
-      name: "shopkeeper",
-      animation: {
-        idle: {
-          frames: [1, 1, 1, 1, 1, 0, 0, 0, 0],
-          hz: 10
-        }
-      },
-      coor: [13, 10],
-      text: {
-        name: "黑市商人",
-        description: "这家伙会出现在任何可以赚钱的地方。无论那里有多么危险。",
-        yells: [
-          "这家伙会出现在任何可以赚钱的地方。无论那里有多么危险。",
-        ]
-      }
-    },
-    shopkeeper2: {
-      name: "shopkeeper",
-      animation: {
-        idle: {
-          frames: [1, 1, 1, 1, 1, 0, 0, 0, 0],
-          hz: 10
-        }
-      },
-      coor: [8, 23],
       text: {
         name: "黑市商人",
         description: "这家伙会出现在任何可以赚钱的地方。无论那里有多么危险。",
@@ -76,14 +35,6 @@ export const texts = {
       }
     },
     otiluke: {
-      name: "otiluke",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 2, 1],
-          hz: 10
-        }
-      },
-      coor: [32, 15],
       text: {
         name: "Otiluke",
         description: "Otiluke，一位极具天赋的巫师。 他做了许多事情。其中之一就是带走了Amulet护符。",
@@ -95,14 +46,6 @@ export const texts = {
       }
     },
     udawos: {
-      name: "udawos",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15
-        }
-      },
-      coor: [33, 34],
       text: {
         name: "Udawos",
         description: "先锋的制作者。先锋是以像素地牢的源代码制作的。",
@@ -113,14 +56,6 @@ export const texts = {
       }
     },
     typedscroll: {
-      name: "typedscroll",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15
-        }
-      },
-      coor: [9, 23],
       text: {
         name: "TypedScroll",
         description: "LCPD的制作者。虽然他的确有不错的编程能力，但是他的没有仔细考虑程序总会有许多bug。",
@@ -131,14 +66,6 @@ export const texts = {
       }
     },
     g2159687: {
-      name: "g2159687",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15
-        }
-      },
-      coor: [35, 3],
       text: {
         name: "G2159687",
         description: "简单发芽的作者及汉化者，国人，现在处于弃坑状态。",
@@ -149,14 +76,6 @@ export const texts = {
       }
     },
     consideredhamster: {
-      name: "consideredhamster",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15
-        }
-      },
-      coor: [26, 10],
       text: {
         name: "ConsideredHamster的宝箱怪",
         description: "YAPD的作者的宠物。恕我直言，打不通YAPD简单难度的都是垃圾。",
@@ -167,14 +86,6 @@ export const texts = {
       }
     },
     bilboldev: {
-      name: "bilboldev",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15
-        }
-      },
-      coor: [24, 10],
       text: {
         name: "Bilboldev",
         description: "技巧地牢的制作者。他人非常好，因为据说他曾帮助typedscroll修复bug。",
@@ -186,14 +97,6 @@ export const texts = {
       }
     },
     xixizero: {
-      name: "xixizero",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15
-        }
-      },
-      coor: [25, 11],
       text: {
         name: "西西0.12",
         description: "黑暗地牢的制作者。",
@@ -203,14 +106,6 @@ export const texts = {
       }
     },
     watabou: {
-      name: "watabou",
-      animation: {
-        idle: {
-          frames: [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
-          hz: 15
-        }
-      },
-      coor: [42, 42],
       text: {
         name: "Watabou",
         description: "像素地牢的创造者。",
@@ -223,14 +118,6 @@ export const texts = {
       }
     },
     whiteghost: {
-      name: "whiteghost",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [45, 44],
       text: {
         name: "白幽妹",
         description: "由于高塔的实验，她已经失去了原有的形体。",
@@ -240,14 +127,6 @@ export const texts = {
       }
     },
     millilitre: {
-      name: "millilitre",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [45, 42],
       text: {
         name: "millilitre isaac",
         description: "因为意外来到这里的测试者之一，他被吓得不轻。",
@@ -258,14 +137,6 @@ export const texts = {
       }
     },
     nyrds: {
-      name: "nyrds",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15
-        }
-      },
-      coor: [13, 11],
       text: {
         name: "Nyrdie",
         description: "混合地牢的制作者???一个带墨镜的白牙肌肉块。",
@@ -276,14 +147,6 @@ export const texts = {
       }
     },
     hbb: {
-      name: "hbb",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [43, 15],
       text: {
         name: "工会主席-巨无霸卡比",
         description: "破碎地牢的翻译者之一，同时也是像素地牢吧的吧主，小马的爱好者。",
@@ -295,14 +158,6 @@ export const texts = {
       }
     },
     sfb: {
-      name: "sfb",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [33, 11],
       text: {
         name: "流浪法师-破碎暴风火杖",
         description: "破碎地牢的翻译者之一。",
@@ -313,14 +168,6 @@ export const texts = {
       }
     },
     flyling: {
-      name: "flyling",
-      animation: {
-        idle: {
-          frames: [0, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [37, 12],
       text: {
         name: "澪",
         description: "谁也不知道她从何处来，她偶尔会去雪景旅馆休息。如果你遇到她了，不妨试试和她搭讪看看吧。",
@@ -332,14 +179,6 @@ export const texts = {
       }
     },
     omicronrg9: {
-      name: "omicronrg9",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [36, 11],
       text: {
         name: "Ømicrónrg9",
         description: "这个看上去像十字军战士的长发男子，是一个研究平行世界的学者。他正在收集这个世界的信息的时候受到了来自高塔的邀请，在蜜蜂罐罐的引导下来的这个世界，并和这个世界的其他人分享关于其他世界的信息。由于看上去有些失眠，所以他可能有攻击性。",
@@ -354,14 +193,6 @@ export const texts = {
       }
     },
     honeypoooot: {
-      name: "honeypoooot",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-          hz: 3
-        }
-      },
-      coor: [40, 15],
       text: {
         name: "蜜蜂罐罐",
         description: "一个老练的冒险者，是工会主席的助手，负责帮忙处理各种工会任务，包括各类新道具的测试。",
@@ -372,14 +203,6 @@ export const texts = {
       }
     },
     jinkeloid: {
-      name: "jinkeloid",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15
-        }
-      },
-      coor: [43, 14],
       text: {
         name: "公会会长Jinkeloid",
         description: "这是mispd作者所创建的镜像。mispd作者同时也是破碎地牢的中文审核者。",
@@ -391,14 +214,6 @@ export const texts = {
       }
     },
     atv9: {
-      name: "atv9",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 10
-        }
-      },
-      coor: [43, 17],
       text: {
         name: "AekaTsrnVeskyinja999",
         description: "这个是9，也可以称之为9[带圈的那个9] 参与绘制明日方舟地牢。彻头彻尾的酒鬼。",
@@ -410,14 +225,6 @@ export const texts = {
       }
     },
     uncles: {
-      name: "uncles",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [43, 22],
       text: {
         name: "斯堡罗提德大叔",
         description: "工会里的力士，是个猛男。",
@@ -427,14 +234,6 @@ export const texts = {
       }
     },
     realman: {
-      name: "realman",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [44, 45],
       text: {
         name: "炼金矮人",
         description: "工会中的一个奇特的存在，擅长炼金术和收藏独立游戏。",
@@ -444,14 +243,6 @@ export const texts = {
       }
     },
     lyn: {
-      name: "lyn",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [40, 22],
       text: {
         name: "受咒ankh",
         description: "破碎地牢的翻译者之一，是个脚男。",
@@ -462,14 +253,6 @@ export const texts = {
       }
     },
     saidbysun: {
-      name: "saidbysun",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [42, 45],
       text: {
         name: "阳说",
         description: "一只猫，用不安的眼神盯着旁边的炼金设备。没准那里有它讨厌的食物。",
@@ -480,14 +263,6 @@ export const texts = {
       }
     },
     sp931: {
-      name: "sp931",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [40, 16],
       text: {
         name: "被放逐者-931451545",
         description: "破碎地牢的翻译者之一。虽然我对他了解不多，但是目前他人对他的评价呈两级分化状态。",
@@ -498,14 +273,6 @@ export const texts = {
       }
     },
     dreamplayer: {
-      name: "dreamplayer",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15
-        }
-      },
-      coor: [43, 24],
       text: {
         name: "小萌新大梦想",
         description: "一团七彩元素，是一个测试产物。",
@@ -516,14 +283,6 @@ export const texts = {
       }
     },
     lery: {
-      name: "lery",
-      animation: {
-        idle: {
-          frames: [0, 1, 2],
-          hz: 10
-        }
-      },
-      coor: [41, 9],
       text: {
         name: "驯兽师-论坛修齐",
         description: "破碎地牢的翻译者之一，同时也是最早期像素地牢更新日志的翻译者之一。",
@@ -534,14 +293,6 @@ export const texts = {
       }
     },
     blackmeow: {
-      name: "blackmeow",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15,
-        }
-      },
-      coor: [38, 38],
       text: {
         name: "黑喵",
         description: "黑喵地牢的领袖",
@@ -552,14 +303,6 @@ export const texts = {
       }
     },
     catsheep: {
-      name: "catsheep",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15,
-        }
-      },
-      coor: [37, 37],
       text: {
         name: "彩虹猫",
         description: "彩虹猫",
@@ -569,14 +312,6 @@ export const texts = {
       }
     },
     evan: {
-      name: "evan",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 3],
-          hz: 15,
-        }
-      },
-      coor: [27, 31],
       text: {
         name: "Evan",
         description: "破碎地牢的制作者。说实在的我无法确定这代表evan还是破碎...他们的图标是一样的。",
@@ -588,14 +323,6 @@ export const texts = {
       }
     },
     ice13: {
-      name: "ice13",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15,
-        }
-      },
-      coor: [29, 32],
       text: {
         name: "佣兵-寒雾十三",
         description: "一个看上去有点神经质的术士，他依靠着一张损坏的多利亚小镇的地图和蜂蜜罐罐的指引来到了这里，他待在这里的目的是为了让这里更加——按他的说法——混乱。",
@@ -610,14 +337,6 @@ export const texts = {
       }
     },
     fruitcat: {
-      name: "fruitcat",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [45, 2],
       text: {
         name: "工会荣誉商人-菜猫",
         description: "这是一个很可爱的玩家。",
@@ -628,14 +347,6 @@ export const texts = {
       }
     },
     locastan: {
-      name: "locastan",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [5, 5],
       text: {
         name: "Locastan",
         description: "哥布林地牢的制作者。他相当喜欢哥布林这部漫画。神灯是释放地牢的标志。",
@@ -647,14 +358,6 @@ export const texts = {
       }
     },
     goblinplayer: {
-      name: "goblinplayer",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [2, 5],
       text: {
         name: "神盾哥布林",
         description: "一个参加测试的哥布林，他手里拿着一块炫彩盾牌。",
@@ -665,14 +368,6 @@ export const texts = {
       }
     },
     dachhack: {
-      name: "dachhack",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [37, 3],
       text: {
         name: "Dachhack",
         description: "发芽地牢的作者。上面那个光环是代表自然之神地牢。",
@@ -684,14 +379,6 @@ export const texts = {
       }
     },
     memoryofsand: {
-      name: "memoryofsand",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3
-        }
-      },
-      coor: [26, 4],
       text: {
         name: "义往尘沙",
         description: "这是一个对发芽改有重大贡献的玩家。",
@@ -702,14 +389,6 @@ export const texts = {
       }
     },
     afly: {
-      name: "afly",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15
-        }
-      },
-      coor: [27, 17],
       text: {
         name: "阿飞，阿比和阿比斯",
         description: "不思议地牢的制作者",
@@ -719,14 +398,6 @@ export const texts = {
       }
     },
     piranha: {
-      name: "piranha",
-      animation: {
-        idle: {
-          frames: [0, 1, 2, 1],
-          hz: 8
-        }
-      },
-      coor: [19, 9],
       text: {
         name: "原生肉食鱼",
         description: "在这种地方生活的肉食鱼经过上百年的演变，它们的视觉早已退化。不过它们的其他感官异常灵敏，可以感受到周围水流的变化，也异常凶猛。",
@@ -736,14 +407,6 @@ export const texts = {
       }
     },
     bonestar: {
-      name: "bonestar",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 10
-        }
-      },
-      coor: [21, 9],
       text: {
         name: "星辰",
         description: "星辰地牢的开发者，不过因为开源包问题已经弃坑。这个家伙简直就是全副武装，然而他却没有打算探索地牢的冲动，真是可惜了这身装备。然而有趣的是，当人们询问他关于这个地牢的故事时，他们只得到了一个回复“我已经通关了”，然而没有任何人见过他除了站在那里还有什么其他的动作。除了对在他面前停留已久的冒险者一个白眼除外……不过值得一提的是，星辰对人还算不错。每当有新的冒险者来交谈的时候，他总会从背包里摸出两块石头给你，当然，两个石子的可能性也并不是没有……看起来从前的他是个热情的冒险者，然而现在的他只想和远道而来的冒险者们唠唠家常话，消磨一下时光，这就够了。",
@@ -753,14 +416,6 @@ export const texts = {
       }
     },
     ahorse: {
-      name: "ahorse",
-      animation: {
-        idle: {
-          frames: [0, 1, 2, 3],
-          hz: 10
-        }
-      },
-      coor: [28, 6],
       text: {
         name: "A神马",
         description: "看，他在变色",
@@ -770,14 +425,6 @@ export const texts = {
       }
     },
     oldnewstwist: {
-      name: "oldnewstwist",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1],
-          hz: 2,
-        }
-      },
-      coor: [20, 3],
       text: {
         name: "Oldnewstwist",
         description: "一个豺狼流浪者，看来豺狼一族里面也是有纷争的。",
@@ -790,14 +437,6 @@ export const texts = {
       }
     },
     hatesokoban: {
-      name: "hatesokoban",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [23, 10],
       text: {
         name: "讨厌的羊关",
         description: "这是一个对发芽改有贡献的玩家，同时也是小马的爱好者。",
@@ -808,14 +447,6 @@ export const texts = {
       }
     },
     laji: {
-      name: "laji",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [23, 12],
       text: {
         name: "原罪学者-司徒",
         description: "这是一个祭师，同时也是小镇的维修者。",
@@ -827,14 +458,6 @@ export const texts = {
       }
     },
     stormandrain: {
-      name: "stormandrain",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [21, 6],
       text: {
         name: "雷雨交加",
         description: "这是一个对发芽改有重大贡献的玩家。",
@@ -847,14 +470,6 @@ export const texts = {
       }
     },
     ravenwolf: {
-      name: "ravenwolf",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [23, 6],
       text: {
         name: "ravenwolf",
         description: "无名地牢的作者",
@@ -864,14 +479,6 @@ export const texts = {
       }
     },
     lynn: {
-      name: "lynn",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [31, 32],
       text: {
         name: "符文学者-莲恩",
         description: "十分出色的符文研究者，对各种派系的魔法都有研究。其中最为出色的研究就是多利亚出产的魔法石。",
@@ -883,14 +490,6 @@ export const texts = {
       }
     },
     ren: {
-      name: "ren",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15,
-        }
-      },
-      coor: [28, 27],
       text: {
         name: "穿越者REN",
         description: "REN是最早使用了穿梭法术而闻名的“玩家”，据说他拿到过超过140枚Yendor护符并且分别来自不同的世界中。同时，REN也是多个地牢的创造者，虽然他现在似乎正在醉心于制作有很多美少女的地牢的样子……最好还是不要问他以前有关于“鸟船”的问题。",
@@ -905,14 +504,6 @@ export const texts = {
       }
     },
     kostis12345: {
-      name: "kostis12345",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [20, 25],
       text: {
         name: "秘书kostis12345",
         description: "小镇的秘书，负责小镇宣传以及其他杂物。偶尔高层也会让她出去考察实习。",
@@ -923,14 +514,6 @@ export const texts = {
       }
     },
     nutpainter: {
-      name: "nutpainter",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 15,
-        }
-      },
-      coor: [16, 21],
       text: {
         name: "坚果教教主",
         description: "一个测试画家，十分喜欢画坚果。",
@@ -941,15 +524,6 @@ export const texts = {
       }
     },
     juh9870: {
-      name: "juh9870",
-      animation: {
-        reverseTexture: true,
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [35, 6],
       text: {
         name: "Juh9870",
         description: "月光地牢的制作者。",
@@ -960,15 +534,6 @@ export const texts = {
       }
     },
     sadsaltan: {
-      name: "sadsaltan",
-      animation: {
-        reverseTexture: true,
-        idle: {
-          frames: [0, 0, 0, 1, 0, 0, 1, 1],
-          hz: 1,
-        }
-      },
-      coor: [42, 38],
       text: {
         name: "SadSaltan",
         description: "月光地牢的绘图者。标识有“月光”的名牌挂在他的胸前。",
@@ -980,15 +545,6 @@ export const texts = {
       }
     },
     noodlemire: {
-      name: "noodlemire",
-      animation: {
-        reverseTexture: true,
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [31, 20],
       text: {
         name: "镇长Noodlemire",
         description: "小镇的镇长，著有chancel一书。因为经济萧条所以工作十分轻松。",
@@ -999,14 +555,6 @@ export const texts = {
       }
     },
     shower: {
-      name: "shower",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-          hz: 3,
-        }
-      },
-      coor: [30, 19],
       text: {
         name: "shower",
         description: "指虎教派的成员之一，来这里测试新的指虎武器。",
@@ -1019,14 +567,6 @@ export const texts = {
 
     },
     xavier251998: {
-      name: "xavier251998",
-      animation: {
-        idle: {
-          frames: [0, 1],
-          hz: 1,
-        }
-      },
-      coor: [14, 33],
       text: {
         name: "地质勘探员Xavier251998",
         description: "一名勘探小镇地质的家伙，他人很好。",
@@ -1038,14 +578,6 @@ export const texts = {
       }
     },
     adultdragonviolet: {
-      name: "adultdragonviolet",
-      animation: {
-        idle: {
-          frames: [0, 1, 0, 1, 0, 1, 0],
-          hz: 10,
-        }
-      },
-      coor: [5, 43],
       text: {
         name: "守卫巨龙",
         description: "守卫巨龙通常是被召唤而来，但是对普通人来说它和野生巨龙没什么两样。",
@@ -1056,14 +588,6 @@ export const texts = {
       }
     },
     scarecrow: {
-      name: "scarecrow",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [18, 44],
       text: {
         name: "稻草人",
         description: "试试看，你能打多少伤害。",
@@ -1073,14 +597,6 @@ export const texts = {
       }
     },
     raintrainer: {
-      name: "raintrainer",
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [17, 42],
       text: {
         name: "训练家Rain",
         description: "这是一个早期的计划npc，但是他并没有加入到游戏中。现在，他准备好了。",
@@ -1091,14 +607,6 @@ export const texts = {
       }
     },
     rustyblade: {
-      name: "rustyblade",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 315,
-        }
-      },
-      coor: [22, 42],
       text: {
         name: "战斗大师-无聊",
         description: "混合地牢的翻译者之一，同时也是破碎地牢翻译的协助者。",
@@ -1109,14 +617,6 @@ export const texts = {
       }
     },
     tempest102: {
-      name: "tempest102",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [33, 42],
       text: {
         name: "音乐家tempest102",
         description: "破碎地牢的翻译者之一，同时也是搞音乐的。",
@@ -1127,14 +627,6 @@ export const texts = {
       }
     },
     springscarecrow: {
-      name: "scarecrow", 
-      animation: {
-        idle: {
-          frames: [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3],
-          hz: 3,
-        }
-      },
-      coor: [21, 44],
       text: {
         name: "发条稻草人",
         description: "这个稻草人很危险，千万不要触动它。",
@@ -1143,49 +635,7 @@ export const texts = {
         ]
       }
     },
-    piranha2: {
-      name: "piranha",
-      coor: [42, 37],
-      animation: {
-        idle: {
-          frames: [0, 1, 2, 1],
-          hz: 8
-        }
-      },
-      text: {
-        name: "原生肉食鱼",
-        description: "在这种地方生活的肉食鱼经过上百年的演变，它们的视觉早已退化。不过它们的其他感官异常灵敏，可以感受到周围水流的变化，也异常凶猛。",
-        yells: [
-          "在这种地方生活的肉食鱼经过上百年的演变，它们的视觉早已退化。不过它们的其他感官异常灵敏，可以感受到周围水流的变化，也异常凶猛。",
-        ]
-      }
-    },
-    piranha3: {
-      name: "piranha",
-      coor: [42, 36],
-      animation: {
-        idle: {
-          frames: [0, 1, 2, 1],
-          hz: 8
-        }
-      },
-      text: {
-        name: "原生肉食鱼",
-        description: "在这种地方生活的肉食鱼经过上百年的演变，它们的视觉早已退化。不过它们的其他感官异常灵敏，可以感受到周围水流的变化，也异常凶猛。",
-        yells: [
-          "在这种地方生活的肉食鱼经过上百年的演变，它们的视觉早已退化。不过它们的其他感官异常灵敏，可以感受到周围水流的变化，也异常凶猛。",
-        ]
-      }
-    },
     ashwolf: {
-      name: "ashwolf",
-      animation: {
-        idle: {
-          frames: [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3],
-          hz: 10,
-        }
-      },
-      coor: [40, 36],
       text: {
         name: "阿萨男爵",
         description: "地牢游戏和像素画爱好者，RM制作者，兽控，正在制作异域冒险传。",
@@ -1204,6 +654,7 @@ export const texts = {
     },
 
     search: "点击查看信息 双击进行搜索",
+    loading: "加载中... ",
   }
 };
 
