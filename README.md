@@ -1,4 +1,4 @@
-## 多利亚小镇
+## 多利亚小镇 DolyaTown
 
 ### 简介
 这个项目使用javascript重写了[像素地牢](https://github.com/watabou/pixel-dungeon/)的一小部分（和它的一个改版：[特别惊喜像素地牢](https://github.com/hmdzl001/SPS-PD/)中的一张地图）。你可以把它叫做“有着像素地牢风格的网页”。
